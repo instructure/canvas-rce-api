@@ -1,0 +1,12 @@
+version: '3'
+services:
+  web:
+    build: .
+    environment:
+      VIRTUAL_HOST: rce.docker
+      NODE_ENV: development
+      STATSD_HOST: 127.0.0.1
+      STATSD_PORT: 8125
+      ECOSYSTEM_SECRET: "astringthatisactually32byteslong"
+      ECOSYSTEM_KEY: "astringthatisactually32byteslong"
+      CIPHER_PASSWORD: TEMP_PASSWORD

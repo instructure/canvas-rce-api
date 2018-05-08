@@ -1,0 +1,9 @@
+Dockerfile
+.gitignore
+README.md
+deploy/
+.git/
+docker-compose*
+node_modules/
+tmp/
+coverage/
