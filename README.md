@@ -151,6 +151,10 @@ filename. Tests are written using `mocha` and the standard `assert` package.
 Sinon is availble for stubbing dependencies, but prefer injecting dependencies
 over stubbing shared bindings where possible.
 
+## License
+
+This project is is released under the [MIT](LICENSE) license.
+
 [1]: https://www.phusionpassenger.com/library/walkthroughs/basics/nodejs/
 [2]: https://pm2.keymetrics.io/
 [3]: https://www.haproxy.org/

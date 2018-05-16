@@ -52,6 +52,7 @@
   },
   "author": "Instructure, Inc.",
   "private": true,
+  "license": "MIT",
   "dependencies": {
     "body-parser": "1.15.0",
     "cors": "2.7.1",
