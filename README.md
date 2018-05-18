@@ -31,8 +31,9 @@ to manage and balance load between node processes such as [Passenger][1] or
 
 A Docker image is available on Docker Hub at
 `instructure/canvas-rce-api:latest`. The container will run the application
-behind Nginx with Passenger listening on ports `8080` for `http` and `8443` for
-`https` (preterminated). Requests using `http` are redirected to `https`.
+behind Nginx with Passenger listening on port `80`. Please refer to the
+documentation for the [`instructure/node-passenger` base image][7] for nginx and
+passenger configuration environment variables.
 
 #### Example
 
@@ -161,3 +162,4 @@ This project is is released under the [MIT](LICENSE) license.
 [4]: https://aws.amazon.com/elasticloadbalancing/
 [5]: https://httpd.apache.org/
 [6]: https://www.nginx.com/
+[7]: https://github.com/instructure/dockerfiles/blob/master/node-passenger/README.md
