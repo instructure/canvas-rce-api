@@ -21,7 +21,7 @@ describe("Files API", () => {
     let request, response, canvasResponse;
 
     beforeEach(() => {
-      request = {};
+      request = { get: () => {} };
       response = {
         status: sinon.spy(),
         send: sinon.spy()

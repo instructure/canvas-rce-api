@@ -7,10 +7,10 @@ const querystring = require("querystring");
 // current request (except replacing any existing bookmark)
 function packageBookmark(request, bookmark) {
   if (bookmark) {
-    let path = request.baseUrl + request.path;
-    let query = Object.assign({}, request.query, { bookmark });
-    let qs = querystring.stringify(query);
-    return `${request.protocol}://${request.host}${path}?${qs}`;
+    const path = request.baseUrl + request.path;
+    const query = Object.assign({}, request.query, { bookmark });
+    const qs = querystring.stringify(query);
+    return `${request.protocol}://${request.get("Host")}${path}?${qs}`;
   } else {
     return null;
   }

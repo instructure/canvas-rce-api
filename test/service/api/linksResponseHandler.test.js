@@ -81,7 +81,7 @@ describe("Link API response handlers", () => {
       });
       const request = {
         protocol: "http",
-        host: "rce.example",
+        get: header => header === "Host" && "rce.example",
         baseUrl: "/api",
         path: "/wikiPages",
         query: {
