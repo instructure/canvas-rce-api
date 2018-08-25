@@ -110,7 +110,7 @@ describe("Canvas Proxy", () => {
         }
       });
       httpStub.get(path).reply(200);
-      return canvasProxy.fetch(url, request, token);
+      canvasProxy.fetch(url, request, token);
     });
 
     describe("bookmark extraction", () => {
@@ -194,7 +194,7 @@ describe("Canvas Proxy", () => {
         }
       });
       httpStub.post(path, postBody).reply(200, "{}");
-      return canvasProxy.send("POST", url, request, token, postBody);
+      canvasProxy.send("POST", url, request, token, postBody);
     });
   });
 });
