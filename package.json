@@ -63,7 +63,6 @@
     "express-healthcheck": "0.0.2",
     "express-request-id": "1.1.0",
     "express-statsd": "0.3.0",
-    "forever": "^0.15.2",
     "inja": "^1.1.0",
     "isomorphic-fetch": "2.2.1",
     "jsonwebtoken": "5.7.0",
