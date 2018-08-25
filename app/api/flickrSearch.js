@@ -1,6 +1,6 @@
 "use strict";
 
-const unirest = require("unirest");
+const request = require("request-promise-native");
 
 const flickrBase = "https://api.flickr.com/services/rest";
 // extras=needs_interstitial is required to get undocumented needs_interstitial
@@ -9,13 +9,11 @@ const flickrQuery =
   "method=flickr.photos.search&format=json&sort=relevance&license=1,2,3,4,5,6&per_page=15&nojsoncallback=1&extras=needs_interstitial";
 
 function getFlickrResults(searchTerm) {
-  let flickrKey = process.env.FLICKR_API_KEY;
-  let encodedTerm = encodeURIComponent(searchTerm);
-  let queryAddendum = `api_key=${flickrKey}&text=${encodedTerm}`;
-  let flickrUrl = `${flickrBase}?${flickrQuery}&${queryAddendum}`;
-  return new Promise(resolve => {
-    unirest.get(flickrUrl).end(resolve);
-  });
+  const flickrKey = process.env.FLICKR_API_KEY;
+  const encodedTerm = encodeURIComponent(searchTerm);
+  const queryAddendum = `api_key=${flickrKey}&text=${encodedTerm}`;
+  const url = `${flickrBase}?${flickrQuery}&${queryAddendum}`;
+  return request.get({ url, resolveWithFullResponse: true, json: true });
 }
 
 function transformSearchResults(results) {
@@ -42,20 +40,20 @@ function transformSearchResults(results) {
 }
 
 // get results from Flickr API
-function flickrSearch(request, response) {
-  let searchTerm = request.query.term;
-  getFlickrResults(searchTerm)
-    .then(searchResults => {
-      let images = transformSearchResults(searchResults);
-      response.status(searchResults.status);
-      response.send(images);
-    })
-    .catch(e => {
-      process.stderr.write("Flickr Search Failed");
-      process.stderr.write("" + e);
-      response.status(500);
-      response.send("Internal Error, see server logs");
-    });
+async function flickrSearch(req, response) {
+  const searchTerm = req.query.term;
+  try {
+    const searchResults = await getFlickrResults(searchTerm);
+    const images = transformSearchResults(searchResults);
+    response.status(searchResults.statusCode);
+    response.send(images);
+  } catch (e) {
+    // TODO: better error handling
+    process.stderr.write("Flickr Search Failed");
+    process.stderr.write("" + e);
+    response.status(500);
+    response.send("Internal Error, see server logs");
+  }
 }
 
 module.exports = flickrSearch;

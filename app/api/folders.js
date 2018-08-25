@@ -41,8 +41,8 @@ function canvasPath(request) {
 }
 
 function canvasResponseHandler(request, response, canvasResponse) {
-  response.status(canvasResponse.status);
-  if (canvasResponse.status === 200) {
+  response.status(canvasResponse.statusCode);
+  if (canvasResponse.statusCode === 200) {
     const folders = canvasResponse.body;
     const protocol = request.get("X-Forwarded-Proto") || request.protocol;
     const baseUrl = `${protocol}://${request.get("host")}/api`;

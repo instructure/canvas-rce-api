@@ -45,7 +45,7 @@ describe("Modules API", () => {
     const request = { query: { contextId: 123 } };
     const response = { status: () => {}, send: () => {} };
     const canvasResponse = {
-      status: 200,
+      statusCode: 200,
       body: [{ id: "456", name: "Module 2" }]
     };
 

@@ -152,10 +152,10 @@ describe("Canvas Proxy", () => {
   });
 
   describe("send", () => {
-    let postBody = "{key1: 'value1', key2: 'value2'}";
+    let postBody = { a: 1, b: [2, 3] };
 
     it("hits the given url with the body for a post", () => {
-      var scope = httpStub.post(path, postBody).reply(200);
+      var scope = httpStub.post(path, postBody).reply(200, "{}");
       return canvasProxy
         .send("POST", url, request, token, postBody)
         .then(() => {
@@ -164,7 +164,7 @@ describe("Canvas Proxy", () => {
     });
 
     it("hits the given url with the body for a put", () => {
-      var scope = httpStub.put(path, postBody).reply(200);
+      var scope = httpStub.put(path, postBody).reply(200, "{}");
       return canvasProxy.send("PUT", url, request, token, postBody).then(() => {
         assert.ok(scope.isDone());
       });
@@ -176,7 +176,7 @@ describe("Canvas Proxy", () => {
         .matchHeader("X-Request-Context-Id", encodedReqId)
         .matchHeader("X-Request-Context-Signature", idSignature)
         .post(path)
-        .reply(200);
+        .reply(200, "{}");
 
       return canvasProxy.send("POST", url, request, token).then(() => {
         assert.ok(scope.isDone());
@@ -193,7 +193,7 @@ describe("Canvas Proxy", () => {
           done();
         }
       });
-      httpStub.post(path, postBody).reply(200);
+      httpStub.post(path, postBody).reply(200, "{}");
       return canvasProxy.send("POST", url, request, token, postBody);
     });
   });

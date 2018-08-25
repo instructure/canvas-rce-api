@@ -64,7 +64,7 @@ describe("Announcements API", () => {
     const request = {};
     const response = { status: () => {}, send: () => {} };
     const canvasResponse = {
-      status: 200,
+      statusCode: 200,
       body: [
         { html_url: "/courses/1/announcements/2", title: "Announcement 2" }
       ]

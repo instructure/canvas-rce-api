@@ -1,6 +1,6 @@
 "use strict";
 
-const unirest = require("unirest");
+const request = require("request-promise-native");
 
 const ytApiBase = "https://content.googleapis.com/youtube/v3/search";
 const ytApiQuery = "part=snippet&maxResults=2";
@@ -12,10 +12,8 @@ function getYouTubeUrl(vid_id) {
 }
 
 function fetchYouTubeTitle(vid_id) {
-  let ytApiUrl = getYouTubeUrl(vid_id);
-  return new Promise(resolve => {
-    unirest.get(ytApiUrl).end(resolve);
-  });
+  const url = getYouTubeUrl(vid_id);
+  return request.get({ url, resolveWithFullResponse: true, json: true });
 }
 
 function parseTitle(vidId, results) {
@@ -28,12 +26,14 @@ function parseTitle(vidId, results) {
   return vidTitle;
 }
 
-function youTubeTitle(request, response) {
-  let vidId = request.query.vid_id;
+function youTubeTitle(req, response) {
+  let vidId = req.query.vid_id;
   fetchYouTubeTitle(vidId)
     .then(searchResults => {
-      if (searchResults.status >= 400) {
-        throw searchResults.error;
+      if (searchResults.statusCode >= 400) {
+        const err = new Error("YouTube search failed");
+        err.body = searchResults.body;
+        throw err;
       }
       let title = parseTitle(vidId, searchResults);
       if (title === undefined) {
@@ -43,7 +43,7 @@ function youTubeTitle(request, response) {
         response.status(500);
         response.send(`Video "${vidId}" not found.`);
       } else {
-        response.status(searchResults.status);
+        response.status(searchResults.statusCode);
         response.json({ id: vidId, title: title });
       }
     })

@@ -8,14 +8,14 @@ const packageBookmark = require("./packageBookmark");
 // packaged bookmark
 function linksResponseHandler(linksFromResponseBody) {
   return (request, response, canvasResponse) => {
-    if (canvasResponse.status == 200) {
+    if (canvasResponse.statusCode == 200) {
       response.status(200);
       response.send({
         links: linksFromResponseBody(request, canvasResponse.body),
         bookmark: packageBookmark(request, canvasResponse.bookmark)
       });
     } else {
-      response.status(canvasResponse.status);
+      response.status(canvasResponse.statusCode);
       response.send(canvasResponse.body);
     }
   };

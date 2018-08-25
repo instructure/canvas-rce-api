@@ -6,7 +6,7 @@ const { RuntimeException } = require("node-exceptions");
 
 // by default just proxies the canvas response status and body
 function defaultCanvasResponseHandler(request, response, canvasResponse) {
-  response.status(canvasResponse.status);
+  response.status(canvasResponse.statusCode);
   response.send(canvasResponse.body);
 }
 

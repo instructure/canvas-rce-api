@@ -82,7 +82,7 @@ describe("wrapping a Canvas request/response", function() {
         canvasResponseHandler(req, resp1, resp2) {
           assert.equal(req, request);
           assert.equal(resp1, response);
-          assert.equal(resp2.status, 200);
+          assert.equal(resp2.statusCode, 200);
           assert.equal(resp2.body, "success");
           done();
         }
@@ -93,7 +93,7 @@ describe("wrapping a Canvas request/response", function() {
   it("posts with a body transformation when method specified", done => {
     const scope = nock(schemaAndHost)
       .post(defaultPath)
-      .reply(200, "success");
+      .reply(200, "{}");
     let wrapper = buildWrapper({
       transformBody() {
         return { post: "body" };
@@ -110,7 +110,7 @@ describe("wrapping a Canvas request/response", function() {
   it("puts with a body transformation when method specified", done => {
     const scope = nock(schemaAndHost)
       .put(defaultPath)
-      .reply(200, "success");
+      .reply(200, "{}");
     let wrapper = buildWrapper({
       transformBody() {
         return { put: "body" };

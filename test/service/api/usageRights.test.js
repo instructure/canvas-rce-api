@@ -1,6 +1,6 @@
 "use strict";
 
-const { ok, equal, throws } = require("assert");
+const { equal, throws } = require("assert");
 const { canvasPath, transformBody } = require("../../../app/api/usageRights");
 
 describe("Usage Rights API", () => {
@@ -42,14 +42,14 @@ describe("Usage Rights API", () => {
   });
 
   describe("transformBody()", () => {
-    it("returns a url encoded string file ids in correct array format", () => {
+    it("includes file id in array", () => {
       const body = transformBody({ fileId: 47 });
-      ok(/file_ids%5B%5D=47/.test(body));
+      equal(body.file_ids[0], 47);
     });
 
     it("sets publish to true", () => {
       const body = transformBody({ fileId: 47 });
-      ok(/publish=true/.test(body));
+      equal(body.publish, true);
     });
 
     it("sets usage rights data", () => {
@@ -58,9 +58,9 @@ describe("Usage Rights API", () => {
         copyrightHolder: "bar",
         ccLicense: "baz"
       });
-      ok(/usage_rights%5Buse_justification%5D=foo/.test(body));
-      ok(/usage_rights%5Blegal_copyright%5D=bar/.test(body));
-      ok(/usage_rights%5Blicense%5D=baz/.test(body));
+      equal(body.usage_rights.use_justification, "foo");
+      equal(body.usage_rights.legal_copyright, "bar");
+      equal(body.usage_rights.license, "baz");
     });
   });
 });

@@ -45,7 +45,7 @@ describe("Quizzes API", () => {
     const request = {};
     const response = { status: () => {}, send: () => {} };
     const canvasResponse = {
-      status: 200,
+      statusCode: 200,
       body: [{ html_url: "/courses/1/quizzes/2", title: "Quiz 2" }]
     };
 

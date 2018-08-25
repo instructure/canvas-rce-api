@@ -27,7 +27,7 @@ function transformBody(body) {
 }
 
 function canvasResponseHandler(request, response, canvasResponse) {
-  response.status(canvasResponse.status);
+  response.status(canvasResponse.statusCode);
   response.send(canvasResponse.body);
 }
 

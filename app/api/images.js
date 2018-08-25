@@ -23,8 +23,8 @@ function canvasPath(request) {
 }
 
 function canvasResponseHandler(request, response, canvasResponse) {
-  response.status(canvasResponse.status);
-  if (canvasResponse.status === 200) {
+  response.status(canvasResponse.statusCode);
+  if (canvasResponse.statusCode === 200) {
     const images = canvasResponse.body;
     const transformedImages = images.map(image => {
       return {

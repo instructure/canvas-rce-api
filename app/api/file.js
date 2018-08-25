@@ -7,8 +7,8 @@ function canvasPath(request) {
 }
 
 function canvasResponseHandler(request, response, canvasResponse) {
-  response.status(canvasResponse.status);
-  if (canvasResponse.status === 200) {
+  response.status(canvasResponse.statusCode);
+  if (canvasResponse.statusCode === 200) {
     const file = canvasResponse.body;
     response.send({
       id: file.id,

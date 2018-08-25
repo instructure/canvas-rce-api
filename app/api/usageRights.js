@@ -1,7 +1,5 @@
 "use strict";
 
-const { stringify } = require("qs");
-
 function canvasPath(request) {
   const { context_type, context_id } = request.auth.payload;
   switch (context_type) {
@@ -18,7 +16,7 @@ function canvasPath(request) {
 }
 
 function transformBody(body) {
-  let transformedBody = {
+  return {
     file_ids: [body.fileId],
     publish: true,
     usage_rights: {
@@ -27,18 +25,6 @@ function transformBody(body) {
       license: body.ccLicense
     }
   };
-
-  // Note: unirest doesn't stringify arrays and sub-objects in the body
-  // correctly. Explicitly use the qs module to handle stringifying the js
-  // object. Also, use arrayFormat: 'brackets' so arrays are in the format
-  // canvas expexts.
-  //
-  // TODO: We should probably move this js obj => body string logic to
-  // canvasProxy.js send(), but it will require testing to ensuer it doesn't
-  // break other requests.
-  const bodyStr = stringify(transformedBody, { arrayFormat: "brackets" });
-
-  return bodyStr;
 }
 
 module.exports = { canvasPath, transformBody };

@@ -1,6 +1,6 @@
 "use strict";
 
-const unirest = require("unirest");
+const request = require("request-promise-native");
 const crypto = require("crypto");
 const parseLinkHeader = require("parse-link-header");
 const sign = require("../utils/sign");
@@ -15,12 +15,12 @@ function signatureFor(string_to_sign) {
   return new Buffer(hmacString).toString("base64");
 }
 
-function requestHeaders(tokenString, request) {
-  const reqIdSignature = signatureFor(request.id);
+function requestHeaders(tokenString, req) {
+  const reqIdSignature = signatureFor(req.id);
   return {
     Authorization: "Bearer " + tokenString,
-    "User-Agent": request.get("User-Agent"),
-    "X-Request-Context-Id": new Buffer(request.id).toString("base64"),
+    "User-Agent": req.get("User-Agent"),
+    "X-Request-Context-Id": new Buffer(req.id).toString("base64"),
     "X-Request-Context-Signature": reqIdSignature
   };
 }
@@ -28,7 +28,7 @@ function requestHeaders(tokenString, request) {
 // looks for a Link header. if there is one, looks for a rel="next" link in it.
 // if there is one, pulls it's value out and sticks it into response.bookmark
 function parseBookmark(response) {
-  // unirest downcases all headers
+  // request downcases all headers
   const header = response.headers.link;
   if (header) {
     const links = parseLinkHeader(header);
@@ -48,28 +48,44 @@ function collectStats(promiseToTime) {
   });
 }
 
-function fetch(url, request, tokenString) {
-  const headers = requestHeaders(tokenString, request);
-  return collectStats(() => {
-    return new Promise(resolve => {
-      unirest
-        .get(url)
-        .headers(headers)
-        .end(resolve);
-    });
-  }).then(parseBookmark);
+function catchStatusCodeError(err) {
+  if (err.name === "StatusCodeError") {
+    return err.response;
+  }
+  throw err;
 }
 
-function send(method, url, request, tokenString, body) {
-  const headers = requestHeaders(tokenString, request);
-  return collectStats(() => {
-    return new Promise(resolve => {
-      unirest[method.toLowerCase()](url)
-        .headers(headers)
-        .send(body)
-        .end(resolve);
+function fetch(url, req, tokenString) {
+  const headers = requestHeaders(tokenString, req);
+  return collectStats(() =>
+    request({
+      url,
+      headers,
+      resolveWithFullResponse: true,
+      json: true
+    })
+  )
+    .catch(catchStatusCodeError)
+    .then(parseBookmark);
+}
+
+function send(method, url, req, tokenString, body) {
+  const headers = requestHeaders(tokenString, req);
+  return collectStats(() =>
+    request({
+      method,
+      url,
+      headers,
+      form: body,
+      qsStringifyOptions: { arrayFormat: "brackets" },
+      resolveWithFullResponse: true
+    })
+  )
+    .catch(catchStatusCodeError)
+    .then(response => {
+      response.body = JSON.parse(response.body);
+      return response;
     });
-  });
 }
 
 module.exports = { fetch, send };

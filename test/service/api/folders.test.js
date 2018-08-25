@@ -114,18 +114,18 @@ describe("Folders API", () => {
         send: sinon.spy()
       };
       canvasResponse = {
-        status: 200,
+        statusCode: 200,
         body: []
       };
     });
 
     it("sends status from canvasResponse", () => {
       canvasResponseHandler(request, response, canvasResponse);
-      sinon.assert.calledWith(response.status, canvasResponse.status);
+      sinon.assert.calledWith(response.status, canvasResponse.statusCode);
     });
 
     it("sends body from canvasResponse for non-200 responses", () => {
-      canvasResponse.status = 400;
+      canvasResponse.statusCode = 400;
       canvasResponseHandler(request, response, canvasResponse);
       sinon.assert.calledWith(response.send, canvasResponse.body);
     });

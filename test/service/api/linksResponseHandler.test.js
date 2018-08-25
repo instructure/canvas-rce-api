@@ -14,7 +14,7 @@ describe("Link API response handlers", () => {
 
   describe("non-200 canvas responses", () => {
     const failedCanvasResponse = {
-      status: 404,
+      statusCode: 404,
       body: { error: "Resource does not exist" }
     };
 
@@ -26,7 +26,7 @@ describe("Link API response handlers", () => {
     it("just forwards status", () => {
       sinon.spy(response, "status");
       handler(request, response, failedCanvasResponse);
-      assert.ok(response.status.calledWith(failedCanvasResponse.status));
+      assert.ok(response.status.calledWith(failedCanvasResponse.statusCode));
       response.status.restore();
     });
 
@@ -40,7 +40,7 @@ describe("Link API response handlers", () => {
 
   describe("successful canvas responses", () => {
     const canvasResponse = {
-      status: 200,
+      statusCode: 200,
       body: [
         { html_url: "/courses/1/announcements/2", title: "Announcement 2" }
       ]

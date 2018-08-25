@@ -10,8 +10,8 @@ function canvasPath(request) {
 }
 
 function canvasResponseHandler(request, response, canvasResponse) {
-  response.status(canvasResponse.status);
-  if (canvasResponse.status === 200) {
+  response.status(canvasResponse.statusCode);
+  if (canvasResponse.statusCode === 200) {
     const files = canvasResponse.body;
     response.send({
       files: files.map(file => {
