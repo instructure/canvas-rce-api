@@ -69,7 +69,7 @@
     "moment": "^2.22.2",
     "morgan": "^1.9.0",
     "node-exceptions": "^3.0.0",
-    "node-jose": "^0.11.0",
+    "node-jose": "^1.0.0",
     "npm": "^6.4.0",
     "parse-link-header": "0.4.1",
     "qs": "^6.2.1",
