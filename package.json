@@ -48,7 +48,8 @@
     "fmt:fix": "prettier --write '**/*.{js,json}'",
     "precommit": "pretty-quick --staged",
     "start": "node app.js",
-    "start:dev": "nodemon --watch app --watch config app.js"
+    "start:dev": "nodemon --watch app --watch config app.js",
+    "security:dependency-monitor": "snyk monitor"
   },
   "author": "Instructure, Inc.",
   "private": true,
@@ -91,6 +92,7 @@
     "prettier": "^1.12.1",
     "pretty-quick": "^1.4.1",
     "sinon": "1.17.3",
+    "snyk": "^1.99.1",
     "supertest": "^3.1.0"
   }
 }

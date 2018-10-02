@@ -7,6 +7,9 @@ docker-compose build
 # start the containers
 docker-compose up -d
 
+# run dependency scanner
+docker-compose run --rm -e SNYK_TOKEN=$SNYK_TOKEN web npm run security:dependency-monitor
+
 # run unit tests
 docker-compose exec -T web npm run test-cov
 unit_status=$?
