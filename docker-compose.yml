@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   web:
     build: .
@@ -10,3 +10,4 @@ services:
       ECOSYSTEM_SECRET: "astringthatisactually32byteslong"
       ECOSYSTEM_KEY: "astringthatisactually32byteslong"
       CIPHER_PASSWORD: TEMP_PASSWORD
+      # HTTP_PROTOCOL_OVERRIDE: http

@@ -18,7 +18,12 @@ function defaultTransformBody(body) {
 }
 
 function buildUrl(domain, path) {
-  var protocol = process.env.NODE_ENV == "production" ? "https" : "http";
+  var protocol = "http";
+  if (process.env.HTTP_PROTOCOL_OVERRIDE) {
+    protocol = process.env.HTTP_PROTOCOL_OVERRIDE;
+  } else if (process.env.NODE_ENV === "production") {
+    protocol = "https";
+  }
   return protocol + "://" + domain + path;
 }
 
