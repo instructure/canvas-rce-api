@@ -10,7 +10,7 @@ describe("File API", () => {
       const id = 47;
       const params = { fileId: id };
       const query = { per_page: 50 };
-      const expectedPath = `/api/v1/files/${id}`;
+      const expectedPath = `/api/v1/files/${id}?include[]=preview_url`;
       assert.equal(canvasPath({ params, query }), expectedPath);
     });
   });
@@ -65,6 +65,7 @@ describe("File API", () => {
               type: file["content-type"],
               name: file.display_name,
               url: file.url,
+              preview_url: file.preview_url,
               embed: { type: "file" }
             },
             val

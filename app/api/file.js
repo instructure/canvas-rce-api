@@ -3,7 +3,7 @@
 const { fileEmbed } = require("../../shared/mimeClass");
 
 function canvasPath(request) {
-  return `/api/v1/files/${request.params.fileId}`;
+  return `/api/v1/files/${request.params.fileId}?include[]=preview_url`;
 }
 
 function canvasResponseHandler(request, response, canvasResponse) {
@@ -15,6 +15,7 @@ function canvasResponseHandler(request, response, canvasResponse) {
       type: file["content-type"],
       name: file.display_name || file.filename,
       url: file.url,
+      preview_url: file.preview_url,
       embed: fileEmbed(file)
     });
   } else {
