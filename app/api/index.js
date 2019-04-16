@@ -1,8 +1,6 @@
 "use strict";
 
-const {
-  statsdKeyMiddleware: statsdKey
-} = require("../middleware/statsLogging");
+const { actionKeyMiddleware: statsdKey } = require("../middleware/stats");
 const _auth = require("../middleware/auth");
 const wrapCanvas = require("./wrapCanvas");
 const flickrSearch = require("./flickrSearch");

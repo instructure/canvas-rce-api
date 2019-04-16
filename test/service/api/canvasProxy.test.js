@@ -99,18 +99,10 @@ describe("Canvas Proxy", () => {
       });
     });
 
-    it("writes stats to track canvas time", done => {
-      let finished = false;
-      statsServer.on("message", msg => {
-        if (finished == false) {
-          let statRegex = /cg\.rich-content-service\.development\.request\.canvas:\d\|ms/;
-          assert.ok(statRegex.test(msg.toString()));
-          finished = true;
-          done();
-        }
-      });
+    it("writes stats to track canvas time", async () => {
       httpStub.get(path).reply(200);
-      canvasProxy.fetch(url, request, token);
+      await canvasProxy.fetch(url, request, token);
+      assert(request.timers.canvas_time);
     });
 
     describe("bookmark extraction", () => {
@@ -183,18 +175,10 @@ describe("Canvas Proxy", () => {
       });
     });
 
-    it("writes a stats key for posts", done => {
-      let finished = false;
-      statsServer.on("message", msg => {
-        if (finished == false) {
-          let statRegex = /cg\.rich-content-service\.development\.request\.canvas:\d\|ms/;
-          assert.ok(statRegex.test(msg.toString()));
-          finished = true;
-          done();
-        }
-      });
+    it("writes a stats key for posts", async () => {
       httpStub.post(path, postBody).reply(200, "{}");
-      canvasProxy.send("POST", url, request, token, postBody);
+      await canvasProxy.send("POST", url, request, token, postBody);
+      assert.ok(request.timers.canvas_time);
     });
   });
 });

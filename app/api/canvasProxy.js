@@ -4,7 +4,6 @@ const request = require("request-promise-native");
 const crypto = require("crypto");
 const parseLinkHeader = require("parse-link-header");
 const sign = require("../utils/sign");
-const statsdClient = require("../middleware/statsLogging");
 
 function signatureFor(string_to_sign) {
   const shared_secret = process.env.ECOSYSTEM_SECRET;
@@ -39,11 +38,11 @@ function parseBookmark(response) {
   return response;
 }
 
-function collectStats(promiseToTime) {
-  const startTime = new Date().getTime();
+function collectStats(req, promiseToTime) {
+  const startTime = Date.now();
   return promiseToTime().then(result => {
-    const endTime = new Date().getTime();
-    statsdClient.recordTiming(["canvas"], startTime, endTime);
+    req.timers = req.timers || {};
+    req.timers.canvas_time = Date.now() - startTime;
     return result;
   });
 }
@@ -57,7 +56,7 @@ function catchStatusCodeError(err) {
 
 function fetch(url, req, tokenString) {
   const headers = requestHeaders(tokenString, req);
-  return collectStats(() =>
+  return collectStats(req, () =>
     request({
       url,
       headers,
@@ -71,7 +70,7 @@ function fetch(url, req, tokenString) {
 
 function send(method, url, req, tokenString, body) {
   const headers = requestHeaders(tokenString, req);
-  return collectStats(() =>
+  return collectStats(req, () =>
     request({
       method,
       url,
