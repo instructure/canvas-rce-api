@@ -3,6 +3,7 @@
 const { equal, throws } = require("assert");
 const _env = require("../../app/env");
 const EnvRequiredException = require("../../app/exceptions/EnvRequiredException");
+const { InvalidArgumentException } = require("node-exceptions");
 
 describe("env provider", () => {
   let vars;
@@ -27,6 +28,10 @@ describe("env provider", () => {
 
     it("executes and returns fallback if it does not exist", () => {
       equal(env.get("OTHER", () => "fallback"), "fallback");
+    });
+
+    it("throws an error if fallback is provided and is not a function", () => {
+      throws(() => env.get("OTHER", "string"), InvalidArgumentException);
     });
   });
 

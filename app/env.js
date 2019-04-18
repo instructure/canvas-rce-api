@@ -1,6 +1,7 @@
 "use strict";
 
 const EnvRequiredException = require("./exceptions/EnvRequiredException");
+const { InvalidArgumentException } = require("node-exceptions");
 
 function inject(provide) {
   return [provide(process.env)];
@@ -9,6 +10,9 @@ function inject(provide) {
 function init(vars) {
   const env = {
     get(name, fallback = () => null) {
+      if (typeof fallback !== "function") {
+        throw new InvalidArgumentException("fallback must be a function");
+      }
       return vars[name] || fallback();
     },
 
