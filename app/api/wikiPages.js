@@ -20,7 +20,13 @@ function canvasPath(request) {
 
 const canvasResponseHandler = linksResponseHandler((request, results) => {
   return results.map(wikiPage => {
-    return { href: wikiPage.html_url, title: wikiPage.title };
+    return {
+      href: wikiPage.html_url,
+      title: wikiPage.title,
+      published: wikiPage.published,
+      date: wikiPage.todo_date || null,
+      date_type: "todo"
+    };
   });
 });
 

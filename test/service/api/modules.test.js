@@ -46,7 +46,7 @@ describe("Modules API", () => {
     const response = { status: () => {}, send: () => {} };
     const canvasResponse = {
       statusCode: 200,
-      body: [{ id: "456", name: "Module 2" }]
+      body: [{ id: "456", name: "Module 2", published: true }]
     };
 
     let result;
@@ -67,6 +67,10 @@ describe("Modules API", () => {
 
     it("pulls title from canvas' name", () => {
       assert.equal(result.links[0].title, canvasResponse.body[0].name);
+    });
+
+    it("pulls the published state from canvas' response", () => {
+      assert.equal(result.links[0].published, canvasResponse.body[0].published);
     });
   });
 });

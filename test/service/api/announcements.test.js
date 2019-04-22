@@ -66,7 +66,11 @@ describe("Announcements API", () => {
     const canvasResponse = {
       statusCode: 200,
       body: [
-        { html_url: "/courses/1/announcements/2", title: "Announcement 2" }
+        {
+          html_url: "/courses/1/announcements/2",
+          title: "Announcement 2",
+          published: true
+        }
       ]
     };
 

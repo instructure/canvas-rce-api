@@ -20,7 +20,22 @@ function canvasPath(request) {
 
 const canvasResponseHandler = linksResponseHandler((request, results) => {
   return results.map(discussion => {
-    return { href: discussion.html_url, title: discussion.title };
+    let date = null;
+    let date_type = null;
+    if (discussion.assignment && discussion.assignment.due_at) {
+      date = discussion.assignment.due_at;
+      date_type = "due";
+    } else {
+      date = discussion.todo_date || null;
+      date_type = "todo";
+    }
+    return {
+      href: discussion.html_url,
+      title: discussion.title,
+      published: discussion.published,
+      date,
+      date_type
+    };
   });
 });
 

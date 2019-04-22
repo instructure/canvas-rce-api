@@ -46,7 +46,14 @@ describe("Quizzes API", () => {
     const response = { status: () => {}, send: () => {} };
     const canvasResponse = {
       statusCode: 200,
-      body: [{ html_url: "/courses/1/quizzes/2", title: "Quiz 2" }]
+      body: [
+        {
+          html_url: "/courses/1/quizzes/2",
+          title: "Quiz 2",
+          published: true,
+          due_at: "2019-04-22T13:00:00Z"
+        }
+      ]
     };
 
     let result;
@@ -63,6 +70,15 @@ describe("Quizzes API", () => {
 
     it("pulls title from canvas' title", () => {
       assert.equal(result.links[0].title, canvasResponse.body[0].title);
+    });
+
+    it("pulls the published state from canvas' response", () => {
+      assert.equal(result.links[0].published, canvasResponse.body[0].published);
+    });
+
+    it("pulls the due date from canvas' response", () => {
+      assert.equal(result.links[0].date, canvasResponse.body[0].due_at);
+      assert.equal(result.links[0].date_type, "due");
     });
   });
 });

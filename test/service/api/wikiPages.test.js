@@ -69,7 +69,14 @@ describe("Wiki Pages API", () => {
     const response = { status: () => {}, send: () => {} };
     const canvasResponse = {
       statusCode: 200,
-      body: [{ html_url: "/courses/1/pages/the-page", title: "The Wiki Page" }]
+      body: [
+        {
+          html_url: "/courses/1/pages/the-page",
+          title: "The Wiki Page",
+          published: true,
+          todo_date: "2019-04-22T13:00:00Z"
+        }
+      ]
     };
 
     let result;
@@ -86,6 +93,15 @@ describe("Wiki Pages API", () => {
 
     it("pulls title from canvas' title", () => {
       assert.equal(result.links[0].title, canvasResponse.body[0].title);
+    });
+
+    it("pulls the published state from canvas' response", () => {
+      assert.equal(result.links[0].published, canvasResponse.body[0].published);
+    });
+
+    it("pulls the due date from canvas' response", () => {
+      assert.equal(result.links[0].date, canvasResponse.body[0].todo_date);
+      assert.equal(result.links[0].date_type, "todo");
     });
   });
 });

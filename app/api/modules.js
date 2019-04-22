@@ -19,7 +19,11 @@ const canvasResponseHandler = linksResponseHandler((request, results) => {
   // it ourselves with knowledge of Canvas' internals (boo)
   let prefix = `/courses/${request.query.contextId}/modules/`;
   return results.map(module => {
-    return { href: prefix + module.id, title: module.name };
+    return {
+      href: prefix + module.id,
+      title: module.name,
+      published: module.published
+    };
   });
 });
 
