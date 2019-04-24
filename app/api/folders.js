@@ -3,6 +3,9 @@
 const packageBookmark = require("./packageBookmark");
 
 function transformBody(baseUrl, folders) {
+  if (!Array.isArray(folders)) {
+    folders = [folders];
+  }
   return folders.map(folder => {
     return {
       id: folder.id,
@@ -16,7 +19,7 @@ function transformBody(baseUrl, folders) {
 
 function canvasPath(request) {
   const id = request.params.folderId;
-  if (id && id !== "all") {
+  if (id && id !== "all" && id !== "media") {
     return `/api/v1/folders/${request.params.folderId}/folders?per_page=${
       request.query.per_page
     }`;
@@ -24,14 +27,23 @@ function canvasPath(request) {
   const byPath = id === "all" ? "" : "/by_path";
   switch (request.query.contextType) {
     case "course":
+      if (id === "media") {
+        return `/api/v1/courses/${request.query.contextId}/folders/media`;
+      }
       return `/api/v1/courses/${
         request.query.contextId
       }/folders${byPath}?per_page=${request.query.per_page}`;
     case "group":
+      if (id === "media") {
+        return `/api/v1/groups/${request.query.contextId}/folders/media`;
+      }
       return `/api/v1/groups/${
         request.query.contextId
       }/folders${byPath}?per_page=${request.query.per_page}`;
     case "user":
+      if (id === "media") {
+        return `/api/v1/users/${request.query.contextId}/folders/media`;
+      }
       return `/api/v1/users/${
         request.query.contextId
       }/folders${byPath}?per_page=${request.query.per_page}`;

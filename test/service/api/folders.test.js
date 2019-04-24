@@ -22,7 +22,7 @@ describe("Folders API", () => {
     });
 
     describe("course context", () => {
-      it("builds the correct path includeing context id", () => {
+      it("builds the correct path including context id", () => {
         const contextId = 47;
         const params = {};
         const query = { contextType: "course", contextId, per_page: 50 };
@@ -34,7 +34,7 @@ describe("Folders API", () => {
     });
 
     describe("group context", () => {
-      it("builds the correct path includeing context id", () => {
+      it("builds the correct path including context id", () => {
         const contextId = 47;
         const params = {};
         const query = { contextType: "group", contextId, per_page: 50 };
@@ -58,7 +58,7 @@ describe("Folders API", () => {
     });
 
     describe("course context all folders", () => {
-      it("builds the correct path includeing context id", () => {
+      it("builds the correct path including context id", () => {
         const contextId = 47;
         const params = { folderId: "all" };
         const query = { contextType: "course", contextId, per_page: 50 };
@@ -68,7 +68,7 @@ describe("Folders API", () => {
     });
 
     describe("group context all folders", () => {
-      it("builds the correct path includeing context id", () => {
+      it("builds the correct path including context id", () => {
         const contextId = 47;
         const params = { folderId: "all" };
         const query = { contextType: "group", contextId, per_page: 50 };
@@ -78,7 +78,7 @@ describe("Folders API", () => {
     });
 
     describe("user context all folders", () => {
-      it("builds the correct path includeing context id", () => {
+      it("builds the correct path including context id", () => {
         const contextId = 47;
         const params = { folderId: "all" };
         const query = { contextType: "user", contextId, per_page: 50 };
@@ -90,6 +90,36 @@ describe("Folders API", () => {
     it("dies on other contexts", () => {
       const query = { contextType: "NotAContext", contextId: 1, per_page: 50 };
       assert.throws(() => canvasPath({ params: {}, query: query }));
+    });
+
+    describe("course context media folder", () => {
+      it("builds the correct path including context id", () => {
+        const contextId = 47;
+        const params = { folderId: "media" };
+        const query = { contextType: "course", contextId, per_page: 50 };
+        const path = canvasPath({ params, query });
+        assert(path === `/api/v1/courses/${contextId}/folders/media`);
+      });
+    });
+
+    describe("group context media folder", () => {
+      it("builds the correct path including context id", () => {
+        const contextId = 47;
+        const params = { folderId: "media" };
+        const query = { contextType: "group", contextId, per_page: 50 };
+        const path = canvasPath({ params, query });
+        assert(path === `/api/v1/groups/${contextId}/folders/media`);
+      });
+    });
+
+    describe("user context media folder", () => {
+      it("builds the correct path including context id", () => {
+        const contextId = 47;
+        const params = { folderId: "media" };
+        const query = { contextType: "user", contextId, per_page: 50 };
+        const path = canvasPath({ params, query });
+        assert(path === `/api/v1/users/${contextId}/folders/media`);
+      });
     });
   });
 
@@ -139,6 +169,14 @@ describe("Folders API", () => {
             Array.isArray(val.folders) &&
             val.folders.length === canvasResponse.body.length
           );
+        });
+      });
+
+      it("works with a non-array response value converting it to an array", () => {
+        canvasResponse.body = {};
+        canvasResponseHandler(request, response, canvasResponse);
+        sinon.assert.calledWithMatch(response.send, val => {
+          return Array.isArray(val.folders) && val.folders.length === 1;
         });
       });
 
