@@ -18,7 +18,8 @@ describe("StatsMiddleware", () => {
       STATSD_HOST: "127.0.0.1",
       STATSD_PORT: await getPort(),
       STATS_PREFIX: "prefix",
-      CG_ENVIRONMENT: "env"
+      CG_ENVIRONMENT: "env",
+      DOG_TAGS: "false"
     };
     req = { actionKey: "foo" };
     res = new EventEmitter();

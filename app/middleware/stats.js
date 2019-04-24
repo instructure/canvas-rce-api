@@ -8,6 +8,10 @@ class StatsMiddleware {
     return [_config];
   }
 
+  static init(config) {
+    return new this(config);
+  }
+
   static actionKeyMiddleware(controller, action) {
     let actionKey = "";
     if (controller == null || action == null) {

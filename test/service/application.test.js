@@ -13,7 +13,8 @@ describe("App Setup", () => {
     env = { get: n => n === "PORT" && 4700 };
     routes = _routes.init({ applyToApp: () => {} }, () => {});
     logger = { log: () => {} };
-    _application.init(env, routes, logger, app);
+    const stats = { handle: (req, res, next) => next() };
+    _application.init(env, routes, logger, app, stats);
   });
 
   it("handles errors", done => {

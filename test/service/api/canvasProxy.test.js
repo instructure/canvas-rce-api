@@ -1,7 +1,6 @@
 "use strict";
 
 const canvasProxy = require("../../../app/api/canvasProxy");
-const dgram = require("dgram");
 const assert = require("assert");
 const nock = require("nock");
 const sinon = require("sinon");
@@ -18,21 +17,9 @@ describe("Canvas Proxy", () => {
   let host = "some.instructure.com";
   let path = "/api/v1/some/path";
   let url = `http://${host}${path}`;
-  let statsServer = null;
 
   before(() => {
     request = { id: reqId, get: () => "Special Agent" };
-    statsServer = dgram.createSocket("udp4");
-    statsServer.on("error", err => {
-      // eslint-disable-next-line no-console
-      console.log(`STATS SERVER error:\n${err.stack}`);
-      statsServer.close();
-    });
-    statsServer.bind(process.env.STATSD_PORT);
-  });
-
-  after(() => {
-    statsServer.close();
   });
 
   beforeEach(() => {

@@ -1,15 +1,17 @@
 "use strict";
 
 const express = require("express");
+const _stats = require("./middleware/stats");
 const withMiddleware = require("./middleware");
 const _env = require("./env");
 const _routes = require("./routes");
 
 function inject(provide) {
-  return [_env, _routes, provide(console), provide(express())];
+  return [_env, _routes, provide(console), provide(express()), _stats];
 }
 
-function init(env, routes, logger, app) {
+function init(env, routes, logger, app, stats) {
+  app.use(stats.handle);
   withMiddleware(app, wrappedApp => routes(wrappedApp));
   const port = env.get("PORT", () => 3000);
   return {

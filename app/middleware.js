@@ -6,12 +6,14 @@ const requestLogging = require("./middleware/requestLogs");
 const bodyParser = require("body-parser");
 const corsProtection = require("./middleware/corsProtection");
 const errorHandling = require("./middleware/errors");
+const stats = require("./middleware/stats");
+const statsdKey = stats.actionKeyMiddleware;
 
 function middleware(app, applyRoutes) {
   // MUST be added before request logging,
   // as request logging depends on the id
   app.use(addRequestId);
-  app.use("/healthcheck", healthcheck());
+  app.use("/healthcheck", statsdKey("main", "healthcheck"), healthcheck());
   app.use(bodyParser.json());
   requestLogging.applyToApp(app);
   corsProtection.applyToApp(app);
