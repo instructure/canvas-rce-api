@@ -16,11 +16,15 @@ function canvasPath(request) {
 
 const canvasResponseHandler = linksResponseHandler((request, results) => {
   return results.map(quiz => {
+    let date = quiz.due_at;
+    if (quiz.all_dates && quiz.all_dates.length > 1) {
+      date = "multiple";
+    }
     return {
       href: quiz.html_url,
       title: quiz.title,
       published: quiz.published,
-      date: quiz.due_at || null,
+      date,
       date_type: "due"
     };
   });
