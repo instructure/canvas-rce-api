@@ -63,31 +63,54 @@ describe("Announcements API", () => {
   describe("canvasResponseHandler", () => {
     const request = {};
     const response = { status: () => {}, send: () => {} };
-    const canvasResponse = {
-      statusCode: 200,
-      body: [
-        {
-          html_url: "/courses/1/announcements/2",
-          title: "Announcement 2",
-          published: true
-        }
-      ]
-    };
 
-    let result;
-    beforeEach(() => {
+    function setup(statusCode = 200, overrides = {}) {
+      const canvasResponse = {
+        statusCode: statusCode,
+        body: [
+          {
+            html_url: "/courses/1/announcements/2",
+            title: "Announcement 2",
+            posted_at: "2019-04-24T13:00:00Z",
+            ...overrides
+          }
+        ]
+      };
       sinon.spy(response, "send");
       announcements.canvasResponseHandler(request, response, canvasResponse);
-      result = response.send.firstCall.args[0];
+      const result = response.send.firstCall.args[0];
       response.send.restore();
-    });
+      return [result, canvasResponse];
+    }
 
     it("pulls href from canvas' html_url", () => {
+      const [result, canvasResponse] = setup();
       assert.equal(result.links[0].href, canvasResponse.body[0].html_url);
     });
 
     it("pulls title from canvas' title", () => {
+      const [result, canvasResponse] = setup();
       assert.equal(result.links[0].title, canvasResponse.body[0].title);
+    });
+
+    it("pulls posted_at from canvas' response", () => {
+      const [result, canvasResponse] = setup();
+      assert.equal(result.links[0].date, canvasResponse.body[0].posted_at);
+      assert.equal(result.links[0].date_type, "posted");
+    });
+
+    it("pulls delayed_post_at from canvas' response if after posted_at", () => {
+      const posted_at = "2019-04-25T13:00:00Z";
+      const delayed_post_at = "2019-05-05T13:00:00Z";
+      const [result, canvasResponse] = setup(200, {
+        posted_at,
+        delayed_post_at
+      });
+      assert.equal(
+        result.links[0].date,
+        canvasResponse.body[0].delayed_post_at
+      );
+      assert.equal(result.links[0].date_type, "delayed_post");
     });
   });
 });

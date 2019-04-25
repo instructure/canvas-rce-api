@@ -24,7 +24,19 @@ function canvasPath(request) {
 
 const canvasResponseHandler = linksResponseHandler((request, results) => {
   return results.map(announcement => {
-    return { href: announcement.html_url, title: announcement.title };
+    let date = announcement.posted_at;
+    let date_type = "posted";
+    // posted_at date is created_at date until delayed post actually posts
+    if (announcement.delayed_post_at > date) {
+      date = announcement.delayed_post_at;
+      date_type = "delayed_post";
+    }
+    return {
+      href: announcement.html_url,
+      title: announcement.title,
+      date,
+      date_type
+    };
   });
 });
 
