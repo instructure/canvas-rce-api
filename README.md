@@ -23,7 +23,7 @@ release. Be sure to run `npm install --production` first to install all of the
 package dependencies.
 
 A Node.js process only runs on a single thread. To take full advantage of multiple
-CPU cores on your application server, it is reccomended that you use something
+CPU cores on your application server, it is recommended that you use something
 to manage and balance load between node processes such as [Passenger][1] or
 [PM2][2].
 
