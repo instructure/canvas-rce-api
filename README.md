@@ -18,7 +18,7 @@ not handle `https` requests directly.
 ### Node.js
 
 The application can be run directly with Node.js by either running `npm start`
-or `node app.js`. It is designed to work with the current Node.js LTS (8.x)
+or `node app.js`. It is designed to work with the current Node.js LTS (10.x)
 release. Be sure to run `npm install --production` first to install all of the
 package dependencies.
 
@@ -96,23 +96,12 @@ production:
         app-host: "canvas-rce-api-host"
 ```
 
-#### Enable Setting
-
-To start using the new rich content editor in Canvas now, a setting needs to be
-enabled from the Rails console. This will not be required in the future, but it
-will be a good idea to enable it early to ensure everything works right before
-it is enabled by default.
-
-```ruby
-Setting.set('rich_content_service_enabled', 'true')
-```
-
 ## Developing
 
 ### Dependencies
 
 The only dependency needed to develop `canvas-rce-api` is a recent LTS release
-of Node.js (8.x). All other dependencies are installed via `npm`. Alternatively
+of Node.js (10.x). All other dependencies are installed via `npm`. Alternatively
 if you don't want to install Node.js on your machine you can run in `docker`
 using the included `docker-compose` file.
 
