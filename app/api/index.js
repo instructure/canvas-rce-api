@@ -11,6 +11,7 @@ const discussions = require("./discussions");
 const modules = require("./modules");
 const quizzes = require("./quizzes");
 const wikiPages = require("./wikiPages");
+const kaltura = require("./kaltura");
 const file = require("./file");
 const files = require("./files");
 const folders = require("./folders");
@@ -121,6 +122,12 @@ function init(auth) {
         statsdKey("api", "youtube_title"),
         auth,
         youTubeTitle
+      );
+      app.post(
+        "/api/v1/services/kaltura_session",
+        statsdKey("api", "kaltura_session"),
+        auth,
+        wrapCanvas(kaltura, { method: "POST" })
       );
     }
   };
