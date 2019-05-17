@@ -42,6 +42,8 @@ docker run \
   -e ECOSYSTEM_KEY \
   -e ECOSYSTEM_SECRET \
   -e FLICKR_API_KEY \
+  -e UNSPLASH_APP_ID \
+  -e UNSPLASH_SECRET \
   -e YOUTUBE_API_KEY \
   -e STATSD_PORT=8125 \
   -e STATSD_HOST=127.0.0.1 \
@@ -64,6 +66,8 @@ Configuration options are set via the following environment variables:
 * `ECOSYSTEM_KEY`: _Required_ The encryption secret shared with Canvas.
 * `ECOSYSTEM_SECRET`: _Required_ The signing secret shared with Canvas.
 * `FLICKR_API_KEY`: Required to support Flickr image search.
+* `UNSPLASH_APP_ID`: Required to support [Unsplash](https://unsplash.com) image search.
+* `UNSPLASH_SECRET`: Required to support [Unsplash](https://unsplash.com) image search.
 * `YOUTUBE_API_KEY`: Required for querying titles of YouTube embeds.
 * `NODE_ENV`: This should always be set to `production` when running in
   production.
