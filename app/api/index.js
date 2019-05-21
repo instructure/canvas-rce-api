@@ -20,6 +20,7 @@ const images = require("./images");
 const usageRights = require("./usageRights");
 const upload = require("./upload");
 const youTubeTitle = require("./youTubeApi");
+const documents = require("./documents");
 
 function inject() {
   return [_auth];
@@ -71,10 +72,10 @@ function init(auth) {
         wrapCanvas(files)
       );
       app.get(
-        "/api/files/:folderId",
+        "/api/documents",
         statsdKey("api", "files"),
         auth,
-        wrapCanvas(files)
+        wrapCanvas(documents)
       );
       app.get(
         "/api/file/:fileId",
