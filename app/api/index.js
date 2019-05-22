@@ -12,6 +12,7 @@ const modules = require("./modules");
 const quizzes = require("./quizzes");
 const wikiPages = require("./wikiPages");
 const kaltura = require("./kaltura");
+const media_objects = require("./mediaObjects");
 const file = require("./file");
 const files = require("./files");
 const folders = require("./folders");
@@ -128,6 +129,12 @@ function init(auth) {
         statsdKey("api", "kaltura_session"),
         auth,
         wrapCanvas(kaltura, { method: "POST" })
+      );
+      app.post(
+        "/api/media_objects",
+        statsdKey("api", "media_objects"),
+        auth,
+        wrapCanvas(media_objects, { method: "POST" })
       );
     }
   };
