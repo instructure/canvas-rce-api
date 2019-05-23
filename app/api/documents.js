@@ -16,6 +16,15 @@ function getContentTypes(query) {
   return "";
 }
 
+function getNotContentTypes(query) {
+  const list =
+    query.exclude_content_types && query.exclude_content_types.split(",");
+  if (list && list.length) {
+    return "&" + list.map(t => `exclude_content_types[]=${t}`).join("&");
+  }
+  return "";
+}
+
 function getContext(query) {
   switch (query.contextType) {
     case "course":
@@ -52,12 +61,13 @@ function getSort(query) {
 
 function canvasPath(request) {
   let content_types = getContentTypes(request.query);
+  let exclude_content_types = getNotContentTypes(request.query);
   let sort = getSort(request.query);
   let context = getContext(request.query);
 
   return `/api/v1/${context}/${request.query.contextId}/files?per_page=${
     request.query.per_page
-  }&use_verifiers=0${content_types}${sort}`;
+  }&use_verifiers=0${content_types}${exclude_content_types}${sort}`;
 }
 
 function canvasResponseHandler(request, response, canvasResponse) {
@@ -71,12 +81,12 @@ function canvasResponseHandler(request, response, canvasResponse) {
         display_name: file.display_name,
         href: file.url,
         content_type: file["content-type"],
-        published: file.locked,
+        published: !file.locked,
         hidden_to_user: file.hidden,
         locked_for_user: file.locked_for_user,
         unlock_at: file.unlock_at,
         lock_at: file.lock_at,
-        added_at: file.created_at
+        date: file.created_at
       };
     });
 

@@ -39,7 +39,7 @@ describe("Documents API", () => {
       );
     });
 
-    it("builds the correct path including content types", () => {
+    it("builds the correct path including content_types", () => {
       const id = 47;
       const params = {};
       const query = {
@@ -52,6 +52,22 @@ describe("Documents API", () => {
       assert(
         path ===
           `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&content_types[]=text&content_types[]=application`
+      );
+    });
+
+    it("builds the correct path including exclude_content_types", () => {
+      const id = 47;
+      const params = {};
+      const query = {
+        contextId: id,
+        contextType: "course",
+        exclude_content_types: "text,application",
+        per_page: 50
+      };
+      const path = canvasPath({ params, query });
+      assert(
+        path ===
+          `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&exclude_content_types[]=text&exclude_content_types[]=application`
       );
     });
 
@@ -126,18 +142,18 @@ describe("Documents API", () => {
       it("transforms the API response", () => {
         sinon.assert.calledWithMatch(response.send, val => {
           return (
-            val.files[0].id == 1 &&
-            val.files[0].filename == "filename" &&
-            val.files[0].display_name == "look!" &&
-            val.files[0].href == "URL" &&
-            val.files[0].content_type == "text/plain" &&
-            val.files[0].published == true && // from locked
-            val.files[0].hidden_to_user == true && // from hidden
-            val.files[0].locked_for_user == true &&
-            val.files[0].unlock_at == "tomorrow" &&
-            val.files[0].lock_at == "next week" &&
-            val.files[0].added_at == "last week" &&
-            val.files[0].other === undefined
+            val.bookmark === null &&
+            val.files[0].id === 1 &&
+            val.files[0].filename === "filename" &&
+            val.files[0].display_name === "look!" &&
+            val.files[0].href === "URL" &&
+            val.files[0].content_type === "text/plain" &&
+            val.files[0].published === false && // from locked
+            val.files[0].hidden_to_user === true && // from hidden
+            val.files[0].locked_for_user === true &&
+            val.files[0].unlock_at === "tomorrow" &&
+            val.files[0].lock_at === "next week" &&
+            val.files[0].date === "last week"
           );
         });
       });
