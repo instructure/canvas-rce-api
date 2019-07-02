@@ -101,7 +101,14 @@ describe("Unsplash", () => {
       }
     };
     const fakeEnv = {
-      get: envVar => envVar === "UNSPLASH_APP_ID" && "fake_app_id"
+      get: envVar => {
+        switch (envVar) {
+          case "UNSPLASH_APP_ID":
+            return "fake_app_id";
+          case "UNSPLASH_APP_NAME":
+            return "fake_app_name";
+        }
+      }
     };
     unsplashController = UnsplashController.init(fakeUnsplash, fakeEnv);
   });
@@ -117,7 +124,6 @@ describe("Unsplash", () => {
       };
 
       await unsplashController.search(fakeRequest, fakeResponse);
-
       assert.ok(
         fakeResponse.send.calledWith({
           total_results: 2285,
@@ -135,7 +141,9 @@ describe("Unsplash", () => {
               user: {
                 name: "Edgar Edgar",
                 avatar:
-                  "https://images.unsplash.com/profile-1530270598334-93244e0a01a0?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&cs=tinysrgb&fit=crop&h=32&w=32"
+                  "https://images.unsplash.com/profile-1530270598334-93244e0a01a0?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&cs=tinysrgb&fit=crop&h=32&w=32",
+                url:
+                  "https://unsplash.com/@edgaredgar?utm_source=fake_app_name&utm_medium=referral"
               }
             }
           ]

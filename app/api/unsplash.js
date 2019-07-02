@@ -33,7 +33,11 @@ class UnsplashController {
         alt_text: imageResult.alt_description,
         user: {
           name: imageResult.user.name,
-          avatar: imageResult.user.profile_image.small
+          avatar: imageResult.user.profile_image.small,
+          url: `${imageResult.user.links.html}?utm_source=${this.env.get(
+            "UNSPLASH_APP_NAME",
+            () => "canvas-rce-api-dev"
+          )}&utm_medium=referral`
         }
       }))
     };
