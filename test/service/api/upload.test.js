@@ -71,20 +71,19 @@ describe("Upload API", () => {
   });
 
   describe("transformBody", () => {
-    let fixed;
-
-    beforeEach(() => {
-      fixed = transformBody({
+    function getBody() {
+      return {
         file: {
           name: "filename",
           size: 42,
           type: "jpeg",
           parentFolderId: 1
         }
-      });
-    });
+      };
+    }
 
     it("reshapes the body to the format canvas wants", () => {
+      const fixed = transformBody(getBody());
       assert.equal(fixed.name, "filename");
       assert.equal(fixed.size, 42);
       assert.equal(fixed.contentType, "jpeg");
@@ -92,11 +91,21 @@ describe("Upload API", () => {
     });
 
     it("renames files on duplicate instead of overwriting them", () => {
+      const fixed = transformBody(getBody());
       assert.equal(fixed.on_duplicate, "rename");
     });
 
     it("has success include preview url", () => {
+      const fixed = transformBody(getBody());
       assert.deepEqual(fixed.success_include, ["preview_url"]);
+    });
+
+    it("uses contentType if type is missing", () => {
+      const body = getBody();
+      delete body.file.type;
+      body.file.contentType = "text/plain";
+      const fixed = transformBody(body);
+      assert.equal(fixed.contentType, "text/plain");
     });
   });
 });

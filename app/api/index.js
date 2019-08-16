@@ -66,6 +66,7 @@ function init(auth, unsplashController) {
         auth,
         wrapCanvas(wikiPages)
       );
+      app.get("/api/files", statsdKey("api", "files"), auth, wrapCanvas(files));
       app.get(
         "/api/files/:folderId",
         statsdKey("api", "files"),
