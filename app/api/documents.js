@@ -59,15 +59,20 @@ function getSort(query) {
   return `&sort=${orderby}&order=asc`;
 }
 
+function getPreview(query) {
+  return query.preview ? `&${query.preview}` : "";
+}
+
 function canvasPath(request) {
   let content_types = getContentTypes(request.query);
   let exclude_content_types = getNotContentTypes(request.query);
   let sort = getSort(request.query);
   let context = getContext(request.query);
+  let preview = getPreview(request.query);
 
   return `/api/v1/${context}/${request.query.contextId}/files?per_page=${
     request.query.per_page
-  }&use_verifiers=0${content_types}${exclude_content_types}${sort}`;
+  }&use_verifiers=0${content_types}${exclude_content_types}${sort}${preview}`;
 }
 
 function canvasResponseHandler(request, response, canvasResponse) {
@@ -78,7 +83,9 @@ function canvasResponseHandler(request, response, canvasResponse) {
       return {
         id: file.id,
         filename: file.filename,
+        thumbnail_url: file.thumbnail_url,
         display_name: file.display_name,
+        preview_url: file.preview_url,
         href: file.url,
         content_type: file["content-type"],
         published: !file.locked,
