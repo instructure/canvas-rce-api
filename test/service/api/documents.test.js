@@ -123,7 +123,7 @@ describe("Documents API", () => {
           {
             id: 1,
             filename: "filename",
-            "content-type": "text/plain",
+            "content-type": "image/jpg",
             thumbnail_url: "thumbnail.jpg",
             display_name: "look!",
             url: "URL",
@@ -146,8 +146,11 @@ describe("Documents API", () => {
             val.files[0].id === 1 &&
             val.files[0].filename === "filename" &&
             val.files[0].display_name === "look!" &&
+            val.files[0].thumbnail_url === "thumbnail.jpg" &&
+            "preview_url" in val.files[0] &&
+            val.files[0].preview_url === undefined &&
             val.files[0].href === "URL" &&
-            val.files[0].content_type === "text/plain" &&
+            val.files[0].content_type === "image/jpg" &&
             val.files[0].published === false && // from locked
             val.files[0].hidden_to_user === true && // from hidden
             val.files[0].locked_for_user === true &&

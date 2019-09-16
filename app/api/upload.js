@@ -18,7 +18,7 @@ function transformBody(body) {
   let canvasUploadPreflightBody = {
     name: body.file.name,
     size: body.file.size,
-    contentType: body.file.type,
+    contentType: body.file.type || body.file.contentType || undefined,
     parent_folder_id: body.file.parentFolderId,
     on_duplicate: "rename",
     success_include: ["preview_url"]

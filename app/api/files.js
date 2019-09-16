@@ -4,9 +4,15 @@ const packageBookmark = require("./packageBookmark");
 const { fileEmbed } = require("../../shared/mimeClass");
 
 function canvasPath(request) {
-  return `/api/v1/folders/${request.params.folderId}/files?per_page=${
-    request.query.per_page
-  }&include[]=preview_url&use_verifiers=0`;
+  if (request.query.contextType === "user") {
+    return `/api/v1/users/${request.query.contextId}/files?per_page=${
+      request.query.per_page
+    }&include[]=preview_url&use_verifiers=0`;
+  } else {
+    return `/api/v1/folders/${request.params.folderId}/files?per_page=${
+      request.query.per_page
+    }&include[]=preview_url&use_verifiers=0`;
+  }
 }
 
 function canvasResponseHandler(request, response, canvasResponse) {

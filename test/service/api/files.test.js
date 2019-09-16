@@ -10,8 +10,21 @@ describe("Files API", () => {
       it("builds the correct path including folder id", () => {
         const id = 47;
         const params = { folderId: id };
-        const query = { per_page: 50 };
+        const query = {
+          contextType: "course",
+          contextId: "nomatter",
+          per_page: 50
+        };
         const expectedPath = `/api/v1/folders/${id}/files?per_page=50&include[]=preview_url&use_verifiers=0`;
+        assert.equal(canvasPath({ params, query }), expectedPath);
+      });
+
+      it("builds the correct path for the user context", () => {
+        const params = {};
+        const query = { contextType: "user", contextId: "17", per_page: 50 };
+        const expectedPath = `/api/v1/users/${
+          query.contextId
+        }/files?per_page=50&include[]=preview_url&use_verifiers=0`;
         assert.equal(canvasPath({ params, query }), expectedPath);
       });
     });

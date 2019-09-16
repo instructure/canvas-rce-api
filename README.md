@@ -23,7 +23,7 @@ release. Be sure to run `npm install --production` first to install all of the
 package dependencies.
 
 A Node.js process only runs on a single thread. To take full advantage of multiple
-CPU cores on your application server, it is reccomended that you use something
+CPU cores on your application server, it is recommended that you use something
 to manage and balance load between node processes such as [Passenger][1] or
 [PM2][2].
 
@@ -42,6 +42,9 @@ docker run \
   -e ECOSYSTEM_KEY \
   -e ECOSYSTEM_SECRET \
   -e FLICKR_API_KEY \
+  -e UNSPLASH_APP_ID \
+  -e UNSPLASH_SECRET \
+  -e UNSPLASH_APP_NAME \
   -e YOUTUBE_API_KEY \
   -e STATSD_PORT=8125 \
   -e STATSD_HOST=127.0.0.1 \
@@ -61,18 +64,21 @@ you are only running a single server.
 
 Configuration options are set via the following environment variables:
 
-* `ECOSYSTEM_KEY`: _Required_ The encryption secret shared with Canvas.
-* `ECOSYSTEM_SECRET`: _Required_ The signing secret shared with Canvas.
-* `FLICKR_API_KEY`: Required to support Flickr image search.
-* `YOUTUBE_API_KEY`: Required for querying titles of YouTube embeds.
-* `NODE_ENV`: This should always be set to `production` when running in
+- `ECOSYSTEM_KEY`: _Required_ The encryption secret shared with Canvas.
+- `ECOSYSTEM_SECRET`: _Required_ The signing secret shared with Canvas.
+- `FLICKR_API_KEY`: Required to support Flickr image search.
+- `UNSPLASH_APP_ID`: Required to support [Unsplash](https://unsplash.com) image search.
+- `UNSPLASH_SECRET`: Required to support [Unsplash](https://unsplash.com) image search.
+- `UNSPLASH_APP_NAME`: Required to support [Unsplash](https://unsplash.com) image search.
+- `YOUTUBE_API_KEY`: Required for querying titles of YouTube embeds.
+- `NODE_ENV`: This should always be set to `production` when running in
   production.
-* `PORT`: Defaults to port `3000`. This is not used when running with Docker
+- `PORT`: Defaults to port `3000`. This is not used when running with Docker
   since Node Passenger monkey patches node `http` to control the port each
   node process is listening on.
-* `STATSD_HOST`: If you would like to collect metrics with statsd, this should
+- `STATSD_HOST`: If you would like to collect metrics with statsd, this should
   be set to the host of your statsd server.
-* `STATSD_PORT`: If you would like to collect metrics with statsd, this should
+- `STATSD_PORT`: If you would like to collect metrics with statsd, this should
   be set to the port of your statsd server.
 * `RCE_API_HOST`: If you need to explicitly set the host/port to which calls 
   back to the canvas-rce-api proxy should be directed (useful if you're 

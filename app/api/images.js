@@ -1,5 +1,10 @@
 "use strict";
 
+/**
+ * NOTE: the new RCE in canvas now uses the /documents?context_types=image
+ * endpoint to query for images rather than this /images endpoint
+ */
+
 const packageBookmark = require("./packageBookmark");
 
 function canvasPath(request) {
