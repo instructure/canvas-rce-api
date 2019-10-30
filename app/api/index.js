@@ -151,6 +151,18 @@ function init(auth, unsplashController) {
         auth,
         wrapCanvas(media_objects, { method: "POST" })
       );
+      app.get(
+        "/api/media_objects",
+        statsdKey("api", "media_objects"),
+        auth,
+        wrapCanvas(media_objects)
+      );
+      app.put(
+        "/api/media_objects/:mediaObjectId",
+        statsdKey("api", "media_objects"),
+        auth,
+        wrapCanvas(media_objects, { method: "PUT" })
+      );
     }
   };
 }
