@@ -157,7 +157,8 @@ describe("MediaObjects API", () => {
             media_id: "m-gibberish",
             can_add_captions: true,
             media_type: "video",
-            created_at: "2019-04-01T13:00Z"
+            created_at: "2019-04-01T13:00Z",
+            embedded_iframe_url: "http://somewhere"
           },
           {
             user_entered_title: "Second User Title",
@@ -165,7 +166,8 @@ describe("MediaObjects API", () => {
             media_id: "m-gibberish2",
             can_add_captions: true,
             media_type: "video",
-            created_at: "2019-04-01T13:01Z"
+            created_at: "2019-04-01T13:01Z",
+            embedded_iframe_url: "http://somewhere_else"
           }
         ];
       });
@@ -177,8 +179,10 @@ describe("MediaObjects API", () => {
             val.bookmark === null &&
             val.files[0].id === "m-gibberish" &&
             val.files[0].title === "The Title" &&
-            val.files[0].media_type === "video" &&
-            val.files[0].date === "2019-04-01T13:00Z"
+            val.files[0].type === "video" &&
+            val.files[0].date === "2019-04-01T13:00Z" &&
+            val.files[0].published === true &&
+            val.files[0].embedded_iframe_url === "http://somewhere"
           );
         });
       });
@@ -187,13 +191,7 @@ describe("MediaObjects API", () => {
         canvasResponse.body[0].user_entered_title = "User Title";
         canvasResponseHandler(request, response, canvasResponse);
         sinon.assert.calledWithMatch(response.send, val => {
-          return (
-            val.bookmark === null &&
-            val.files[0].id === "m-gibberish" &&
-            val.files[0].title === "User Title" &&
-            val.files[0].media_type === "video" &&
-            val.files[0].date === "2019-04-01T13:00Z"
-          );
+          return val.files[0].title === "User Title";
         });
       });
 
@@ -204,12 +202,16 @@ describe("MediaObjects API", () => {
             val.bookmark === null &&
             val.files[0].id === "m-gibberish" &&
             val.files[0].title === "The Title" &&
-            val.files[0].media_type === "video" &&
+            val.files[0].type === "video" &&
             val.files[0].date === "2019-04-01T13:00Z" &&
+            val.files[0].published === true &&
+            val.files[0].embedded_iframe_url === "http://somewhere" &&
             val.files[1].id === "m-gibberish2" &&
             val.files[1].title === "Second User Title" &&
-            val.files[1].media_type === "video" &&
-            val.files[1].date === "2019-04-01T13:01Z"
+            val.files[1].type === "video" &&
+            val.files[1].date === "2019-04-01T13:01Z" &&
+            val.files[1].published === true &&
+            val.files[1].embedded_iframe_url === "http://somewhere_else"
           );
         });
       });

@@ -119,9 +119,10 @@ function transformMediaObject(obj) {
   return {
     id: obj.media_id,
     title: obj.user_entered_title || obj.title,
-    media_type: obj.media_type,
+    type: obj.media_type,
     date: obj.created_at,
-    published: true // TODO: is this true?
+    published: true, // TODO: is this true?
+    embedded_iframe_url: obj.embedded_iframe_url
   };
 }
 module.exports = { canvasPath, canvasResponseHandler };
