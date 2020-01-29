@@ -94,7 +94,11 @@ describe("Documents API", () => {
     beforeEach(() => {
       request = {
         protocol: "http",
-        get: () => "canvashost"
+        get: () => "canvashost",
+        query: {
+          contextType: "course",
+          contextId: "17"
+        }
       };
       response = {
         status: sinon.spy(),
@@ -133,13 +137,15 @@ describe("Documents API", () => {
             locked_for_user: true,
             unlock_at: "tomorrow",
             lock_at: "next week",
-            created_at: "last week"
+            created_at: "last week",
+            uuid: "xyzzy"
           }
         ];
-        canvasResponseHandler(request, response, canvasResponse);
       });
 
-      it("transforms the API response", () => {
+      it("transforms the API response for course files", () => {
+        canvasResponseHandler(request, response, canvasResponse);
+
         sinon.assert.calledWithMatch(response.send, val => {
           return (
             val.bookmark === null &&
@@ -149,7 +155,32 @@ describe("Documents API", () => {
             val.files[0].thumbnail_url === "thumbnail.jpg" &&
             "preview_url" in val.files[0] &&
             val.files[0].preview_url === undefined &&
-            val.files[0].href === "URL" &&
+            val.files[0].href === "/courses/17/files/1/preview" &&
+            val.files[0].content_type === "image/jpg" &&
+            val.files[0].published === false && // from locked
+            val.files[0].hidden_to_user === true && // from hidden
+            val.files[0].locked_for_user === true &&
+            val.files[0].unlock_at === "tomorrow" &&
+            val.files[0].lock_at === "next week" &&
+            val.files[0].date === "last week"
+          );
+        });
+      });
+
+      it("transforms the API response for user files", () => {
+        request.query.contextType = "user";
+        canvasResponseHandler(request, response, canvasResponse);
+
+        sinon.assert.calledWithMatch(response.send, val => {
+          return (
+            val.bookmark === null &&
+            val.files[0].id === 1 &&
+            val.files[0].filename === "filename" &&
+            val.files[0].display_name === "look!" &&
+            val.files[0].thumbnail_url === "thumbnail.jpg" &&
+            "preview_url" in val.files[0] &&
+            val.files[0].preview_url === undefined &&
+            val.files[0].href === "/users/17/files/1/preview?verifier=xyzzy" &&
             val.files[0].content_type === "image/jpg" &&
             val.files[0].published === false && // from locked
             val.files[0].hidden_to_user === true && // from hidden

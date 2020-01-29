@@ -63,6 +63,13 @@ function getPreview(query) {
   return query.preview ? `&${query.preview}` : "";
 }
 
+function formatFileUrl(contextType, contextId, apiFile) {
+  const context = `/${contextType}/${contextId}`;
+  return `${context}/files/${apiFile.id}/preview${
+    context.includes("user") ? `?verifier=${apiFile.uuid}` : ""
+  }`;
+}
+
 function canvasPath(request) {
   let content_types = getContentTypes(request.query);
   let exclude_content_types = getNotContentTypes(request.query);
@@ -77,6 +84,9 @@ function canvasPath(request) {
 
 function canvasResponseHandler(request, response, canvasResponse) {
   response.status(canvasResponse.statusCode);
+  const contextType = getContext(request.query);
+  const contextId = request.query.contextId;
+
   if (canvasResponse.statusCode === 200) {
     const files = canvasResponse.body;
     const transformedFiles = files.map(file => {
@@ -86,14 +96,15 @@ function canvasResponseHandler(request, response, canvasResponse) {
         thumbnail_url: file.thumbnail_url,
         display_name: file.display_name,
         preview_url: file.preview_url,
-        href: file.url,
+        href: formatFileUrl(contextType, contextId, file),
         content_type: file["content-type"],
         published: !file.locked,
         hidden_to_user: file.hidden,
         locked_for_user: file.locked_for_user,
         unlock_at: file.unlock_at,
         lock_at: file.lock_at,
-        date: file.created_at
+        date: file.created_at,
+        uuid: file.uuid
       };
     });
 
