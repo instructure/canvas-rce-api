@@ -56,7 +56,8 @@ function getSort(query) {
   if (!validSortFields.includes(orderby)) {
     throw new Error("invalid sort");
   }
-  return `&sort=${orderby}&order=asc`;
+  const order = query.order === "desc" ? "desc" : "asc";
+  return `&sort=${orderby}&order=${order}`;
 }
 
 function getPreview(query) {

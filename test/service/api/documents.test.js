@@ -71,7 +71,7 @@ describe("Documents API", () => {
       );
     });
 
-    it("builds the correct path including sort order", () => {
+    it("builds the correct path including default sort order", () => {
       const id = 47;
       const params = {};
       const query = {
@@ -84,6 +84,23 @@ describe("Documents API", () => {
       assert(
         path ===
           `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&sort=name&order=asc`
+      );
+    });
+
+    it("builds the correct path including provided sort order", () => {
+      const id = 47;
+      const params = {};
+      const query = {
+        contextId: id,
+        contextType: "course",
+        sort: "name",
+        order: "desc",
+        per_page: 50
+      };
+      const path = canvasPath({ params, query });
+      assert(
+        path ===
+          `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&sort=name&order=desc`
       );
     });
   });
