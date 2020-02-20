@@ -28,62 +28,56 @@ describe("Canvas Proxy", () => {
   });
 
   describe("fetch", () => {
-    it("requests from given url", () => {
+    it("requests from given url", async () => {
       var scope = httpStub.get(path).reply(200);
-      return canvasProxy.fetch(url, request, token).then(() => {
-        assert.ok(scope.isDone());
-      });
+      await canvasProxy.fetch(url, request, token);
+      assert.ok(scope.isDone());
     });
 
-    it("passes the response back through to the caller", () => {
+    it("passes the response back through to the caller", async () => {
       httpStub.get(path).reply(200, { some: "data" });
-      return canvasProxy.fetch(url, request, token).then(response => {
-        assert.equal(response.body.some, "data");
-      });
+      const response = await canvasProxy.fetch(url, request, token);
+      assert.equal(response.body.some, "data");
     });
 
-    it("passes the token along in the auth header", () => {
+    it("passes the token along in the auth header", async () => {
       var scope = httpStub
         .matchHeader("Authorization", "Bearer token")
         .get(path)
         .reply(200);
 
-      return canvasProxy.fetch(url, request, token).then(() => {
-        assert.ok(scope.isDone());
-      });
+      await canvasProxy.fetch(url, request, token);
+      assert.ok(scope.isDone());
     });
 
-    it("provides the request ID in the context id header", () => {
+    it("provides the request ID in the context id header", async () => {
       let scope = httpStub
         .matchHeader("X-Request-Context-Id", encodedReqId)
         .get(path)
         .reply(200);
 
-      return canvasProxy.fetch(url, request, token).then(() => {
-        assert.ok(scope.isDone());
-      });
+      await canvasProxy.fetch(url, request, token);
+      assert.ok(scope.isDone());
     });
 
-    it("signs the request id to confirm origin", () => {
+    it("signs the request id to confirm origin", async () => {
       let scope = httpStub
         .matchHeader("X-Request-Context-Signature", idSignature)
         .get(path)
         .reply(200);
 
-      return canvasProxy.fetch(url, request, token).then(() => {
-        assert.ok(scope.isDone());
-      });
+      await canvasProxy.fetch(url, request, token);
+      assert.ok(scope.isDone());
     });
 
-    it("passes the request user agent through", () => {
+    it("passes the request user agent through", async () => {
       let scope = httpStub
         .matchHeader("User-Agent", "Special Agent")
         .get(path)
         .reply(200);
 
-      return canvasProxy.fetch(url, request, token).then(() => {
-        assert.ok(scope.isDone());
-      });
+      await canvasProxy.fetch(url, request, token);
+      assert.ok(scope.isDone());
     });
 
     it("writes stats to track canvas time", async () => {
@@ -95,7 +89,7 @@ describe("Canvas Proxy", () => {
     describe("bookmark extraction", () => {
       const bookmark = "bookmarkValue";
 
-      it("signs bookmark from link header and includes in response", () => {
+      it("signs bookmark from link header and includes in response", async () => {
         const mock = sinon.mock(sign);
         const signed = "signed";
         mock
@@ -106,50 +100,56 @@ describe("Canvas Proxy", () => {
         httpStub
           .get(path)
           .reply(200, { some: "data" }, { Link: `<${bookmark}>; rel="next"` });
-        return canvasProxy.fetch(url, request, token).then(response => {
-          assert.equal(response.bookmark, signed);
-          mock.verify();
-        });
+        const response = await canvasProxy.fetch(url, request, token);
+        assert.equal(response.bookmark, signed);
+        mock.verify();
       });
 
-      it('only cares about the rel="next" link in the header', () => {
+      it('only cares about the rel="next" link in the header', async () => {
         httpStub
           .get(path)
           .reply(200, { some: "data" }, { Link: `<${bookmark}>; rel="prev"` });
-        return canvasProxy.fetch(url, request, token).then(response => {
-          assert.equal(response.bookmark, undefined);
-        });
+        const response = await canvasProxy.fetch(url, request, token);
+        assert.equal(response.bookmark, undefined);
       });
 
-      it("skips if there is no Link header", () => {
+      it("skips if there is no Link header", async () => {
         httpStub.get(path).reply(200, { some: "data" });
-        return canvasProxy.fetch(url, request, token).then(response => {
-          assert.equal(response.bookmark, undefined);
-        });
+        const response = await canvasProxy.fetch(url, request, token);
+        assert.equal(response.bookmark, undefined);
       });
     });
   });
 
   describe("send", () => {
-    let postBody = { a: 1, b: [2, 3] };
-
-    it("hits the given url with the body for a post", () => {
+    it("hits the given url with the string body for a post", async () => {
+      const postBody = "this is a string";
       var scope = httpStub.post(path, postBody).reply(200, "{}");
-      return canvasProxy
-        .send("POST", url, request, token, postBody)
-        .then(() => {
-          assert.ok(scope.isDone());
-        });
+      await canvasProxy.send("POST", url, request, token, postBody);
+      assert.ok(scope.isDone());
     });
 
-    it("hits the given url with the body for a put", () => {
+    it("hits the given url with the string body for a put", async () => {
+      const postBody = "this is a string";
       var scope = httpStub.put(path, postBody).reply(200, "{}");
-      return canvasProxy.send("PUT", url, request, token, postBody).then(() => {
-        assert.ok(scope.isDone());
-      });
+      await canvasProxy.send("PUT", url, request, token, postBody);
+      assert.ok(scope.isDone());
+    });
+    it("hits the given url with the object body for a post", async () => {
+      const postBody = { foo: 1, bar: 2 };
+      var scope = httpStub.post(path, postBody).reply(200, "{}");
+      await canvasProxy.send("POST", url, request, token, postBody);
+      assert.ok(scope.isDone());
     });
 
-    it("passes the token and request id along in the headers", () => {
+    it("hits the given url with the body for a put", async () => {
+      const postBody = { foo: 1, bar: 2 };
+      var scope = httpStub.put(path, postBody).reply(200, "{}");
+      await canvasProxy.send("PUT", url, request, token, postBody);
+      assert.ok(scope.isDone());
+    });
+
+    it("passes the token and request id along in the headers", async () => {
       var scope = httpStub
         .matchHeader("Authorization", "Bearer token")
         .matchHeader("X-Request-Context-Id", encodedReqId)
@@ -157,15 +157,17 @@ describe("Canvas Proxy", () => {
         .post(path)
         .reply(200, "{}");
 
-      return canvasProxy.send("POST", url, request, token).then(() => {
-        assert.ok(scope.isDone());
-      });
+      await canvasProxy.send("POST", url, request, token);
+      assert.ok(scope.isDone());
     });
 
-    it("writes a stats key for posts", async () => {
+    it("writes a stats key for posts", done => {
+      const postBody = "post body";
       httpStub.post(path, postBody).reply(200, "{}");
-      await canvasProxy.send("POST", url, request, token, postBody);
-      assert.ok(request.timers.canvas_time);
+      canvasProxy.send("POST", url, request, token, postBody).then(() => {
+        assert.ok(request.timers.canvas_time);
+        done();
+      });
     });
   });
 });

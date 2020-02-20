@@ -96,7 +96,7 @@ describe("wrapping a Canvas request/response", function() {
       .reply(200, "{}");
     let wrapper = buildWrapper({
       transformBody() {
-        return { post: "body" };
+        return JSON.stringify({ post: "body" });
       },
 
       canvasResponseHandler() {
@@ -113,7 +113,7 @@ describe("wrapping a Canvas request/response", function() {
       .reply(200, "{}");
     let wrapper = buildWrapper({
       transformBody() {
-        return { put: "body" };
+        return JSON.stringify({ put: "body" });
       },
       canvasResponseHandler() {
         assert.ok(scope.isDone());

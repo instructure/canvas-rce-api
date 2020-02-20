@@ -70,16 +70,21 @@ function fetch(url, req, tokenString) {
 
 function send(method, url, req, tokenString, body) {
   const headers = requestHeaders(tokenString, req);
-  return collectStats(req, () =>
-    request({
+  return collectStats(req, () => {
+    const params = {
       method,
       url,
       headers,
-      form: body,
       qsStringifyOptions: { arrayFormat: "brackets" },
       resolveWithFullResponse: true
-    })
-  )
+    };
+    if (typeof body === "string") {
+      params.body = body;
+    } else {
+      params.form = body;
+    }
+    return request(params);
+  })
     .catch(catchStatusCodeError)
     .then(response => {
       response.body = JSON.parse(response.body);
