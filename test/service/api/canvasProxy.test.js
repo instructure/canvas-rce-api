@@ -83,7 +83,7 @@ describe("Canvas Proxy", () => {
     it("writes stats to track canvas time", async () => {
       httpStub.get(path).reply(200);
       await canvasProxy.fetch(url, request, token);
-      assert(request.timers.canvas_time);
+      assert("canvas_time" in request.timers);
     });
 
     describe("bookmark extraction", () => {
@@ -161,13 +161,11 @@ describe("Canvas Proxy", () => {
       assert.ok(scope.isDone());
     });
 
-    it("writes a stats key for posts", done => {
+    it("writes a stats key for posts", async () => {
       const postBody = "post body";
       httpStub.post(path, postBody).reply(200, "{}");
-      canvasProxy.send("POST", url, request, token, postBody).then(() => {
-        assert.ok(request.timers.canvas_time);
-        done();
-      });
+      await canvasProxy.send("POST", url, request, token, postBody);
+      assert("canvas_time" in request.timers);
     });
   });
 });

@@ -52,6 +52,16 @@ describe("MediaTracks API", () => {
           "/api/v1/media_objects/m-theidgoeshere/media_tracks?include[]=content&include[]=user_id"
         );
       });
+
+      it("builds the correct path with the array form of the 'include' query param", () => {
+        const params = { mediaObjectId: "m-theidgoeshere" };
+        const query = { include: ["content", "user_id"] };
+        const path = canvasPath({ params, query, method: "PUT" });
+        assert.equal(
+          path,
+          "/api/v1/media_objects/m-theidgoeshere/media_tracks?include[]=content&include[]=user_id"
+        );
+      });
     });
 
     describe("tansformBody()", () => {

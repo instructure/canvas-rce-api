@@ -55,6 +55,22 @@ describe("Documents API", () => {
       );
     });
 
+    it("builds the correct path including the array form of content_types", () => {
+      const id = 47;
+      const params = {};
+      const query = {
+        contextId: id,
+        contextType: "course",
+        content_types: ["text", "application"],
+        per_page: 50
+      };
+      const path = canvasPath({ params, query });
+      assert(
+        path ===
+          `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&content_types[]=text&content_types[]=application`
+      );
+    });
+
     it("builds the correct path including exclude_content_types", () => {
       const id = 47;
       const params = {};
@@ -62,6 +78,22 @@ describe("Documents API", () => {
         contextId: id,
         contextType: "course",
         exclude_content_types: "text,application",
+        per_page: 50
+      };
+      const path = canvasPath({ params, query });
+      assert(
+        path ===
+          `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&exclude_content_types[]=text&exclude_content_types[]=application`
+      );
+    });
+
+    it("builds the correct path including the array form of exclude_content_types", () => {
+      const id = 47;
+      const params = {};
+      const query = {
+        contextId: id,
+        contextType: "course",
+        exclude_content_types: ["text", "application"],
         per_page: 50
       };
       const path = canvasPath({ params, query });

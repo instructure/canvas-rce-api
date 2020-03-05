@@ -1,8 +1,9 @@
 "use strict";
 const InvalidMediaTrack = require("../exceptions/InvalidMediaTrackException");
+const { getArrayQueryParam } = require("../utils/object");
 
 function getIncludes(query) {
-  const list = query.include && query.include.split(",");
+  const list = getArrayQueryParam(query.include);
   if (list && list.length) {
     return "?" + list.map(t => `include[]=${t}`).join("&");
   }

@@ -7,9 +7,10 @@
 "use strict";
 
 const packageBookmark = require("./packageBookmark");
+const { getArrayQueryParam } = require("../utils/object");
 
 function getContentTypes(query) {
-  const list = query.content_types && query.content_types.split(",");
+  const list = getArrayQueryParam(query.content_types);
   if (list && list.length) {
     return "&" + list.map(t => `content_types[]=${t}`).join("&");
   }
@@ -17,8 +18,7 @@ function getContentTypes(query) {
 }
 
 function getNotContentTypes(query) {
-  const list =
-    query.exclude_content_types && query.exclude_content_types.split(",");
+  const list = getArrayQueryParam(query.exclude_content_types);
   if (list && list.length) {
     return "&" + list.map(t => `exclude_content_types[]=${t}`).join("&");
   }
@@ -70,9 +70,7 @@ function canvasPath(request) {
   let context = getContext(request.query);
   let preview = getPreview(request.query);
 
-  return `/api/v1/${context}/${request.query.contextId}/files?per_page=${
-    request.query.per_page
-  }&use_verifiers=0${content_types}${exclude_content_types}${sort}${preview}`;
+  return `/api/v1/${context}/${request.query.contextId}/files?per_page=${request.query.per_page}&use_verifiers=0${content_types}${exclude_content_types}${sort}${preview}`;
 }
 
 function canvasResponseHandler(request, response, canvasResponse) {
