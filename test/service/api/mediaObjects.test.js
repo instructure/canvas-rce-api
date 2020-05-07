@@ -179,7 +179,7 @@ describe("MediaObjects API", () => {
             val.bookmark === null &&
             val.files[0].id === "m-gibberish" &&
             val.files[0].title === "The Title" &&
-            val.files[0].type === "video" &&
+            val.files[0].content_type === "video" &&
             val.files[0].date === "2019-04-01T13:00Z" &&
             val.files[0].published === true &&
             val.files[0].embedded_iframe_url === "http://somewhere"
@@ -202,13 +202,13 @@ describe("MediaObjects API", () => {
             val.bookmark === null &&
             val.files[0].id === "m-gibberish" &&
             val.files[0].title === "The Title" &&
-            val.files[0].type === "video" &&
+            val.files[0].content_type === "video" &&
             val.files[0].date === "2019-04-01T13:00Z" &&
             val.files[0].published === true &&
             val.files[0].embedded_iframe_url === "http://somewhere" &&
             val.files[1].id === "m-gibberish2" &&
             val.files[1].title === "Second User Title" &&
-            val.files[1].type === "video" &&
+            val.files[1].content_type === "video" &&
             val.files[1].date === "2019-04-01T13:01Z" &&
             val.files[1].published === true &&
             val.files[1].embedded_iframe_url === "http://somewhere_else"

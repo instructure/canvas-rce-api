@@ -79,9 +79,7 @@ function canvasPathGET(request) {
     }
   }
 
-  return `${baseURI}?per_page=${
-    request.query.per_page
-  }&use_verifiers=0${exclude}${sort}`;
+  return `${baseURI}?per_page=${request.query.per_page}&use_verifiers=0${exclude}${sort}`;
 }
 
 function canvasPathPUT(request) {
@@ -119,7 +117,7 @@ function transformMediaObject(obj) {
   return {
     id: obj.media_id,
     title: obj.user_entered_title || obj.title,
-    type: obj.media_type,
+    content_type: obj.media_type,
     date: obj.created_at,
     published: true, // TODO: is this true?
     embedded_iframe_url: obj.embedded_iframe_url
