@@ -73,15 +73,23 @@ function canvasPath(request) {
   return `/api/v1/${context}/${request.query.contextId}/files?per_page=${request.query.per_page}&use_verifiers=0${content_types}${exclude_content_types}${sort}${preview}`;
 }
 
+const svg_re = /image\/svg/;
 function canvasResponseHandler(request, response, canvasResponse) {
   response.status(canvasResponse.statusCode);
   if (canvasResponse.statusCode === 200) {
     const files = canvasResponse.body;
     const transformedFiles = files.map(file => {
+      // svg files come back from canvas without a thumbnail
+      // let's use the file's url
+      let thumbnail_url = file.thumbnail_url;
+      if (!thumbnail_url && svg_re.test(file["content-type"])) {
+        thumbnail_url = file.url.replace(/\?.*$/, "");
+      }
+
       return {
         id: file.id,
         filename: file.filename,
-        thumbnail_url: file.thumbnail_url,
+        thumbnail_url: thumbnail_url,
         display_name: file.display_name,
         preview_url: file.preview_url,
         href: file.url,
