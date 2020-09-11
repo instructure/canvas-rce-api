@@ -9,7 +9,7 @@ function inject() {
 
 function init(env) {
   return new Unsplash({
-    applicationId: env.get("UNSPLASH_APP_ID", () => "fake_app_id"),
+    accessKey: env.get("UNSPLASH_APP_ID", () => "fake_app_id"),
     secret: env.get("UNSPLASH_SECRET", () => "fake_secret")
   });
 }

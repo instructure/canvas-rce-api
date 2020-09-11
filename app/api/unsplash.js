@@ -52,7 +52,10 @@ class UnsplashController {
       const searchResults = await this.unsplash.search.photos(
         searchTerm,
         page,
-        perPage
+        perPage,
+        {
+          contentFilter: "high"
+        }
       );
       const jsonified = await toJson(searchResults);
       res.send(this.transformSearchResults(jsonified));

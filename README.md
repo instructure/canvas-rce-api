@@ -84,7 +84,7 @@ Configuration options are set via the following environment variables:
 ### Canvas
 
 Canvas needs to be configured with the same secrets used to encrypt and sign the
-JWTs used for authenticaiton. If you are running Consul to manage dynamic
+JWTs used for authentication. If you are running Consul to manage dynamic
 settings, the secrets and host should be added at the same paths as shown in the
 `dynamic_settings.yml` example below. A `dynamic_settings.yml` file may be used
 in place of managing configuration through Consul.
