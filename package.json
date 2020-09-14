@@ -73,7 +73,7 @@
     "isomorphic-fetch": "2.2.1",
     "jsonwebtoken": "5.7.0",
     "moment": "^2.22.2",
-    "morgan": "^1.9.0",
+    "morgan": "^1.9.1",
     "node-exceptions": "^3.0.0",
     "node-jose": "^1.0.0",
     "parse-link-header": "0.4.1",
