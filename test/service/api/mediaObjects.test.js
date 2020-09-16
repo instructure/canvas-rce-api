@@ -18,9 +18,23 @@ describe("MediaObjects API", () => {
           per_page: 50
         };
         const path = canvasPath({ params, query, method: "GET" });
-        assert.equal(
+        assert.strictEqual(
           path,
           "/api/v1/courses/47/media_objects?per_page=50&use_verifiers=0&exclude[]=sources&exclude[]=tracks"
+        );
+      });
+
+      it("builds the correct path including a group context", () => {
+        const params = {};
+        const query = {
+          contextId: 47,
+          contextType: "group",
+          per_page: 50
+        };
+        const path = canvasPath({ params, query, method: "GET" });
+        assert.strictEqual(
+          path,
+          "/api/v1/groups/47/media_objects?per_page=50&use_verifiers=0&exclude[]=sources&exclude[]=tracks"
         );
       });
 
@@ -32,7 +46,7 @@ describe("MediaObjects API", () => {
           per_page: 50
         };
         const path = canvasPath({ params, query, method: "GET" });
-        assert.equal(
+        assert.strictEqual(
           path,
           "/api/v1/media_objects?per_page=50&use_verifiers=0&exclude[]=sources&exclude[]=tracks"
         );
@@ -48,7 +62,7 @@ describe("MediaObjects API", () => {
           order: "desc"
         };
         const path = canvasPath({ params, query, method: "GET" });
-        assert.equal(
+        assert.strictEqual(
           path,
           "/api/v1/media_objects?per_page=50&use_verifiers=0&exclude[]=sources&exclude[]=tracks&sort=created_at&order=desc"
         );
@@ -58,7 +72,7 @@ describe("MediaObjects API", () => {
         const params = {};
         const query = { per_page: 50 };
         const path = canvasPath({ params, query, method: "GET" });
-        assert.equal(
+        assert.strictEqual(
           path,
           "/api/v1/media_objects?per_page=50&use_verifiers=0&exclude[]=sources&exclude[]=tracks"
         );
@@ -110,7 +124,7 @@ describe("MediaObjects API", () => {
         const params = { mediaObjectId: "mo_id" };
         const query = { anyOtherJunk: 17, user_entered_title: "the new title" };
         const path = canvasPath({ params, query, method: "PUT" });
-        assert.equal(
+        assert.strictEqual(
           path,
           `/api/v1/media_objects/mo_id?user_entered_title=${encodeURIComponent(
             "the new title"

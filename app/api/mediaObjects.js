@@ -9,6 +9,9 @@ function getContext(query) {
     case "course":
     case "courses":
       return "course";
+    case "group":
+    case "groups":
+      return "group";
     case "user":
     case "users":
       return "";
@@ -19,7 +22,7 @@ function getContext(query) {
 
 const validSortFields = ["title", "date"];
 const validSortDirs = ["asc", "desc"];
-const validContextTypes = ["course", "user"];
+const validContextTypes = ["course", "user", "group"];
 
 function getSort(query) {
   if (!query.sort) {
@@ -76,6 +79,8 @@ function canvasPathGET(request) {
     }
     if (contextType === "course") {
       baseURI = `/api/v1/courses/${contextId}/media_objects`;
+    } else if (contextType === "group") {
+      baseURI = `/api/v1/groups/${contextId}/media_objects`;
     }
   }
 

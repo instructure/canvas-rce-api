@@ -53,6 +53,7 @@
     "precommit": "pretty-quick --staged",
     "start": "node app.js",
     "start:dev": "nodemon --watch app --watch config app.js",
+    "start:debug": "node --inspect-brk app.js",
     "security:dependency-monitor": "snyk monitor"
   },
   "author": "Instructure, Inc.",
