@@ -60,6 +60,13 @@ function getSort(query) {
   return `&sort=${orderby}&order=${order}`;
 }
 
+function getSearch(query) {
+  if (!query.search_term) {
+    return "";
+  }
+  return `&search_term=${query.search_term}`;
+}
+
 function getPreview(query) {
   return query.preview ? `&${query.preview}` : "";
 }
@@ -67,10 +74,11 @@ function canvasPath(request) {
   let content_types = getContentTypes(request.query);
   let exclude_content_types = getNotContentTypes(request.query);
   let sort = getSort(request.query);
+  let search = getSearch(request.query);
   let context = getContext(request.query);
   let preview = getPreview(request.query);
 
-  return `/api/v1/${context}/${request.query.contextId}/files?per_page=${request.query.per_page}&use_verifiers=0${content_types}${exclude_content_types}${sort}${preview}`;
+  return `/api/v1/${context}/${request.query.contextId}/files?per_page=${request.query.per_page}&use_verifiers=0${content_types}${exclude_content_types}${sort}${search}${preview}`;
 }
 
 const svg_re = /image\/svg/;

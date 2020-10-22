@@ -27,10 +27,23 @@ function combineTests(tests, callback) {
 }
 
 function buildMiddleware() {
+  const v = getVersion();
   return healthcheck({
-    healthy: () => ({ everything: "is ok" }),
+    healthy: () => ({ everything: "is ok", version: `${v}` }),
     test: combineTests.bind(null, [fsHealthy])
   });
+}
+
+function getVersion() {
+  let version = 0;
+  try {
+    const fs = require("fs");
+    const packageJson = fs.readFileSync("./package.json");
+    return JSON.parse(packageJson).version || 0;
+  } catch (_ex) {
+    // ignore
+  }
+  return version;
 }
 
 module.exports = buildMiddleware;

@@ -1,6 +1,6 @@
 "use strict";
 
-const assert = require("assert");
+const { strictEqual } = require("assert");
 const sinon = require("sinon");
 const {
   canvasPath,
@@ -14,8 +14,9 @@ describe("Documents API", () => {
       const params = {};
       const query = { contextId: id, contextType: "course", per_page: 50 };
       const path = canvasPath({ params, query });
-      assert(
-        path === `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0`
+      strictEqual(
+        path,
+        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0`
       );
     });
 
@@ -24,8 +25,9 @@ describe("Documents API", () => {
       const params = {};
       const query = { contextType: "group", contextId, per_page: 50 };
       const path = canvasPath({ params, query });
-      assert(
-        path === `/api/v1/groups/${contextId}/files?per_page=50&use_verifiers=0`
+      strictEqual(
+        path,
+        `/api/v1/groups/${contextId}/files?per_page=50&use_verifiers=0`
       );
     });
 
@@ -34,8 +36,9 @@ describe("Documents API", () => {
       const params = {};
       const query = { contextType: "user", contextId, per_page: 50 };
       const path = canvasPath({ params, query });
-      assert(
-        path === `/api/v1/users/${contextId}/files?per_page=50&use_verifiers=0`
+      strictEqual(
+        path,
+        `/api/v1/users/${contextId}/files?per_page=50&use_verifiers=0`
       );
     });
 
@@ -49,9 +52,9 @@ describe("Documents API", () => {
         per_page: 50
       };
       const path = canvasPath({ params, query });
-      assert(
-        path ===
-          `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&content_types[]=text&content_types[]=application`
+      strictEqual(
+        path,
+        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&content_types[]=text&content_types[]=application`
       );
     });
 
@@ -65,9 +68,9 @@ describe("Documents API", () => {
         per_page: 50
       };
       const path = canvasPath({ params, query });
-      assert(
-        path ===
-          `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&content_types[]=text&content_types[]=application`
+      strictEqual(
+        path,
+        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&content_types[]=text&content_types[]=application`
       );
     });
 
@@ -81,9 +84,9 @@ describe("Documents API", () => {
         per_page: 50
       };
       const path = canvasPath({ params, query });
-      assert(
-        path ===
-          `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&exclude_content_types[]=text&exclude_content_types[]=application`
+      strictEqual(
+        path,
+        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&exclude_content_types[]=text&exclude_content_types[]=application`
       );
     });
 
@@ -97,9 +100,9 @@ describe("Documents API", () => {
         per_page: 50
       };
       const path = canvasPath({ params, query });
-      assert(
-        path ===
-          `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&exclude_content_types[]=text&exclude_content_types[]=application`
+      strictEqual(
+        path,
+        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&exclude_content_types[]=text&exclude_content_types[]=application`
       );
     });
 
@@ -113,9 +116,9 @@ describe("Documents API", () => {
         per_page: 50
       };
       const path = canvasPath({ params, query });
-      assert(
-        path ===
-          `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&sort=name&order=asc`
+      strictEqual(
+        path,
+        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&sort=name&order=asc`
       );
     });
 
@@ -130,9 +133,27 @@ describe("Documents API", () => {
         per_page: 50
       };
       const path = canvasPath({ params, query });
-      assert(
-        path ===
-          `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&sort=name&order=desc`
+      strictEqual(
+        path,
+        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&sort=name&order=desc`
+      );
+    });
+
+    it("builds the correct path including provided search string", () => {
+      const id = 47;
+      const params = {};
+      const query = {
+        contextId: id,
+        contextType: "course",
+        sort: "name",
+        order: "desc",
+        search_term: "foo%20bar", // search comes in uri encoded
+        per_page: 50
+      };
+      const path = canvasPath({ params, query });
+      strictEqual(
+        path,
+        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&sort=name&order=desc&search_term=foo%20bar`
       );
     });
   });
