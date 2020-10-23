@@ -51,6 +51,13 @@ function getSortDir(query) {
   return `&order=${dir}`;
 }
 
+function getSearch(query) {
+  if (!query.search_term) {
+    return "";
+  }
+  return `&search_term=${query.search_term}`;
+}
+
 function canvasPath(request) {
   switch (request.method) {
     case "GET":
@@ -68,6 +75,7 @@ function canvasPathGET(request) {
 
   const exclude = "&exclude[]=sources&exclude[]=tracks";
   const sort = getSort(request.query);
+  const search = getSearch(request.query);
   let baseURI = "/api/v1/media_objects";
 
   if (contextType) {
@@ -84,7 +92,7 @@ function canvasPathGET(request) {
     }
   }
 
-  return `${baseURI}?per_page=${request.query.per_page}&use_verifiers=0${exclude}${sort}`;
+  return `${baseURI}?per_page=${request.query.per_page}&use_verifiers=0${exclude}${sort}${search}`;
 }
 
 function canvasPathPUT(request) {
