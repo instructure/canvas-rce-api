@@ -1,6 +1,7 @@
 "use strict";
 
 const packageBookmark = require("./packageBookmark");
+const { getSearch } = require("../utils/search");
 
 // to limit the results to media_objects associated with a course
 // the api includes contextType and contextId query_string parameters.
@@ -49,13 +50,6 @@ function getSortDir(query) {
   }
 
   return `&order=${dir}`;
-}
-
-function getSearch(query) {
-  if (!query.search_term) {
-    return "";
-  }
-  return `&search_term=${query.search_term}`;
 }
 
 function canvasPath(request) {

@@ -8,6 +8,7 @@
 
 const packageBookmark = require("./packageBookmark");
 const { getArrayQueryParam } = require("../utils/object");
+const { getSearch } = require("../utils/search");
 
 function getContentTypes(query) {
   const list = getArrayQueryParam(query.content_types);
@@ -58,13 +59,6 @@ function getSort(query) {
   }
   const order = query.order === "desc" ? "desc" : "asc";
   return `&sort=${orderby}&order=${order}`;
-}
-
-function getSearch(query) {
-  if (!query.search_term) {
-    return "";
-  }
-  return `&search_term=${query.search_term}`;
 }
 
 function getPreview(query) {

@@ -7,26 +7,35 @@ const quizzes = require("../../../app/api/quizzes");
 describe("Quizzes API", () => {
   describe("canvasPath", () => {
     describe("course context", () => {
-      let path;
+      let query;
       beforeEach(() => {
-        const query = { contextType: "course", contextId: 123, per_page: 50 };
-        path = quizzes.canvasPath({ query });
+        query = { contextType: "course", contextId: 123, per_page: 50 };
       });
 
       it("builds course paths", () => {
+        const path = quizzes.canvasPath({ query });
         assert.ok(path.match("api/v1/courses"));
       });
 
       it("uses context id in path", () => {
+        const path = quizzes.canvasPath({ query });
         assert.ok(path.match("courses/123"));
       });
 
       it("asks for quizzes", () => {
+        const path = quizzes.canvasPath({ query });
         assert.ok(path.match("quizzes"));
       });
 
       it("passes per_page through", () => {
+        const path = quizzes.canvasPath({ query });
         assert.ok(path.match("per_page=50"));
+      });
+
+      it("includes search term", () => {
+        query.search_term = "hello";
+        const path = quizzes.canvasPath({ query });
+        assert.ok(path.match("&search_term=hello"));
       });
     });
 

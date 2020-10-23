@@ -7,26 +7,35 @@ const assignments = require("../../../app/api/assignments");
 describe("Assignments API", () => {
   describe("canvasPath", () => {
     describe("course context", () => {
-      let path;
+      let query;
       beforeEach(() => {
-        const query = { contextType: "course", contextId: 123, per_page: 50 };
-        path = assignments.canvasPath({ query });
+        query = { contextType: "course", contextId: 123, per_page: 50 };
       });
 
       it("builds course paths", () => {
+        const path = assignments.canvasPath({ query });
         assert.ok(path.match("api/v1/courses"));
       });
 
       it("uses context id in path", () => {
+        const path = assignments.canvasPath({ query });
         assert.ok(path.match("courses/123"));
       });
 
       it("asks for assignments", () => {
+        const path = assignments.canvasPath({ query });
         assert.ok(path.match("assignments"));
       });
 
       it("passes per_page through", () => {
+        const path = assignments.canvasPath({ query });
         assert.ok(path.match("per_page=50"));
+      });
+
+      it("includes search term", () => {
+        query.search_term = "hello";
+        const path = assignments.canvasPath({ query });
+        assert.ok(path.match("&search_term=hello"));
       });
     });
 
@@ -68,29 +77,32 @@ describe("Assignments API", () => {
 
     it("pulls href from canvas' html_url", () => {
       const [result, canvasResponse] = setup();
-      assert.equal(result.links[0].href, canvasResponse.body[0].html_url);
+      assert.strictEqual(result.links[0].href, canvasResponse.body[0].html_url);
     });
 
     it("pulls title from canvas' name", () => {
       const [result, canvasResponse] = setup();
-      assert.equal(result.links[0].title, canvasResponse.body[0].name);
+      assert.strictEqual(result.links[0].title, canvasResponse.body[0].name);
     });
 
     it("pulls the published state from canvas' response", () => {
       const [result, canvasResponse] = setup();
-      assert.equal(result.links[0].published, canvasResponse.body[0].published);
+      assert.strictEqual(
+        result.links[0].published,
+        canvasResponse.body[0].published
+      );
     });
 
     it("pulls date from canvas' due_at", () => {
       const [result, canvasResponse] = setup();
-      assert.equal(result.links[0].date, canvasResponse.body[0].due_at);
-      assert.equal(result.links[0].date_type, "due");
+      assert.strictEqual(result.links[0].date, canvasResponse.body[0].due_at);
+      assert.strictEqual(result.links[0].date_type, "due");
     });
 
     it("deals with multiple dates", () => {
       const [result] = setup(200, { has_overrides: true });
-      assert.equal(result.links[0].date, "multiple");
-      assert.equal(result.links[0].date_type, "due");
+      assert.strictEqual(result.links[0].date, "multiple");
+      assert.strictEqual(result.links[0].date_type, "due");
     });
   });
 });

@@ -6,21 +6,16 @@
  */
 
 const packageBookmark = require("./packageBookmark");
+const { getSearch } = require("../utils/search");
 
 function canvasPath(request) {
   switch (request.query.contextType) {
     case "course":
-      return `/api/v1/courses/${request.query.contextId}/files?per_page=${
-        request.query.per_page
-      }&content_types[]=image&use_verifiers=0`;
+      return `/api/v1/courses/${request.query.contextId}/files?per_page=${request.query.per_page}&content_types[]=image&use_verifiers=0`;
     case "group":
-      return `/api/v1/groups/${request.query.contextId}/files?per_page=${
-        request.query.per_page
-      }&content_types[]=image&use_verifiers=0`;
+      return `/api/v1/groups/${request.query.contextId}/files?per_page=${request.query.per_page}&content_types[]=image&use_verifiers=0`;
     case "user":
-      return `/api/v1/users/${request.query.contextId}/files?per_page=${
-        request.query.per_page
-      }&content_types[]=image&use_verifiers=0`;
+      return `/api/v1/users/${request.query.contextId}/files?per_page=${request.query.per_page}&content_types[]=image&use_verifiers=0`;
     // TODO handle as 400 Bad Request instead of 500 Internal Server Error
     default:
       throw new Error("invalid contextType");
