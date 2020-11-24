@@ -30,7 +30,8 @@ to manage and balance load between node processes such as [Passenger][1] or
 ### Docker
 
 A Docker image is available on Docker Hub at
-`instructure/canvas-rce-api:latest`. The container will run the application
+`instructure/canvas-rce-api:latest` or Starload at `starlord.inscloudgate.net/jenkins/canvas-rce-api:latest`.
+The container will run the application
 behind Nginx with Passenger listening on port `80`. Please refer to the
 documentation for the [`instructure/node-passenger` base image][7] for nginx and
 passenger configuration environment variables.
@@ -127,6 +128,15 @@ cp .env.example .env
 npm install
 npm run start:dev # will automatically restart the app when you make changes
 ```
+
+or can build docker locally:
+
+```
+docker-compose build
+docker-compose up
+```
+
+Docker requires canvas to use rce.docker as the app-host in instead of whatever is being used by localhost.
 
 ### Formatting Code
 
