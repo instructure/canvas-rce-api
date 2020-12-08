@@ -11,7 +11,7 @@ describe("Canvas Proxy", () => {
   let token = "token";
   let request;
   let reqId = "1234-5678-9012-3456";
-  let encodedReqId = new Buffer(reqId).toString("base64");
+  let encodedReqId = Buffer.from(reqId).toString("base64");
   let idSignature =
     "18cGMHRzi2nQG6Fg1ye+X8VC7Pk0x5njI9hEdhwwcKLKcFhoFNjYmo4i+hFiMdkh21pLLmuMc7AYUVk9NDKSfQ==";
   let host = "some.instructure.com";
@@ -37,7 +37,7 @@ describe("Canvas Proxy", () => {
     it("passes the response back through to the caller", async () => {
       httpStub.get(path).reply(200, { some: "data" });
       const response = await canvasProxy.fetch(url, request, token);
-      assert.equal(response.body.some, "data");
+      assert.strictEqual(response.body.some, "data");
     });
 
     it("passes the token along in the auth header", async () => {
@@ -101,7 +101,7 @@ describe("Canvas Proxy", () => {
           .get(path)
           .reply(200, { some: "data" }, { Link: `<${bookmark}>; rel="next"` });
         const response = await canvasProxy.fetch(url, request, token);
-        assert.equal(response.bookmark, signed);
+        assert.strictEqual(response.bookmark, signed);
         mock.verify();
       });
 
@@ -110,13 +110,13 @@ describe("Canvas Proxy", () => {
           .get(path)
           .reply(200, { some: "data" }, { Link: `<${bookmark}>; rel="prev"` });
         const response = await canvasProxy.fetch(url, request, token);
-        assert.equal(response.bookmark, undefined);
+        assert.strictEqual(response.bookmark, undefined);
       });
 
       it("skips if there is no Link header", async () => {
         httpStub.get(path).reply(200, { some: "data" });
         const response = await canvasProxy.fetch(url, request, token);
-        assert.equal(response.bookmark, undefined);
+        assert.strictEqual(response.bookmark, undefined);
       });
     });
   });

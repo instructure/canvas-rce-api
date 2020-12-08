@@ -1,8 +1,6 @@
 "use strict";
 
-require("isomorphic-fetch");
 const toJson = require("unsplash-js").toJson;
-const request = require("request-promise-native");
 const _unsplash = require("../services/unsplash");
 const _env = require("../env");
 
@@ -73,15 +71,17 @@ class UnsplashController {
     // an extra request since the SDK requires doing an initial get request
     // prior to then doing a "download" request.
     try {
-      await request({
-        uri: `https://api.unsplash.com/photos/${imageId}/download`,
-        headers: {
-          Authorization: `Client-ID ${this.env.get(
-            "UNSPLASH_APP_ID",
-            () => "fake_app_id"
-          )}`
+      await global.fetch(
+        `https://api.unsplash.com/photos/${imageId}/download`,
+        {
+          headers: {
+            Authorization: `Client-ID ${this.env.get(
+              "UNSPLASH_APP_ID",
+              () => "fake_app_id"
+            )}`
+          }
         }
-      });
+      );
       // The Unsplash API gives back an image URL, but it's unnecessary so
       // we just send back an OK response with no body to save a few bytes
       // across the wire.

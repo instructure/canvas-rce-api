@@ -1,6 +1,6 @@
 "use strict";
 
-const request = require("request-promise-native");
+const { parseFetchResponse } = require("../utils/fetch");
 
 const ytApiBase = "https://content.googleapis.com/youtube/v3/search";
 const ytApiQuery = "part=snippet&maxResults=2";
@@ -13,7 +13,7 @@ function getYouTubeUrl(vid_id) {
 
 function fetchYouTubeTitle(vid_id) {
   const url = getYouTubeUrl(vid_id);
-  return request.get({ url, resolveWithFullResponse: true, json: true });
+  return global.fetch(url).then(parseFetchResponse);
 }
 
 function parseTitle(vidId, results) {
