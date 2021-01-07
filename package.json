@@ -3,7 +3,7 @@
   "version": "1.14.0",
   "description": "An API for proxying requests by the RCE to Canvas and other services.",
   "engines": {
-    "node": "^10",
+    "node": "^12",
     "npm": "^6"
   },
   "mocha": {
