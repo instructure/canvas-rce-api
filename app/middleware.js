@@ -14,6 +14,7 @@ function middleware(app, applyRoutes) {
   // as request logging depends on the id
   app.use(addRequestId);
   app.use("/healthcheck", statsdKey("main", "healthcheck"), healthcheck());
+  app.use("/readiness", statsdKey("main", "readiness"), healthcheck());
   app.use(bodyParser.json());
   requestLogging.applyToApp(app);
   corsProtection.applyToApp(app);

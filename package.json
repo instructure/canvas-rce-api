@@ -73,7 +73,6 @@
     "entities": "1.1.1",
     "escape-html": "1.0.3",
     "express": "^4.16.3",
-    "express-healthcheck": "0.0.2",
     "express-request-id": "1.1.0",
     "express-statsd": "0.3.0",
     "hot-shots": "^6.1.1",
