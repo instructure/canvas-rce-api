@@ -1,3 +1,4 @@
 FROM instructure/node-passenger:12
-COPY . /usr/src/app
+COPY --chown=docker:docker . /usr/src/app
+
 RUN npm install

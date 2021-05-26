@@ -5,13 +5,15 @@ pipeline {
     stage('Build') {
       steps {
         sh 'docker-compose build --pull'
+        // Start a container once to create a network, otherwise there could be
+        // a race condition in the parallel stages below.
+        sh 'docker-compose run --rm -dT --name=web_test web'
       }
     }
     stage('Verify') {
       parallel {
         stage('Test') {
           steps {
-            sh 'docker-compose run --rm -dT --name=web_test web'
             sh 'docker exec web_test npm run test-cov'
             sh 'docker cp $(docker ps -q -f "name=web_test"):/usr/src/app/coverage coverage'
             sh 'docker stop web_test'
