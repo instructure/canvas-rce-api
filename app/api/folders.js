@@ -12,7 +12,11 @@ function transformBody(baseUrl, folders) {
       parentId: folder.parent_folder_id,
       name: folder.name,
       filesUrl: `${baseUrl}/files/${folder.id}`,
-      foldersUrl: `${baseUrl}/folders/${folder.id}`
+      foldersUrl: `${baseUrl}/folders/${folder.id}`,
+      lockedForUser: folder.locked_for_user,
+      contextType: folder.context_type,
+      contextId: folder.context_id,
+      canUpload: folder.can_upload
     };
   });
 }

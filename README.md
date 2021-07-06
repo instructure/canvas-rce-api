@@ -157,6 +157,13 @@ filename. Tests are written using `mocha` and the standard `assert` package.
 Sinon is availble for stubbing dependencies, but prefer injecting dependencies
 over stubbing shared bindings where possible.
 
+To run all tests, do `yarn test`
+
+Example of running a single test file:
+```
+yarn test:one test/service/api/folders.test.js
+```
+
 ## License
 
 This project is is released under the [MIT](LICENSE) license.
