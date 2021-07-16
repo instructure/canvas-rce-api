@@ -23,13 +23,16 @@ pipeline {
             sh '''
               GIT_SSH_COMMAND='ssh -i "$SSH_KEY_PATH" -l "$SSH_USERNAME"' git clone --depth 1 ssh://${GERRIT_HOST}:29418/RichContentService
             '''
-            dir('RichContentService') {
+          }
+
+          dir('RichContentService') {
+            withCredentials([sshUserPrivateKey(credentialsId: '44aa91d6-ab24-498a-b2b4-911bcb17cc35', keyFileVariable: 'SSH_KEY_PATH', usernameVariable: 'SSH_USERNAME')]) {
               sh '''
                 GIT_SSH_COMMAND='ssh -i "$SSH_KEY_PATH" -l "$SSH_USERNAME"' git submodule update --init
-                echo Buidling image from $(pwd)
               '''
-              cloudgateBuild(cgEnvironment: "beta-virginia", cgVersion: "11.0", tfVersion: "0.13")
             }
+
+            cloudgateBuild(cgEnvironment: "beta-virginia", cgVersion: "11.0", tfVersion: "0.13")
           }
       }
       post {
