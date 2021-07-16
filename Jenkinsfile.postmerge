@@ -21,7 +21,7 @@ pipeline {
       steps {
           withCredentials([sshUserPrivateKey(credentialsId: '44aa91d6-ab24-498a-b2b4-911bcb17cc35', keyFileVariable: 'SSH_KEY_PATH', usernameVariable: 'SSH_USERNAME')]) {
             sh '''
-              GIT_SSH_COMMAND='ssh -i "$SSH_KEY_PATH" -l "$SSH_USERNAME"' git clone --depth 1 ssh://${GERRIT_HOST}:29418/RichContentService'
+              GIT_SSH_COMMAND='ssh -i "$SSH_KEY_PATH" -l "$SSH_USERNAME"' git clone --depth 1 ssh://${GERRIT_HOST}:29418/RichContentService
             '''
             dir('RichContentService') {
               sh '''
