@@ -23,7 +23,7 @@ pipeline {
             sh '''
                 GIT_SSH_COMMAND='ssh -i "$SSH_KEY_PATH" -l "$SSH_USERNAME"' git clone --depth 1 ssh://${GERRIT_HOST}:29418/RichContentService
                 cd RichContentService
-                GIT_SSH_COMMAND='ssh -i "$SSH_KEY_PATH" -l "$SSH_USERNAME"' git submodule update --initgit submodule update --init
+                GIT_SSH_COMMAND='ssh -i "$SSH_KEY_PATH" -l "$SSH_USERNAME"' git submodule update --init
             '''
           }
           sh 'echo Buidling image from $(pwd)'
