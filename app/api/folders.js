@@ -57,7 +57,8 @@ function canvasResponseHandler(request, response, canvasResponse) {
   if (canvasResponse.statusCode === 200) {
     const folders = canvasResponse.body;
     const protocol = request.get("X-Forwarded-Proto") || request.protocol;
-    const baseUrl = `${protocol}://${request.get("host")}/api`;
+    const myUrl = process.env.RCE_API_HOST || request.get("host");
+    const baseUrl = `${protocol}://${myUrl}/api`;
     response.send({
       folders: transformBody(baseUrl, folders),
       bookmark: packageBookmark(request, canvasResponse.bookmark)

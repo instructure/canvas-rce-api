@@ -81,7 +81,9 @@ Configuration options are set via the following environment variables:
   be set to the host of your statsd server.
 - `STATSD_PORT`: If you would like to collect metrics with statsd, this should
   be set to the port of your statsd server.
-
+- `RCE_API_HOST`: If you need to explicitly set the host/port to which calls 
+  back to the canvas-rce-api proxy should be directed (useful if you're 
+  behind a load balancer, for example).
 ### Canvas
 
 Canvas needs to be configured with the same secrets used to encrypt and sign the
