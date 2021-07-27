@@ -27,6 +27,19 @@ describe("Files API", () => {
         }/files?per_page=50&include[]=preview_url&use_verifiers=0`;
         assert.equal(canvasPath({ params, query }), expectedPath);
       });
+
+      it("builds the correct path with search_term present", () => {
+        const id = 47;
+        const params = { folderId: id };
+        const query = {
+          contextType: "course",
+          contextId: "nomatter",
+          per_page: 50,
+          search_term: "banana"
+        };
+        const expectedPath = `/api/v1/folders/${id}/files?per_page=50&include[]=preview_url&use_verifiers=0&search_term=banana`;
+        assert.equal(canvasPath({ params, query }), expectedPath);
+      })
     });
   });
 
@@ -62,11 +75,15 @@ describe("Files API", () => {
       beforeEach(() => {
         file = {
           id: 47,
+          uuid: '123123123asdf',
           "content-type": "text/plain",
           display_name: "Foo",
           filename: "Foo.pdf",
           preview_url: "someCANVADOCSurl",
-          url: "someurl"
+          url: "someurl",
+          folder_id: 1,
+          embedded_iframe_url: 'https://canvas.com/foo/bar',
+          thumbnail_url: 'https://canvas.com/foo/bar/thumbnail'
         };
       });
 
@@ -83,19 +100,22 @@ describe("Files API", () => {
 
       it("files have correctly tranformed properties", () => {
         canvasResponse.body = [file];
+        canvasResponse.statusCode = 200
         canvasResponseHandler(request, response, canvasResponse);
-        response.send.calledWithMatch(val => {
-          return sinon.match(
-            {
-              id: file.id,
-              type: file["content-type"],
-              name: file.display_name,
-              url: file.url,
-              embed: { type: "file" }
-            },
-            val[0]
-          );
-        });
+        assert.deepStrictEqual(
+          response.send.firstCall.args[0].files[0],
+          {
+            id: 47,
+            uuid: '123123123asdf',
+            type: 'text/plain',
+            name: 'Foo',
+            url: 'someurl',
+            embed: { type: 'scribd' },
+            folderId: 1,
+            iframeUrl: 'https://canvas.com/foo/bar',
+            thumbnailUrl: 'https://canvas.com/foo/bar/thumbnail'
+          }
+        )
       });
 
       it("will use fallbacks for name", () => {

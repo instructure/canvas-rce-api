@@ -1,8 +1,10 @@
 function getSearch(query) {
-  if (!query.search_term) {
+  const searchTerm = query.search_term || query.searchTerm
+
+  if (!searchTerm) {
     return "";
   }
-  return `&search_term=${query.search_term}`;
+  return `&search_term=${searchTerm}`;
 }
 
 module.exports = { getSearch };
