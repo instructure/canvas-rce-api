@@ -23,34 +23,29 @@ function transformBody(baseUrl, folders) {
 
 function canvasPath(request) {
   const id = request.params.folderId;
-  if (id && id !== "all" && id !== "media") {
-    return `/api/v1/folders/${request.params.folderId}/folders?per_page=${
-      request.query.per_page
-    }`;
+  if (id && id !== "all" && id !== "buttons_and_icons" && id !== "media") {
+    return `/api/v1/folders/${request.params.folderId}/folders?per_page=${request.query.per_page}`;
   }
   const byPath = id === "all" ? "" : "/by_path";
   switch (request.query.contextType) {
     case "course":
+      if (id === "buttons_and_icons") {
+        return `/api/v1/courses/${request.query.contextId}/folders/buttons_and_icons`;
+      }
       if (id === "media") {
         return `/api/v1/courses/${request.query.contextId}/folders/media`;
       }
-      return `/api/v1/courses/${
-        request.query.contextId
-      }/folders${byPath}?per_page=${request.query.per_page}`;
+      return `/api/v1/courses/${request.query.contextId}/folders${byPath}?per_page=${request.query.per_page}`;
     case "group":
       if (id === "media") {
         return `/api/v1/groups/${request.query.contextId}/folders/media`;
       }
-      return `/api/v1/groups/${
-        request.query.contextId
-      }/folders${byPath}?per_page=${request.query.per_page}`;
+      return `/api/v1/groups/${request.query.contextId}/folders${byPath}?per_page=${request.query.per_page}`;
     case "user":
       if (id === "media") {
         return `/api/v1/users/${request.query.contextId}/folders/media`;
       }
-      return `/api/v1/users/${
-        request.query.contextId
-      }/folders${byPath}?per_page=${request.query.per_page}`;
+      return `/api/v1/users/${request.query.contextId}/folders${byPath}?per_page=${request.query.per_page}`;
     default:
       throw new Error(`invalid contextType (${request.query.contextType})`);
   }
