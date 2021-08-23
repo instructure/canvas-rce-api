@@ -22,9 +22,7 @@ describe("Files API", () => {
       it("builds the correct path for the user context", () => {
         const params = {};
         const query = { contextType: "user", contextId: "17", per_page: 50 };
-        const expectedPath = `/api/v1/users/${
-          query.contextId
-        }/files?per_page=50&include[]=preview_url&use_verifiers=0`;
+        const expectedPath = `/api/v1/users/${query.contextId}/files?per_page=50&include[]=preview_url&use_verifiers=0`;
         assert.equal(canvasPath({ params, query }), expectedPath);
       });
 
@@ -39,7 +37,21 @@ describe("Files API", () => {
         };
         const expectedPath = `/api/v1/folders/${id}/files?per_page=50&include[]=preview_url&use_verifiers=0&search_term=banana`;
         assert.equal(canvasPath({ params, query }), expectedPath);
-      })
+      });
+
+      it("builds the correct path with sort and order present", () => {
+        const id = 47;
+        const params = { folderId: id };
+        const query = {
+          contextType: "course",
+          contextId: "nomatter",
+          per_page: 50,
+          sort: "created_at",
+          order: "desc"
+        };
+        const expectedPath = `/api/v1/folders/${id}/files?per_page=50&include[]=preview_url&use_verifiers=0&sort=created_at&order=desc`;
+        assert.equal(canvasPath({ params, query }), expectedPath);
+      });
     });
   });
 
@@ -74,16 +86,17 @@ describe("Files API", () => {
 
       beforeEach(() => {
         file = {
+          created_at: "2021-08-12T18:30:53Z",
           id: 47,
-          uuid: '123123123asdf',
+          uuid: "123123123asdf",
           "content-type": "text/plain",
           display_name: "Foo",
           filename: "Foo.pdf",
           preview_url: "someCANVADOCSurl",
           url: "someurl",
           folder_id: 1,
-          embedded_iframe_url: 'https://canvas.com/foo/bar',
-          thumbnail_url: 'https://canvas.com/foo/bar/thumbnail'
+          embedded_iframe_url: "https://canvas.com/foo/bar",
+          thumbnail_url: "https://canvas.com/foo/bar/thumbnail"
         };
       });
 
@@ -100,22 +113,20 @@ describe("Files API", () => {
 
       it("files have correctly tranformed properties", () => {
         canvasResponse.body = [file];
-        canvasResponse.statusCode = 200
+        canvasResponse.statusCode = 200;
         canvasResponseHandler(request, response, canvasResponse);
-        assert.deepStrictEqual(
-          response.send.firstCall.args[0].files[0],
-          {
-            id: 47,
-            uuid: '123123123asdf',
-            type: 'text/plain',
-            name: 'Foo',
-            url: 'someurl',
-            embed: { type: 'scribd' },
-            folderId: 1,
-            iframeUrl: 'https://canvas.com/foo/bar',
-            thumbnailUrl: 'https://canvas.com/foo/bar/thumbnail'
-          }
-        )
+        assert.deepStrictEqual(response.send.firstCall.args[0].files[0], {
+          createdAt: "2021-08-12T18:30:53Z",
+          id: 47,
+          uuid: "123123123asdf",
+          type: "text/plain",
+          name: "Foo",
+          url: "someurl",
+          embed: { type: "scribd" },
+          folderId: 1,
+          iframeUrl: "https://canvas.com/foo/bar",
+          thumbnailUrl: "https://canvas.com/foo/bar/thumbnail"
+        });
       });
 
       it("will use fallbacks for name", () => {

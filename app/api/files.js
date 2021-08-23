@@ -3,6 +3,7 @@
 const packageBookmark = require("./packageBookmark");
 const { fileEmbed } = require("../../shared/mimeClass");
 const { getSearch } = require("../utils/search");
+const { getSort } = require("../utils/sort");
 
 function canvasPath(request) {
   if (request.query.contextType === "user") {
@@ -12,7 +13,9 @@ function canvasPath(request) {
   } else {
     return `/api/v1/folders/${request.params.folderId}/files?per_page=${
       request.query.per_page
-    }&include[]=preview_url&use_verifiers=0${getSearch(request.query)}`;
+    }&include[]=preview_url&use_verifiers=0${getSearch(request.query)}${getSort(
+      request.query
+    )}`;
   }
 }
 
@@ -23,6 +26,7 @@ function canvasResponseHandler(request, response, canvasResponse) {
     response.send({
       files: files.map(file => {
         return {
+          createdAt: file.created_at,
           id: file.id,
           uuid: file.uuid,
           type: file["content-type"],
