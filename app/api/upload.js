@@ -20,9 +20,10 @@ function transformBody(body) {
     size: body.file.size,
     contentType: body.file.type || body.file.contentType || undefined,
     parent_folder_id: body.file.parentFolderId,
-    on_duplicate: "rename",
+    on_duplicate: body.onDuplicate || "rename",
     success_include: ["preview_url"]
   };
+
   return canvasUploadPreflightBody;
 }
 

@@ -71,23 +71,25 @@ describe("Upload API", () => {
   });
 
   describe("transformBody", () => {
-    function getBody() {
+    function getBody(overrides) {
       return {
         file: {
           name: "filename",
           size: 42,
           type: "jpeg",
           parentFolderId: 1
-        }
+        },
+        ...overrides
       };
     }
 
     it("reshapes the body to the format canvas wants", () => {
-      const fixed = transformBody(getBody());
+      const fixed = transformBody(getBody({onDuplicate: 'overwrite'}));
       assert.equal(fixed.name, "filename");
       assert.equal(fixed.size, 42);
       assert.equal(fixed.contentType, "jpeg");
       assert.equal(fixed.parent_folder_id, 1);
+      assert.equal(fixed.on_duplicate, 'overwrite')
     });
 
     it("renames files on duplicate instead of overwriting them", () => {
@@ -107,5 +109,15 @@ describe("Upload API", () => {
       const fixed = transformBody(body);
       assert.equal(fixed.contentType, "text/plain");
     });
+
+    describe('when "onDuplicate" is undefined', () => {
+      const overrides = {onDuplicate: undefined}
+
+      const subject = () => transformBody(getBody(overrides))
+
+      it('defaults duplication strategy to "rename"', () => {
+        assert.equal(subject().on_duplicate, 'rename')
+      })
+    })
   });
 });
