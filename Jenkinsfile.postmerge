@@ -32,7 +32,7 @@ pipeline {
               '''
             }
 
-            cloudgateBuild(cgEnvironment: "build", cgVersion: "11.0", tfVersion: "0.13")
+            cloudgateBuild(cgEnvironment: "build", cgVersion: "12.0", tfVersion: "0.13")
           }
       }
       post {
