@@ -226,6 +226,7 @@ describe("Documents API", () => {
             "preview_url" in val.files[0] &&
             val.files[0].preview_url === undefined &&
             val.files[0].href === "URL" &&
+            val.files[0].download_url === "URL" &&
             val.files[0].content_type === "image/jpg" &&
             val.files[0].published === false && // from locked
             val.files[0].hidden_to_user === true && // from hidden

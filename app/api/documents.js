@@ -95,6 +95,7 @@ function canvasResponseHandler(request, response, canvasResponse) {
         display_name: file.display_name,
         preview_url: file.preview_url,
         href: file.url,
+        download_url: file.url,
         content_type: file["content-type"],
         published: !file.locked,
         hidden_to_user: file.hidden,
