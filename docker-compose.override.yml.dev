@@ -3,3 +3,7 @@ services:
   web:
     volumes:
       - .:/usr/src/app
+    command:
+      - npm
+      - run
+      - start:dev
