@@ -1,7 +1,10 @@
 "use strict";
 
+const buildUrl = require("./buildUrl");
+
 function getSessionHandler(req, res) {
-  const { workflow_state, context_type, context_id } = req.auth.payload;
+  const { workflow_state, context_type, context_id, domain } = req.auth.payload;
+
   const {
     can_upload_files,
     usage_rights_required,
@@ -15,7 +18,8 @@ function getSessionHandler(req, res) {
     canUploadFiles: can_upload_files,
     usageRightsRequired: usage_rights_required,
     useHighContrast: use_high_contrast,
-    canCreatePages: can_create_pages
+    canCreatePages: can_create_pages,
+    canvasUrl: buildUrl(domain)
   });
 }
 

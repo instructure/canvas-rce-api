@@ -15,7 +15,8 @@ describe("Session handler", () => {
             usage_rights_required: false,
             use_high_contrast: true,
             can_create_pages: false
-          }
+          },
+          domain: "canvas.docker"
         }
       }
     };
@@ -27,7 +28,8 @@ describe("Session handler", () => {
       canUploadFiles: true,
       usageRightsRequired: false,
       useHighContrast: true,
-      canCreatePages: false
+      canCreatePages: false,
+      canvasUrl: "http://canvas.docker"
     });
   });
 });
