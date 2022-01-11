@@ -1,10 +1,14 @@
 function getSearch(query) {
-  const searchTerm = query.search_term || query.searchTerm
+  const searchTerm = query.search_term || query.searchTerm;
 
   if (!searchTerm) {
     return "";
   }
-  return `&search_term=${searchTerm}`;
+
+  const isSearchTermEncoded = searchTerm !== decodeURIComponent(searchTerm);
+  return isSearchTermEncoded
+    ? `&search_term=${searchTerm}`
+    : `&search_term=${encodeURIComponent(searchTerm)}`;
 }
 
 module.exports = { getSearch };
