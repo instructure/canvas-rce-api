@@ -21,7 +21,8 @@ function transformBody(body) {
     contentType: body.file.type || body.file.contentType || undefined,
     parent_folder_id: body.file.parentFolderId,
     on_duplicate: body.onDuplicate || "rename",
-    success_include: ["preview_url"]
+    success_include: ["preview_url"],
+    category: body.category || undefined,
   };
 
   return canvasUploadPreflightBody;
