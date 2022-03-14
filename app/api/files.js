@@ -4,6 +4,7 @@ const packageBookmark = require("./packageBookmark");
 const { fileEmbed } = require("../../shared/mimeClass");
 const { getSearch } = require("../utils/search");
 const { getSort } = require("../utils/sort");
+const { optionalQuery } = require("../utils/optionalQuery");
 
 function canvasPath(request) {
   if (request.query.contextType === "user") {
@@ -15,7 +16,7 @@ function canvasPath(request) {
       request.query.per_page
     }&include[]=preview_url&use_verifiers=0${getSearch(request.query)}${getSort(
       request.query
-    )}`;
+    )}${optionalQuery(request.query, "category")}`;
   }
 }
 

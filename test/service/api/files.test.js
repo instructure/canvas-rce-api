@@ -52,6 +52,24 @@ describe("Files API", () => {
         const expectedPath = `/api/v1/folders/${id}/files?per_page=50&include[]=preview_url&use_verifiers=0&sort=created_at&order=desc`;
         assert.equal(canvasPath({ params, query }), expectedPath);
       });
+
+      describe("when a category is given", () => {
+        let params, query;
+
+        const subject = () => canvasPath({ params, query });
+
+        beforeEach(() => {
+          params = { folderId: 7 };
+          query = { category: "uncategorized" };
+        });
+
+        it("adds the category as a query param", () => {
+          assert.equal(
+            subject(),
+            "/api/v1/folders/7/files?per_page=undefined&include[]=preview_url&use_verifiers=0&category=uncategorized"
+          );
+        });
+      });
     });
   });
 
