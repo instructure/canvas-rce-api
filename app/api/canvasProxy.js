@@ -1,9 +1,9 @@
 "use strict";
 
-const request = require("request-promise-native");
 const crypto = require("crypto");
 const parseLinkHeader = require("parse-link-header");
 const sign = require("../utils/sign");
+const { parseFetchResponse } = require("../utils/fetch");
 
 function signatureFor(string_to_sign) {
   const shared_secret = process.env.ECOSYSTEM_SECRET;
@@ -11,7 +11,7 @@ function signatureFor(string_to_sign) {
   hmac.write(string_to_sign);
   hmac.end();
   const hmacString = hmac.read();
-  return new Buffer(hmacString).toString("base64");
+  return Buffer.from(hmacString).toString("base64");
 }
 
 function requestHeaders(tokenString, req) {
@@ -19,7 +19,7 @@ function requestHeaders(tokenString, req) {
   return {
     Authorization: "Bearer " + tokenString,
     "User-Agent": req.get("User-Agent"),
-    "X-Request-Context-Id": new Buffer(req.id).toString("base64"),
+    "X-Request-Context-Id": Buffer.from(req.id).toString("base64"),
     "X-Request-Context-Signature": reqIdSignature
   };
 }
@@ -30,7 +30,7 @@ function parseBookmark(response) {
   // request downcases all headers
   const header = response.headers.link;
   if (header) {
-    const links = parseLinkHeader(header);
+    const links = parseLinkHeader(header[0]);
     if (links.next) {
       response.bookmark = sign.sign(links.next.url);
     }
@@ -55,36 +55,31 @@ function catchStatusCodeError(err) {
 }
 
 function fetch(url, req, tokenString) {
-  const headers = requestHeaders(tokenString, req);
   return collectStats(req, () =>
-    request({
-      url,
-      headers,
-      resolveWithFullResponse: true,
-      json: true
-    })
-  )
-    .catch(catchStatusCodeError)
-    .then(parseBookmark);
+    global
+      .fetch(url, {
+        headers: requestHeaders(tokenString, req)
+      })
+      .then(parseFetchResponse)
+      .then(parseBookmark)
+      .catch(catchStatusCodeError)
+  );
 }
 
 function send(method, url, req, tokenString, body) {
-  const headers = requestHeaders(tokenString, req);
   return collectStats(req, () =>
-    request({
-      method,
-      url,
-      headers,
-      form: body,
-      qsStringifyOptions: { arrayFormat: "brackets" },
-      resolveWithFullResponse: true
-    })
-  )
-    .catch(catchStatusCodeError)
-    .then(response => {
-      response.body = JSON.parse(response.body);
-      return response;
-    });
+    global
+      .fetch(url, {
+        method,
+        headers: {
+          ...requestHeaders(tokenString, req),
+          "Content-Type": "application/json"
+        },
+        body: typeof body === "string" ? body : JSON.stringify(body)
+      })
+      .then(parseFetchResponse)
+      .catch(catchStatusCodeError)
+  );
 }
 
 module.exports = { fetch, send };

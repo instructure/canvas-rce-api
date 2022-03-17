@@ -3,6 +3,7 @@ services:
   web:
     build: .
     environment:
+      PORT: 80
       VIRTUAL_HOST: rce.docker
       NODE_ENV: development
       STATSD_HOST: 127.0.0.1

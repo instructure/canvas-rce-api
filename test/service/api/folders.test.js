@@ -92,6 +92,18 @@ describe("Folders API", () => {
       assert.throws(() => canvasPath({ params: {}, query: query }));
     });
 
+    describe("course context buttons and icons folder", () => {
+      it("builds the correct path including context id", () => {
+        const contextId = 47;
+        const params = { folderId: "buttons_and_icons" };
+        const query = { contextType: "course", contextId, per_page: 50 };
+        const path = canvasPath({ params, query });
+        assert(
+          path === `/api/v1/courses/${contextId}/folders/buttons_and_icons`
+        );
+      });
+    });
+
     describe("course context media folder", () => {
       it("builds the correct path including context id", () => {
         const contextId = 47;
@@ -183,18 +195,26 @@ describe("Folders API", () => {
       it("folders have correctly tranformed properties", () => {
         const folder = {
           id: 47,
-          name: "Foo"
+          name: "Foo",
+          parent_folder_id: 2,
+          locked_for_user: true,
+          context_type: "Course",
+          context_id: 22,
+          can_upload: true
         };
         canvasResponse.body = [folder];
         canvasResponseHandler(request, response, canvasResponse);
-        sinon.assert.calledWithMatch(response.send, val => {
-          return sinon.match(
-            {
-              id: folder.id,
-              name: folder.name
-            },
-            val[0]
-          );
+
+        assert.deepStrictEqual(response.send.firstCall.args[0].folders[0], {
+          canUpload: folder.can_upload,
+          contextId: folder.context_id,
+          contextType: folder.context_type,
+          filesUrl: "http://canvashost/api/files/47",
+          foldersUrl: "http://canvashost/api/folders/47",
+          id: folder.id,
+          lockedForUser: folder.locked_for_user,
+          name: folder.name,
+          parentId: folder.parent_folder_id
         });
       });
 

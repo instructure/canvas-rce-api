@@ -30,7 +30,8 @@ to manage and balance load between node processes such as [Passenger][1] or
 ### Docker
 
 A Docker image is available on Docker Hub at
-`instructure/canvas-rce-api:latest`. The container will run the application
+`instructure/canvas-rce-api:latest` or Starload at `starlord.inscloudgate.net/jenkins/canvas-rce-api:latest`.
+The container will run the application
 behind Nginx with Passenger listening on port `80`. Please refer to the
 documentation for the [`instructure/node-passenger` base image][7] for nginx and
 passenger configuration environment variables.
@@ -87,7 +88,7 @@ Configuration options are set via the following environment variables:
 ### Canvas
 
 Canvas needs to be configured with the same secrets used to encrypt and sign the
-JWTs used for authenticaiton. If you are running Consul to manage dynamic
+JWTs used for authentication. If you are running Consul to manage dynamic
 settings, the secrets and host should be added at the same paths as shown in the
 `dynamic_settings.yml` example below. A `dynamic_settings.yml` file may be used
 in place of managing configuration through Consul.
@@ -131,6 +132,15 @@ npm install
 npm run start:dev # will automatically restart the app when you make changes
 ```
 
+or can build docker locally:
+
+```
+docker-compose build
+docker-compose up
+```
+
+Docker requires canvas to use rce.docker as the app-host in instead of whatever is being used by localhost.
+
 ### Formatting Code
 
 This project uses `prettier` to automatically format source code. Code will be
@@ -149,6 +159,13 @@ All tests live under the top level `test` directory and have a `*.test.js`
 filename. Tests are written using `mocha` and the standard `assert` package.
 Sinon is availble for stubbing dependencies, but prefer injecting dependencies
 over stubbing shared bindings where possible.
+
+To run all tests, do `yarn test`
+
+Example of running a single test file:
+```
+yarn test:one test/service/api/folders.test.js
+```
 
 ## License
 

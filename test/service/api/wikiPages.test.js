@@ -7,30 +7,40 @@ const wikiPages = require("../../../app/api/wikiPages");
 describe("Wiki Pages API", () => {
   describe("canvasPath", () => {
     describe("course context", () => {
-      let path;
+      let query;
       beforeEach(() => {
-        const query = { contextType: "course", contextId: 123, per_page: 50 };
-        path = wikiPages.canvasPath({ query });
+        query = { contextType: "course", contextId: 123, per_page: 50 };
       });
 
       it("builds course paths", () => {
+        const path = wikiPages.canvasPath({ query });
         assert.ok(path.match("api/v1/courses"));
       });
 
       it("uses context id in path", () => {
+        const path = wikiPages.canvasPath({ query });
         assert.ok(path.match("courses/123"));
       });
 
       it("asks for wikiPages", () => {
+        const path = wikiPages.canvasPath({ query });
         assert.ok(path.match("pages"));
       });
 
       it("passes per_page through", () => {
+        const path = wikiPages.canvasPath({ query });
         assert.ok(path.match("per_page=50"));
       });
 
       it("sorts by title", () => {
+        const path = wikiPages.canvasPath({ query });
         assert.ok(path.match("sort=title"));
+      });
+
+      it("includes search term", () => {
+        query.search_term = "hello";
+        const path = wikiPages.canvasPath({ query });
+        assert.ok(path.match("&search_term=hello"));
       });
     });
 

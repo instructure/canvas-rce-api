@@ -1,45 +1,77 @@
 "use strict";
 
 const sinon = require("sinon");
-const { equal } = require("assert");
+const { deepStrictEqual, strictEqual } = require("assert");
 const fs = require("fs");
-const tests = require("../../../app/middleware/healthcheck");
+const healthcheck = require("../../../app/middleware/healthcheck");
 
 describe("Healthcheck middleware", () => {
-  describe("fsHealthy", () => {
-    let cb;
+  it("returns a function", async () => {
+    const fn = healthcheck();
+    strictEqual(typeof fn, "function");
+  });
+
+  describe("healthcheck returned function", () => {
+    let fsStatStub, jsonStub, statusStub;
+    let healthCheckFn;
+    let res;
 
     beforeEach(() => {
-      sinon.stub(fs, "stat");
-      cb = sinon.spy();
-      tests.fsHealthy(cb);
+      fsStatStub = sinon.stub(fs, "stat");
+      healthCheckFn = healthcheck();
+      jsonStub = sinon.stub();
+      statusStub = sinon.stub().returns({ json: jsonStub });
+      res = { status: statusStub };
     });
 
     afterEach(() => {
-      fs.stat.restore();
+      fsStatStub.restore();
     });
 
-    it("calls back with nothing if healthy", () => {
-      fs.stat.firstCall.args[1](null, { isDirectory: () => true });
-      sinon.assert.calledWithExactly(cb);
+    it("returns status 200 when components are healthy", async () => {
+      fsStatStub.callsArgWith(1, null, { isDirectory: () => true });
+
+      await healthCheckFn(null, res, null);
+      strictEqual(statusStub.firstCall.args[0], 200);
     });
 
-    it("calls back with unhealthy if it can not find directory", () => {
-      fs.stat.firstCall.args[1](null, { isDirectory: () => false });
-      sinon.assert.calledWithMatch(cb, { state: "unhealthy" });
+    it("returns json describing healthy components when healthy", async () => {
+      const expectedComponent = {
+        message: "Filesystem healthy",
+        name: "Filesystem",
+        status: 200
+      };
+
+      fsStatStub.callsArgWith(1, null, { isDirectory: () => true });
+
+      await healthCheckFn(null, res, null);
+      deepStrictEqual(
+        jsonStub.firstCall.args[0].components[0],
+        expectedComponent
+      );
     });
 
-    it("calls back with unhealthy if there is a fs error", () => {
-      fs.stat.firstCall.args[1](new Error("fs error"));
-      sinon.assert.calledWithMatch(cb, { state: "unhealthy" });
-    });
-  });
+    it("returns status 503 when components are unhealthy", async () => {
+      fsStatStub.callsArgWith(1, null, { isDirectory: () => false });
 
-  describe("combineTests", () => {
-    it("should not mutate the array of test functions", () => {
-      const checks = [() => {}];
-      tests.combineTests(checks, () => {});
-      equal(checks.length, 1);
+      await healthCheckFn(null, res, null);
+      strictEqual(statusStub.firstCall.args[0], 503);
+    });
+
+    it("returns json describing unhealthy components when unhealthy", async () => {
+      const expectedComponent = {
+        message: "Filesystem in unexpected state",
+        name: "Filesystem",
+        status: 503
+      };
+
+      fsStatStub.callsArgWith(1, null, { isDirectory: () => false });
+
+      await healthCheckFn(null, res, null);
+      deepStrictEqual(
+        jsonStub.firstCall.args[0].components[0],
+        expectedComponent
+      );
     });
   });
 });

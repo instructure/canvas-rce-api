@@ -12,6 +12,10 @@ function inject(provide) {
 
 function init(env, routes, logger, app, stats) {
   app.use(stats.handle);
+
+  // Increase max default body size from 100kb to 300kb
+  app.use(express.json({ limit: 300000 }))
+
   withMiddleware(app, wrappedApp => routes(wrappedApp));
   const port = env.get("PORT", () => 3000);
   return {

@@ -1,10 +1,17 @@
 {
   "name": "canvas-rce-api",
-  "version": "1.0.0",
+  "version": "1.18.0",
   "description": "An API for proxying requests by the RCE to Canvas and other services.",
   "engines": {
-    "node": "^10",
+    "node": "^12",
     "npm": "^6"
+  },
+  "mocha": {
+    "exit": true,
+    "require": [
+      "dotenv/config",
+      "test/support/setup"
+    ]
   },
   "nyc": {
     "include": [
@@ -43,14 +50,17 @@
   },
   "scripts": {
     "lint": "eslint \"app/**/*.js\" \"test/**/*.js\" \"shared/**/*.js\"",
-    "test": "mocha --exit -r dotenv/config 'test/{service,shared}/**/*.test.js'",
-    "test-cov": "cross-env BABEL_ENV=test nyc -r html  node_modules/.bin/mocha --exit -r dotenv/config -- 'test/{service,shared}/**/*.test.js'",
-    "debug-test": "mocha debug --exit -r dotenv/config 'test/{service,shared}/**/*.test.js'",
+    "test": "mocha 'test/{service,shared}/**/*.test.js'",
+    "test:one": "mocha",
+    "test-cov": "cross-env BABEL_ENV=test nyc -r html node_modules/.bin/mocha -- 'test/{service,shared}/**/*.test.js'",
+    "debug-test": "mocha --inspect-brk 'test/{service,shared}/**/*.test.js'",
+    "debug-test:one": "mocha --inspect-brk",
     "fmt:check": "prettier -l '**/*.{js,json}'",
     "fmt:fix": "prettier --write '**/*.{js,json}'",
     "precommit": "pretty-quick --staged",
     "start": "node app.js",
     "start:dev": "nodemon --watch app --watch config app.js",
+    "start:debug": "node --inspect-brk app.js",
     "security:dependency-monitor": "snyk monitor"
   },
   "author": "Instructure, Inc.",
@@ -63,39 +73,36 @@
     "entities": "1.1.1",
     "escape-html": "1.0.3",
     "express": "^4.16.3",
-    "express-healthcheck": "0.0.2",
     "express-request-id": "1.1.0",
     "express-statsd": "0.3.0",
     "hot-shots": "^6.1.1",
     "inja": "^1.1.0",
-    "isomorphic-fetch": "2.2.1",
     "jsonwebtoken": "5.7.0",
     "moment": "^2.22.2",
-    "morgan": "^1.9.0",
+    "morgan": "^1.10.0",
     "node-exceptions": "^3.0.0",
-    "node-jose": "^1.0.0",
+    "node-fetch": "^2.6.1",
+    "node-jose": "^2.0.0",
     "parse-link-header": "0.4.1",
     "qs": "^6.2.1",
     "querystring": "0.2.0",
     "raven": "github:zwily/raven-node#middleware-req-callback",
-    "request": "^2.88.0",
-    "request-promise-native": "^1.0.5",
-    "unsplash-js": "^5.0.0"
+    "unsplash-js": "^6.3.0"
   },
   "devDependencies": {
     "cross-env": "^3.1.3",
     "dev-null": "0.1.1",
     "eslint": "^4.19.1",
-    "eslint-config-prettier": "^2.9.0",
+    "eslint-config-prettier": "^6",
     "eslint-plugin-mocha": "2.0.0",
     "eslint-plugin-security": "^1.4.0",
     "get-port": "^5.0.0",
     "husky": "^0.14.3",
-    "mocha": "^5.2.0",
+    "mocha": "^8.2.1",
     "nock": "^9.2.5",
     "nodemon": "^1.18.3",
     "nyc": "^12.0.2",
-    "prettier": "^1.12.1",
+    "prettier": "^1",
     "pretty-quick": "^1.4.1",
     "sinon": "1.17.3",
     "snyk": "^1.99.1",

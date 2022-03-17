@@ -80,10 +80,10 @@ describe("wrapping a Canvas request/response", function() {
     wrapCanvas(
       buildWrapper({
         canvasResponseHandler(req, resp1, resp2) {
-          assert.equal(req, request);
-          assert.equal(resp1, response);
-          assert.equal(resp2.statusCode, 200);
-          assert.equal(resp2.body, "success");
+          assert.strictEqual(req, request);
+          assert.strictEqual(resp1, response);
+          assert.strictEqual(resp2.statusCode, 200);
+          assert.strictEqual(resp2.body, "success");
           done();
         }
       })
@@ -96,7 +96,7 @@ describe("wrapping a Canvas request/response", function() {
       .reply(200, "{}");
     let wrapper = buildWrapper({
       transformBody() {
-        return { post: "body" };
+        return JSON.stringify({ post: "body" });
       },
 
       canvasResponseHandler() {
@@ -113,7 +113,7 @@ describe("wrapping a Canvas request/response", function() {
       .reply(200, "{}");
     let wrapper = buildWrapper({
       transformBody() {
-        return { put: "body" };
+        return JSON.stringify({ put: "body" });
       },
       canvasResponseHandler() {
         assert.ok(scope.isDone());

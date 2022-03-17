@@ -1,38 +1,84 @@
 "use strict";
 
-const healthcheck = require("express-healthcheck");
 const fs = require("fs");
 
+function defaultResponse() {
+  return {
+    components: [],
+    name: "Rich Content Service",
+    status: 200,
+    version: `${getVersion()}`
+  };
+}
+
+function defaultFSResponse() {
+  return {
+    message: "Filesystem healthy",
+    name: "Filesystem",
+    status: 200
+  };
+}
+
 function fsHealthy(callback) {
-  fs.stat("/tmp", (err, stats) => {
-    if (err || !stats.isDirectory()) {
-      return callback({
-        state: "unhealthy",
-        reason: "Filesystem in unexpected state"
-      });
-    }
-    callback();
-  });
-}
+  const state = defaultFSResponse();
 
-function combineTests(tests, callback) {
-  const [next, ...remaining] = tests;
-  next(state => {
-    if (!state && remaining.length > 0) {
-      combineTests(remaining, callback);
-    } else {
+  return new Promise(function(resolve, _reject) {
+    fs.stat("/tmp", (err, stats) => {
+      if (err || !stats.isDirectory()) {
+        state.status = 503;
+        state.message = "Filesystem in unexpected state";
+      }
+
       callback(state);
-    }
+      resolve();
+    });
   });
 }
 
-function buildMiddleware() {
-  return healthcheck({
-    healthy: () => ({ everything: "is ok" }),
-    test: combineTests.bind(null, [fsHealthy])
-  });
+async function combineTests(tests, callback) {
+  const response = defaultResponse();
+
+  for (const test of tests) {
+    await test(componentState => {
+      if (componentState.status !== 200) {
+        response.status = 503;
+      }
+
+      response.components.push(componentState);
+    });
+  }
+
+  callback(response);
 }
 
-module.exports = buildMiddleware;
-module.exports.fsHealthy = fsHealthy;
-module.exports.combineTests = combineTests;
+function healthcheck() {
+  const tests = [fsHealthy];
+
+  return function(_req, res, _next) {
+    return new Promise(function(resolve, _reject) {
+      try {
+        combineTests(tests, function(response) {
+          res.status(response.status).json(response);
+          resolve();
+        });
+      } catch (err) {
+        res.status(503).json(err);
+        resolve();
+      }
+    });
+  };
+}
+
+function getVersion() {
+  let version = 0;
+  try {
+    const fs = require("fs");
+    const packageJson = fs.readFileSync("./package.json");
+    return JSON.parse(packageJson).version || 0;
+  } catch (_ex) {
+    // ignore
+  }
+  return version;
+}
+
+module.exports = healthcheck;

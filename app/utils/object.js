@@ -16,4 +16,16 @@ function getByPath(path, obj) {
   return next;
 }
 
-module.exports = { getByPath };
+function getArrayQueryParam(param) {
+  let list = "";
+  if (param) {
+    if (Array.isArray(param)) {
+      list = param;
+    } else {
+      list = param.split(",");
+    }
+  }
+  return list;
+}
+
+module.exports = { getByPath, getArrayQueryParam };

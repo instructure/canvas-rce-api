@@ -1,6 +1,5 @@
 #!/bin/bash
 type="$1"
-version=$(cat package.json | jq '.version' --raw-output)
 
 broadcast_notification() {
     local message="$1"
@@ -15,13 +14,13 @@ then
 else
     if [[ "$type" == "pre" ]]
     then
-        broadcast_notification "about to deploy RCE service $version to $AWS_REGION $CG_ENVIRONMENT" "#releases"
+        broadcast_notification "about to deploy RCE service $CG_GIT_COMMIT_ID to $AWS_REGION $CG_ENVIRONMENT" "#canvas_deploys"
     elif [[ "$type" == "post" ]]
     then
-        broadcast_notification "RCE service $version deployed successfully to $AWS_REGION $CG_ENVIRONMENT" "#releases"
+        broadcast_notification "RCE service $CG_GIT_COMMIT_ID deployed successfully to $AWS_REGION $CG_ENVIRONMENT" "#canvas_deploys"
         if [[ "$AWS_REGION" == "us-east-1" ]]
         then
-          broadcast_notification "Deployed Rich Content Service $CG_ENVIRONMENT to $version" "#changelog"
+          broadcast_notification "Deployed Rich Content Service $CG_ENVIRONMENT revision $CG_GIT_COMMIT_ID to $AWS_REGION" "#changelog"
         fi
     else
         echo "I don't know how to send a notification of type $type"

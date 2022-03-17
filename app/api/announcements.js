@@ -1,21 +1,16 @@
 "use strict";
 
 const linksResponseHandler = require("./linksResponseHandler");
+const { getSearch } = require("../utils/search");
 
 function canvasPath(request) {
+  const search = getSearch(request.query);
+
   switch (request.query.contextType) {
     case "course":
-      return `/api/v1/courses/${
-        request.query.contextId
-      }/discussion_topics?per_page=${
-        request.query.per_page
-      }&only_announcements=1&order_by=title`;
+      return `/api/v1/courses/${request.query.contextId}/discussion_topics?per_page=${request.query.per_page}&only_announcements=1&order_by=title${search}`;
     case "group":
-      return `/api/v1/groups/${
-        request.query.contextId
-      }/discussion_topics?per_page=${
-        request.query.per_page
-      }&only_announcements=1&order_by=title`;
+      return `/api/v1/groups/${request.query.contextId}/discussion_topics?per_page=${request.query.per_page}&only_announcements=1&order_by=title${search}`;
     // TODO handle as 400 Bad Request instead of 500 Internal Server Error
     default:
       throw new Error(`invalid contextType (${request.query.contextType})`);

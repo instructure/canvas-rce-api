@@ -1,6 +1,6 @@
 "use strict";
 
-const request = require("request-promise-native");
+const { parseFetchResponse } = require("../utils/fetch");
 
 const flickrBase = "https://api.flickr.com/services/rest";
 // extras=needs_interstitial is required to get undocumented needs_interstitial
@@ -13,7 +13,7 @@ function getFlickrResults(searchTerm) {
   const encodedTerm = encodeURIComponent(searchTerm);
   const queryAddendum = `api_key=${flickrKey}&text=${encodedTerm}`;
   const url = `${flickrBase}?${flickrQuery}&${queryAddendum}`;
-  return request.get({ url, resolveWithFullResponse: true, json: true });
+  return global.fetch(url).then(parseFetchResponse);
 }
 
 function transformSearchResults(results) {
@@ -25,9 +25,7 @@ function transformSearchResults(results) {
       // nsfw results come through in the future.
       .filter(photo => photo.needs_interstitial != 1)
       .map(photo => {
-        const url = `https://farm${photo.farm}.static.flickr.com/${
-          photo.server
-        }/${photo.id}_${photo.secret}.jpg`;
+        const url = `https://farm${photo.farm}.static.flickr.com/${photo.server}/${photo.id}_${photo.secret}.jpg`;
         const link = `https://www.flickr.com/photos/${photo.owner}/${photo.id}`;
         return {
           id: photo.id,

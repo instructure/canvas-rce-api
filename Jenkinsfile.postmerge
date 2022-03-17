@@ -1,0 +1,48 @@
+pipeline {
+  agent { label 'docker' }
+  environment {
+    GIT_SUBJECT = sh (
+        script: 'git show --format=oneline --no-patch',
+        returnStdout: true
+    ).trim()
+    GIT_AUTHOR = sh (
+        script: 'git show -s --pretty=%an',
+        returnStdout: true
+    ).trim()
+    SERVICE_NAME = 'canvas-rce-api'
+  }
+  options {
+    ansiColor("xterm")
+    timeout(time: 50, unit: 'MINUTES')
+    disableConcurrentBuilds()
+  }
+  stages {
+    stage('CG Build') {
+      steps {
+          withCredentials([sshUserPrivateKey(credentialsId: '44aa91d6-ab24-498a-b2b4-911bcb17cc35', keyFileVariable: 'SSH_KEY_PATH', usernameVariable: 'SSH_USERNAME')]) {
+            sh '''
+              GIT_SSH_COMMAND='ssh -i "$SSH_KEY_PATH" -l "$SSH_USERNAME"' git clone --depth 1 ssh://${GERRIT_HOST}:29418/RichContentService
+            '''
+          }
+
+          dir('RichContentService') {
+            withCredentials([sshUserPrivateKey(credentialsId: '44aa91d6-ab24-498a-b2b4-911bcb17cc35', keyFileVariable: 'SSH_KEY_PATH', usernameVariable: 'SSH_USERNAME')]) {
+              sh '''
+                GIT_SSH_COMMAND='ssh -i "$SSH_KEY_PATH" -l "$SSH_USERNAME"' git submodule update --init
+              '''
+            }
+
+            cloudgateBuild(cgEnvironment: "build", cgVersion: "12.0", tfVersion: "0.13")
+          }
+      }
+      post {
+          failure {
+              slackSend channel: "#mat-bots", color: 'danger', message: "${env.SERVICE_NAME}: CG build failed (<${env.BUILD_URL}|Open>). Changes: \n - ${env.GIT_SUBJECT} [${env.GIT_AUTHOR}]"
+          }
+          success {
+              slackSend channel: "#mat-bots", color: 'good', message: "${env.SERVICE_NAME}: CG build successful (<${env.BUILD_URL}|Open>). Changes: \n - ${env.GIT_SUBJECT} [${env.GIT_AUTHOR}]"
+          }
+      }
+    }
+  }
+}

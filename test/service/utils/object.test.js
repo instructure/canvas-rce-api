@@ -24,4 +24,21 @@ describe("object utils", () => {
       equal(object.getByPath("a.c"), null);
     });
   });
+
+  describe("getArrayQueryParam", () => {
+    it("returns array if param is an array", () => {
+      const list = object.getArrayQueryParam(["a", "b"]);
+      deepEqual(list, ["a", "b"]);
+    });
+
+    it("return array from comma separated string", () => {
+      const list = object.getArrayQueryParam("a,b");
+      deepEqual(list, ["a", "b"]);
+    });
+
+    it("returns the empty string if param is undefined", () => {
+      const list = object.getArrayQueryParam();
+      equal(list, "");
+    });
+  });
 });

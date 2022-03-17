@@ -1,6 +1,7 @@
 "use strict";
 
 const canvasProxy = require("./canvasProxy");
+const buildUrl = require("./buildUrl");
 const sign = require("../utils/sign");
 const { RuntimeException } = require("node-exceptions");
 
@@ -15,16 +16,6 @@ const DEFAULT_CANVAS_PER_PAGE_ARG = 50;
 // by default just returns the body as-is
 function defaultTransformBody(body) {
   return body;
-}
-
-function buildUrl(domain, path) {
-  var protocol = "http";
-  if (process.env.HTTP_PROTOCOL_OVERRIDE) {
-    protocol = process.env.HTTP_PROTOCOL_OVERRIDE;
-  } else if (process.env.NODE_ENV === "production") {
-    protocol = "https";
-  }
-  return protocol + "://" + domain + path;
 }
 
 // uses wrapper to determine canvas request to make, makes the request (with

@@ -14,6 +14,7 @@ const quizzes = require("./quizzes");
 const wikiPages = require("./wikiPages");
 const kaltura = require("./kaltura");
 const media_objects = require("./mediaObjects");
+const media_tracks = require("./mediaTracks");
 const file = require("./file");
 const files = require("./files");
 const folders = require("./folders");
@@ -151,6 +152,30 @@ function init(auth, unsplashController) {
         auth,
         wrapCanvas(media_objects, { method: "POST" })
       );
+      app.get(
+        "/api/media_objects",
+        statsdKey("api", "media_objects"),
+        auth,
+        wrapCanvas(media_objects)
+      );
+      app.put(
+        "/api/media_objects/:mediaObjectId",
+        statsdKey("api", "media_objects"),
+        auth,
+        wrapCanvas(media_objects, { method: "PUT" })
+      );
+      app.get(
+        "/api/media_objects/:mediaObjectId/media_tracks",
+        statsdKey("api", "media_tracks"),
+        auth,
+        wrapCanvas(media_tracks)
+      ),
+        app.put(
+          "/api/media_objects/:mediaObjectId/media_tracks",
+          statsdKey("api", "media_tracks"),
+          auth,
+          wrapCanvas(media_tracks, { method: "PUT" })
+        );
     }
   };
 }

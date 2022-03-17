@@ -7,30 +7,40 @@ const announcements = require("../../../app/api/announcements");
 describe("Announcements API", () => {
   describe("canvasPath", () => {
     describe("course context", () => {
-      let path;
+      let query;
       beforeEach(() => {
-        const query = { contextType: "course", contextId: 123, per_page: 50 };
-        path = announcements.canvasPath({ query });
+        query = { contextType: "course", contextId: 123, per_page: 50 };
       });
 
       it("builds course paths", () => {
+        const path = announcements.canvasPath({ query });
         assert.ok(path.match("api/v1/courses"));
       });
 
       it("uses context id in path", () => {
+        const path = announcements.canvasPath({ query });
         assert.ok(path.match("courses/123"));
       });
 
       it("asks for discussions (announcements are discussions)", () => {
+        const path = announcements.canvasPath({ query });
         assert.ok(path.match("discussion_topics"));
       });
 
       it("restricts to announcements", () => {
+        const path = announcements.canvasPath({ query });
         assert.ok(path.match("only_announcements=1"));
       });
 
       it("passes per_page through", () => {
+        const path = announcements.canvasPath({ query });
         assert.ok(path.match("per_page=50"));
+      });
+
+      it("includes search term", () => {
+        query.search_term = "hello";
+        const path = announcements.canvasPath({ query });
+        assert.ok(path.match("&search_term=hello"));
       });
     });
 
