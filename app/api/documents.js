@@ -106,6 +106,7 @@ function canvasResponseHandler(request, response, canvasResponse) {
         lock_at: file.lock_at,
         date: file.created_at,
         uuid: file.uuid,
+        media_entry_id: file.media_entry_id,
       };
     });
 
