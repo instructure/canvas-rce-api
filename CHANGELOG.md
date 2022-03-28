@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Responses from the documents API now include the file's media_entry_id. This ID corresponds to a Canvas MediaObject.
+- The files API now accepts query params that communicate to Canvas the "replaced by" chain context
 ## [1.19]
 ### Added
 - A changelog to make changes more clear
