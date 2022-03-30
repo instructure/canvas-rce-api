@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.20]
 ### Added
 - Responses from the documents API now include the file's media_entry_id. This ID corresponds to a Canvas MediaObject.
 - The files API now accepts query params that communicate to Canvas the "replaced by" chain context
