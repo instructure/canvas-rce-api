@@ -23,14 +23,14 @@ function transformBody(baseUrl, folders) {
 
 function canvasPath(request) {
   const id = request.params.folderId;
-  if (id && id !== "all" && id !== "buttons_and_icons" && id !== "media") {
+  if (id && id !== "all" && id !== "icon_maker" && id !== "media") {
     return `/api/v1/folders/${request.params.folderId}/folders?per_page=${request.query.per_page}`;
   }
   const byPath = id === "all" ? "" : "/by_path";
   switch (request.query.contextType) {
     case "course":
-      if (id === "buttons_and_icons") {
-        return `/api/v1/courses/${request.query.contextId}/folders/buttons_and_icons`;
+      if (id === "icon_maker") {
+        return `/api/v1/courses/${request.query.contextId}/folders/icon_maker`;
       }
       if (id === "media") {
         return `/api/v1/courses/${request.query.contextId}/folders/media`;

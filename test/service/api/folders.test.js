@@ -92,15 +92,13 @@ describe("Folders API", () => {
       assert.throws(() => canvasPath({ params: {}, query: query }));
     });
 
-    describe("course context buttons and icons folder", () => {
+    describe("course context icon maker folder", () => {
       it("builds the correct path including context id", () => {
         const contextId = 47;
-        const params = { folderId: "buttons_and_icons" };
+        const params = { folderId: "icon_maker" };
         const query = { contextType: "course", contextId, per_page: 50 };
         const path = canvasPath({ params, query });
-        assert(
-          path === `/api/v1/courses/${contextId}/folders/buttons_and_icons`
-        );
+        assert(path === `/api/v1/courses/${contextId}/folders/icon_maker`);
       });
     });
 
