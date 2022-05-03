@@ -94,7 +94,7 @@
     "dev-null": "0.1.1",
     "eslint": "^4.19.1",
     "eslint-config-prettier": "^6",
-    "eslint-plugin-mocha": "2.0.0",
+    "eslint-plugin-mocha": "4.12.1",
     "eslint-plugin-security": "^1.4.0",
     "get-port": "^5.0.0",
     "husky": "^0.14.3",
