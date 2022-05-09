@@ -18,7 +18,7 @@ not handle `https` requests directly.
 ### Node.js
 
 The application can be run directly with Node.js by either running `npm start`
-or `node app.js`. It is designed to work with the current Node.js LTS (10.x)
+or `node app.js`. It is designed to work with the current Node.js LTS (16.x)
 release. Be sure to run `npm install --production` first to install all of the
 package dependencies.
 
@@ -108,7 +108,7 @@ production:
 ### Dependencies
 
 The only dependency needed to develop `canvas-rce-api` is a recent LTS release
-of Node.js (10.x). All other dependencies are installed via `npm`. Alternatively
+of Node.js (16.x). All other dependencies are installed via `npm`. Alternatively
 if you don't want to install Node.js on your machine you can run in `docker`
 using the included `docker-compose` file.
 
@@ -120,6 +120,13 @@ for configuring Canvas to setup a local Canvas environment to test with.
 
 ```
 cp .env.example .env
+```
+
+Additionally, make a copy of the `docker-compose.override.yml.dev` file with
+the following command:
+
+```
+cp docker-compose.override.yml.dev docker-compose.override.yml
 ```
 
 ### Serve the application
@@ -160,6 +167,7 @@ over stubbing shared bindings where possible.
 To run all tests, do `yarn test`
 
 Example of running a single test file:
+
 ```
 yarn test:one test/service/api/folders.test.js
 ```
