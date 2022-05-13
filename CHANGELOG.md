@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.21]
+Rename Buttons & Icon text to Icon Maker
 ## [1.20]
 ### Added
 - Responses from the documents API now include the file's media_entry_id. This ID corresponds to a Canvas MediaObject.
