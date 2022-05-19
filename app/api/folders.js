@@ -23,14 +23,22 @@ function transformBody(baseUrl, folders) {
 
 function canvasPath(request) {
   const id = request.params.folderId;
-  if (id && id !== "all" && id !== "icon_maker" && id !== "media") {
+  /*
+   ** This logic ensures that backwards compatibility is maintained until canvas no longer uses this URL
+   ** with buttons_and_icons
+   ** It should be safe to delete the buttons_and_icons-related (isIconMaker) logic after canvas release/2022-05-25.XXX is in production
+   */
+  const idButtonsAndIcons = "buttons_and_icons";
+  const idIconMaker = "icon_maker";
+  const isIconMaker = id === idIconMaker || id === idButtonsAndIcons;
+  if (id && id !== "all" && !isIconMaker && id !== "media") {
     return `/api/v1/folders/${request.params.folderId}/folders?per_page=${request.query.per_page}`;
   }
   const byPath = id === "all" ? "" : "/by_path";
   switch (request.query.contextType) {
     case "course":
-      if (id === "icon_maker") {
-        return `/api/v1/courses/${request.query.contextId}/folders/icon_maker`;
+      if (isIconMaker) {
+        return `/api/v1/courses/${request.query.contextId}/folders/${id}`;
       }
       if (id === "media") {
         return `/api/v1/courses/${request.query.contextId}/folders/media`;
