@@ -132,6 +132,13 @@ describe("MediaObjects API", () => {
         );
       });
     });
+
+    describe("POST", () => {
+      it("builds the correct path", () => {
+        const path = canvasPath({ method: "POST" });
+        assert.strictEqual(path, "/api/v1/media_objects");
+      });
+    });
   });
 
   describe("canvasResponseHandler()", () => {
@@ -209,7 +216,7 @@ describe("MediaObjects API", () => {
         });
       });
 
-      it("transforms the whole array", () => {
+      it("transforms the whole files array", () => {
         canvasResponseHandler(request, response, canvasResponse);
         sinon.assert.calledWithMatch(response.send, val => {
           return (
