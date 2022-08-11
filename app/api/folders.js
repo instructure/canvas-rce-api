@@ -23,14 +23,7 @@ function transformBody(baseUrl, folders) {
 
 function canvasPath(request) {
   const id = request.params.folderId;
-  /*
-   ** This logic ensures that backwards compatibility is maintained until canvas no longer uses this URL
-   ** with buttons_and_icons
-   ** It should be safe to delete the buttons_and_icons-related (isIconMaker) logic after canvas release/2022-05-25.XXX is in production
-   */
-  const idButtonsAndIcons = "buttons_and_icons";
-  const idIconMaker = "icon_maker";
-  const isIconMaker = id === idIconMaker || id === idButtonsAndIcons;
+  const isIconMaker = id === "icon_maker";
   if (id && id !== "all" && !isIconMaker && id !== "media") {
     return `/api/v1/folders/${request.params.folderId}/folders?per_page=${request.query.per_page}`;
   }

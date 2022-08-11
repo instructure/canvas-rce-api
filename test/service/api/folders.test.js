@@ -100,22 +100,6 @@ describe("Folders API", () => {
         const path = canvasPath({ params, query });
         assert(path === `/api/v1/courses/${contextId}/folders/icon_maker`);
       });
-
-      /*
-       ** The test below ensures that backwards compatibility is maintained until canvas no longer uses this URL
-       ** with buttons_and_icons
-       ** It should be safe to delete this test after canvas release/2022-05-25.XXX is in production
-       ** along with the corresponding logic in app/api/folders.js
-       */
-      it("builds the correct path including context id when folder id is 'buttons_and_icons'", () => {
-        const contextId = 47;
-        const params = { folderId: "buttons_and_icons" };
-        const query = { contextType: "course", contextId, per_page: 50 };
-        const path = canvasPath({ params, query });
-        assert(
-          path === `/api/v1/courses/${contextId}/folders/buttons_and_icons`
-        );
-      });
     });
 
     describe("course context media folder", () => {
