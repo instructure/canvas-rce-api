@@ -26,7 +26,8 @@ const canvasResponseHandler = linksResponseHandler((request, results) => {
       title: quiz.title,
       published: quiz.published,
       date,
-      date_type: "due"
+      date_type: "due",
+      quiz_type: quiz.quiz_type
     };
   });
 });
