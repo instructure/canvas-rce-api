@@ -26,7 +26,7 @@ function canvasResponseHandler(request, response, canvasResponse) {
     const files = canvasResponse.body;
 
     response.send({
-      files: files.map((file) => {
+      files: files.map(file => {
         return {
           createdAt: file.created_at,
           id: file.id,
@@ -38,9 +38,10 @@ function canvasResponseHandler(request, response, canvasResponse) {
           folderId: file.folder_id,
           iframeUrl: file.embedded_iframe_url,
           thumbnailUrl: file.thumbnail_url || file.url,
+          category: file.category
         };
       }),
-      bookmark: packageBookmark(request, canvasResponse.bookmark),
+      bookmark: packageBookmark(request, canvasResponse.bookmark)
     });
   } else {
     response.send(canvasResponse.body);
