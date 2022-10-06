@@ -105,7 +105,7 @@
     "prettier": "^1",
     "pretty-quick": "^1.4.1",
     "sinon": "1.17.3",
-    "snyk": "^1.99.1",
+    "snyk": "^1.996.0",
     "supertest": "^3.1.0"
   }
 }
