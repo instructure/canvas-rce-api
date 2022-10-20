@@ -20,7 +20,8 @@ function requestHeaders(tokenString, req) {
     Authorization: "Bearer " + tokenString,
     "User-Agent": req.get("User-Agent"),
     "X-Request-Context-Id": Buffer.from(req.id).toString("base64"),
-    "X-Request-Context-Signature": reqIdSignature
+    "X-Request-Context-Signature": reqIdSignature,
+    Accept: "application/json+canvas-string-ids"
   };
 }
 
