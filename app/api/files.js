@@ -38,7 +38,8 @@ function canvasResponseHandler(request, response, canvasResponse) {
           folderId: file.folder_id,
           iframeUrl: file.embedded_iframe_url,
           thumbnailUrl: file.thumbnail_url || file.url,
-          category: file.category
+          category: file.category,
+          mediaEntryId: file.media_entry_id
         };
       }),
       bookmark: packageBookmark(request, canvasResponse.bookmark)

@@ -115,7 +115,8 @@ describe("Files API", () => {
           folder_id: 1,
           embedded_iframe_url: "https://canvas.com/foo/bar",
           thumbnail_url: "https://canvas.com/foo/bar/thumbnail",
-          category: "foo"
+          category: "foo",
+          media_entry_id: "bar"
         };
       });
 
@@ -139,7 +140,8 @@ describe("Files API", () => {
             folderId: 1,
             iframeUrl: "https://canvas.com/foo/bar",
             thumbnailUrl: "someurl",
-            category: "foo"
+            category: "foo",
+            mediaEntryId: "bar"
           });
         });
       });
@@ -156,6 +158,7 @@ describe("Files API", () => {
       });
 
       it("files have correctly tranformed properties", () => {
+        file.media_entry_id = null;
         canvasResponse.body = [file];
         canvasResponse.statusCode = 200;
         canvasResponseHandler(request, response, canvasResponse);
@@ -170,7 +173,8 @@ describe("Files API", () => {
           folderId: 1,
           iframeUrl: "https://canvas.com/foo/bar",
           thumbnailUrl: "https://canvas.com/foo/bar/thumbnail",
-          category: "foo"
+          category: "foo",
+          mediaEntryId: null
         });
       });
 
