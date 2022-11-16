@@ -12,6 +12,8 @@ function canvasPath(request) {
         return "user_id";
       case "group":
         return "group_id";
+      case "account":
+        return "account_id";
       default:
         throw new Error(`invalid contextType (${request.query.contextType})`);
     }

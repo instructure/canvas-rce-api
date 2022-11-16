@@ -27,6 +27,13 @@ describe("RCE config API", () => {
       assert.ok(path.match("/api/v1/services/rce_config\\?group_id=1"));
     });
 
+    it("builds the correct path including with account_id parameter", () => {
+      const path = canvasPath({
+        query: { contextType: "account", contextId: "101230234" }
+      });
+      assert.ok(path.match("/api/v1/services/rce_config\\?account_id=101230234"));
+    });
+
     it("throws error in case of missing context type", () => {
       assert.throws(() => canvasPath({ query: { contextId: "1" } }));
     });
