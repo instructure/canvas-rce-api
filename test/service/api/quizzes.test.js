@@ -64,6 +64,7 @@ describe("Quizzes API", () => {
             published: true,
             all_dates: [{ due_at: "2019-04-22T13:00:00Z" }],
             due_at: "2019-04-22T13:00:00Z",
+            quiz_type: "assignment",
             ...overrides
           }
         ]
@@ -107,6 +108,11 @@ describe("Quizzes API", () => {
       });
       assert.equal(result.links[0].date, "multiple");
       assert.equal(result.links[0].date_type, "due");
+    });
+
+    it("pulls the quiz_type from canvas' response", () => {
+      const [result, canvasResponse] = setup();
+      assert.equal(result.links[0].quiz_type, canvasResponse.body[0].quiz_type);
     });
   });
 });

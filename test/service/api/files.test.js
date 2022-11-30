@@ -13,7 +13,7 @@ describe("Files API", () => {
         const query = {
           contextType: "course",
           contextId: "nomatter",
-          per_page: 50,
+          per_page: 50
         };
         const expectedPath = `/api/v1/folders/${id}/files?per_page=50&include[]=preview_url&use_verifiers=0`;
         assert.equal(canvasPath({ params, query }), expectedPath);
@@ -33,7 +33,7 @@ describe("Files API", () => {
           contextType: "course",
           contextId: "nomatter",
           per_page: 50,
-          search_term: "banana",
+          search_term: "banana"
         };
         const expectedPath = `/api/v1/folders/${id}/files?per_page=50&include[]=preview_url&use_verifiers=0&search_term=banana`;
         assert.equal(canvasPath({ params, query }), expectedPath);
@@ -47,7 +47,7 @@ describe("Files API", () => {
           contextId: "nomatter",
           per_page: 50,
           sort: "created_at",
-          order: "desc",
+          order: "desc"
         };
         const expectedPath = `/api/v1/folders/${id}/files?per_page=50&include[]=preview_url&use_verifiers=0&sort=created_at&order=desc`;
         assert.equal(canvasPath({ params, query }), expectedPath);
@@ -80,11 +80,11 @@ describe("Files API", () => {
       request = { get: () => {} };
       response = {
         status: sinon.spy(),
-        send: sinon.spy(),
+        send: sinon.spy()
       };
       canvasResponse = {
         status: 200,
-        body: [],
+        body: []
       };
     });
 
@@ -115,6 +115,8 @@ describe("Files API", () => {
           folder_id: 1,
           embedded_iframe_url: "https://canvas.com/foo/bar",
           thumbnail_url: "https://canvas.com/foo/bar/thumbnail",
+          category: "foo",
+          media_entry_id: "bar"
         };
       });
 
@@ -138,6 +140,8 @@ describe("Files API", () => {
             folderId: 1,
             iframeUrl: "https://canvas.com/foo/bar",
             thumbnailUrl: "someurl",
+            category: "foo",
+            mediaEntryId: "bar"
           });
         });
       });
@@ -145,7 +149,7 @@ describe("Files API", () => {
       it("creates files array property with items from response body", () => {
         canvasResponse.body = [{}, {}, {}];
         canvasResponseHandler(request, response, canvasResponse);
-        response.send.calledWithMatch((val) => {
+        response.send.calledWithMatch(val => {
           return (
             Array.isArray(val.files) &&
             val.files.length === canvasResponse.body.length
@@ -154,6 +158,7 @@ describe("Files API", () => {
       });
 
       it("files have correctly tranformed properties", () => {
+        file.media_entry_id = null;
         canvasResponse.body = [file];
         canvasResponse.statusCode = 200;
         canvasResponseHandler(request, response, canvasResponse);
@@ -168,6 +173,8 @@ describe("Files API", () => {
           folderId: 1,
           iframeUrl: "https://canvas.com/foo/bar",
           thumbnailUrl: "https://canvas.com/foo/bar/thumbnail",
+          category: "foo",
+          mediaEntryId: null
         });
       });
 
@@ -175,7 +182,7 @@ describe("Files API", () => {
         file.display_name = undefined;
         canvasResponse.body = [file];
         canvasResponseHandler(request, response, canvasResponse);
-        response.send.calledWithMatch((val) => {
+        response.send.calledWithMatch(val => {
           return sinon.match({ name: file.filename }, val[0]);
         });
       });
@@ -183,7 +190,7 @@ describe("Files API", () => {
       it("has bookmark from canvasResponse", () => {
         canvasResponse.bookmark = "foo";
         canvasResponseHandler(request, response, canvasResponse);
-        response.send.calledWithMatch((val) => {
+        response.send.calledWithMatch(val => {
           return /foo/.test(val.bookmark);
         });
       });
@@ -191,7 +198,7 @@ describe("Files API", () => {
       it("has null bookmark if canvasResponse does not have one", () => {
         canvasResponse.bookmark = undefined;
         canvasResponseHandler(request, response, canvasResponse);
-        response.send.calledWithMatch((val) => {
+        response.send.calledWithMatch(val => {
           return val.bookmark === null;
         });
       });

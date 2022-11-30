@@ -8,7 +8,7 @@ function canvasPath(request) {
 
   switch (request.query.contextType) {
     case "course":
-      return `/api/v1/courses/${request.query.contextId}/quizzes?per_page=${request.query.per_page}${search}`;
+      return `/api/v1/courses/${request.query.contextId}/all_quizzes?per_page=${request.query.per_page}${search}`;
     // TODO handle as 400 Bad Request instead of 500 Internal Server Error
     default:
       throw new Error(`invalid contextType (${request.query.contextType})`);
@@ -26,7 +26,8 @@ const canvasResponseHandler = linksResponseHandler((request, results) => {
       title: quiz.title,
       published: quiz.published,
       date,
-      date_type: "due"
+      date_type: "due",
+      quiz_type: quiz.quiz_type
     };
   });
 });

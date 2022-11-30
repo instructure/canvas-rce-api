@@ -235,6 +235,7 @@ describe("Documents API", () => {
             lock_at: "next week",
             created_at: "last week",
             uuid: "xyzzy",
+            media_entry_id: "m-aSwWWoNpSxcYpzDQSwhxVdt1hFCHzR4",
           },
         ];
       });
@@ -259,7 +260,8 @@ describe("Documents API", () => {
             val.files[0].locked_for_user === true &&
             val.files[0].unlock_at === "tomorrow" &&
             val.files[0].lock_at === "next week" &&
-            val.files[0].date === "last week"
+            val.files[0].date === "last week" &&
+            val.files[0].media_entry_id === "m-aSwWWoNpSxcYpzDQSwhxVdt1hFCHzR4"
           );
         });
       });

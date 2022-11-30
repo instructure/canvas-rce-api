@@ -17,19 +17,17 @@ describe("App Setup", () => {
     _application.init(env, routes, logger, app, stats);
   });
 
-  it("handles errors", done => {
-    request(app)
+  it("handles errors", () => {
+    const a = request(app)
       .get("/test_error")
       .expect(500)
-      .expect(/From Simple Error Handler/)
-      .end(done);
+      .expect(/From Simple Error Handler/);
   });
 
-  it("can render a hello page", done => {
+  it("can render a hello page", () => {
     request(app)
       .get("/")
       .expect(200)
-      .expect(/Hello, from RCE Service/)
-      .end(done);
+      .expect(/Hello, from RCE Service/);
   });
 });

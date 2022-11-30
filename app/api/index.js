@@ -11,6 +11,7 @@ const assignments = require("./assignments");
 const discussions = require("./discussions");
 const modules = require("./modules");
 const quizzes = require("./quizzes");
+const rceConfig = require("./rceConfig");
 const wikiPages = require("./wikiPages");
 const kaltura = require("./kaltura");
 const media_objects = require("./mediaObjects");
@@ -60,6 +61,12 @@ function init(auth, unsplashController) {
         statsdKey("api", "quizzes"),
         auth,
         wrapCanvas(quizzes)
+      );
+      app.get(
+        "/api/rceConfig",
+        statsdKey("api", "rceConfig"),
+        auth,
+        wrapCanvas(rceConfig)
       );
       app.get(
         "/api/wikiPages",

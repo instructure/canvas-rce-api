@@ -5,7 +5,7 @@ const sinon = require("sinon");
 const {
   canvasPath,
   canvasResponseHandler,
-  transformBody,
+  transformBody
 } = require("../../../app/api/upload");
 
 describe("Upload API", () => {
@@ -14,8 +14,8 @@ describe("Upload API", () => {
       const path = canvasPath({
         body: {
           contextType: "course",
-          contextId: 47,
-        },
+          contextId: 47
+        }
       });
       assert(path === `/api/v1/courses/47/files`);
     });
@@ -24,8 +24,8 @@ describe("Upload API", () => {
       const path = canvasPath({
         body: {
           contextType: "group",
-          contextId: 47,
-        },
+          contextId: 47
+        }
       });
       assert(path === `/api/v1/groups/47/files`);
     });
@@ -34,8 +34,8 @@ describe("Upload API", () => {
       const path = canvasPath({
         body: {
           contextType: "user",
-          contextId: 47,
-        },
+          contextId: 47
+        }
       });
       assert(path === `/api/v1/users/47/files`);
     });
@@ -47,15 +47,15 @@ describe("Upload API", () => {
     beforeEach(() => {
       request = {
         protocol: "http",
-        get: () => "canvashost",
+        get: () => "canvashost"
       };
       response = {
         status: sinon.spy(),
-        send: sinon.spy(),
+        send: sinon.spy()
       };
       canvasResponse = {
         status: 200,
-        body: [],
+        body: []
       };
     });
 
@@ -77,9 +77,9 @@ describe("Upload API", () => {
           name: "filename",
           size: 42,
           type: "jpeg",
-          parentFolderId: 1,
+          parentFolderId: 1
         },
-        ...overrides,
+        ...overrides
       };
     }
 
@@ -121,12 +121,12 @@ describe("Upload API", () => {
     });
 
     describe('when "category" is specified', () => {
-      const overrides = { category: "buttons_and_icons" };
+      const overrides = { category: "icon_maker" };
 
       const subject = () => transformBody(getBody(overrides));
 
       it("sets the category in the body", () => {
-        assert.equal(subject().category, "buttons_and_icons");
+        assert.equal(subject().category, "icon_maker");
       });
     });
 
