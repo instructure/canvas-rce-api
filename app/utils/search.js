@@ -5,10 +5,16 @@ function getSearch(query) {
     return "";
   }
 
-  const isSearchTermEncoded = searchTerm !== decodeURIComponent(searchTerm);
-  return isSearchTermEncoded
-    ? `&search_term=${searchTerm}`
-    : `&search_term=${encodeURIComponent(searchTerm)}`;
+  let encodedTerm;
+  try {
+    isSearchTermEncoded = searchTerm !== decodeURIComponent(searchTerm);
+    encodedTerm = isSearchTermEncoded
+      ? searchTerm
+      : encodeURIComponent(searchTerm);
+  } catch {
+    encodedTerm = encodeURIComponent(searchTerm);
+  }
+  return `&search_term=${encodedTerm}`;
 }
 
 module.exports = { getSearch };

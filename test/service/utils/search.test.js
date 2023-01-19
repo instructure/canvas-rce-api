@@ -44,4 +44,13 @@ describe("search(query)", () => {
       `Expected ${getSearchResult} to end with ${encodedSearchText}`
     );
   });
+
+  it("does not return an error for malformed URIs", () => {
+    const searchTerm = "80%";
+    const encodedSearchText = encodeURIComponent(searchTerm);
+    query.search_term = searchTerm;
+
+    const getSearchResult = search.getSearch(query);
+    assert(getSearchResult.endsWith(encodedSearchText));
+  });
 });
