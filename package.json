@@ -4,7 +4,7 @@
   "description": "An API for proxying requests by the RCE to Canvas and other services.",
   "engines": {
     "node": "^16",
-    "npm": "^8"
+    "npm": "^9"
   },
   "mocha": {
     "exit": true,
