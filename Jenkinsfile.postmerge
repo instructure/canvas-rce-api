@@ -17,31 +17,99 @@ pipeline {
     disableConcurrentBuilds()
   }
   stages {
-    stage('CG Build') {
-      steps {
-          withCredentials([sshUserPrivateKey(credentialsId: '44aa91d6-ab24-498a-b2b4-911bcb17cc35', keyFileVariable: 'SSH_KEY_PATH', usernameVariable: 'SSH_USERNAME')]) {
-            sh '''
-              GIT_SSH_COMMAND='ssh -i "$SSH_KEY_PATH" -l "$SSH_USERNAME"' git clone --depth 1 ssh://${GERRIT_HOST}:29418/RichContentService
-            '''
-          }
-
-          dir('RichContentService') {
+    stage {
+      parallel {
+        stage('CG Build') {
+          steps {
             withCredentials([sshUserPrivateKey(credentialsId: '44aa91d6-ab24-498a-b2b4-911bcb17cc35', keyFileVariable: 'SSH_KEY_PATH', usernameVariable: 'SSH_USERNAME')]) {
               sh '''
-                GIT_SSH_COMMAND='ssh -i "$SSH_KEY_PATH" -l "$SSH_USERNAME"' git submodule update --init
+                GIT_SSH_COMMAND='ssh -i "$SSH_KEY_PATH" -l "$SSH_USERNAME"' git clone --depth 1 ssh://${GERRIT_HOST}:29418/RichContentService
               '''
             }
 
-            cloudgateBuild(cgEnvironment: "build", cgVersion: "12.0", tfVersion: "0.13")
+            dir('RichContentService') {
+              withCredentials([sshUserPrivateKey(credentialsId: '44aa91d6-ab24-498a-b2b4-911bcb17cc35', keyFileVariable: 'SSH_KEY_PATH', usernameVariable: 'SSH_USERNAME')]) {
+                sh '''
+                  GIT_SSH_COMMAND='ssh -i "$SSH_KEY_PATH" -l "$SSH_USERNAME"' git submodule update --init
+                '''
+              }
+
+              cloudgateBuild(cgEnvironment: "build", cgVersion: "12.0", tfVersion: "0.13")
+            }
           }
-      }
-      post {
-          failure {
-              slackSend channel: "#mat-bots", color: 'danger', message: "${env.SERVICE_NAME}: CG build failed (<${env.BUILD_URL}|Open>). Changes: \n - ${env.GIT_SUBJECT} [${env.GIT_AUTHOR}]"
+          post {
+            failure {
+                slackSend channel: "#mat-bots", color: 'danger', message: "${env.SERVICE_NAME}: CG build failed (<${env.BUILD_URL}|Open>). Changes: \n - ${env.GIT_SUBJECT} [${env.GIT_AUTHOR}]"
+            }
+            success {
+                slackSend channel: "#mat-bots", color: 'good', message: "${env.SERVICE_NAME}: CG build successful (<${env.BUILD_URL}|Open>). Changes: \n - ${env.GIT_SUBJECT} [${env.GIT_AUTHOR}]"
+            }
           }
-          success {
-              slackSend channel: "#mat-bots", color: 'good', message: "${env.SERVICE_NAME}: CG build successful (<${env.BUILD_URL}|Open>). Changes: \n - ${env.GIT_SUBJECT} [${env.GIT_AUTHOR}]"
+        }
+        stage('Push to Starlord and Dockerhub') {
+          environment {
+            DOCKERHUB_RW_USERNAME = 'svcmaterials'
+            starlordImageTag = 'starlord.inscloudgate.net/jenkins/canvas-rce-api'
+
           }
+          stages {
+            stage('Push :latest') {
+              steps {
+                script {
+                  withMultiPlatformBuilder {
+                    withCredentials([string(credentialsId: 'dockerhub-materials-rw', variable: 'DOCKERHUB_RW_PASSWORD')]) {
+                      sh 'echo $DOCKERHUB_RW_PASSWORD | docker login --username $DOCKERHUB_RW_USERNAME --password-stdin'
+                    }
+
+                    sh """
+                      docker buildx build \
+                        --builder multi-platform-builder \
+                        --pull \
+                        --push \
+                        --platform=linux/amd64,linux/arm64 \
+                        --tag "${starlordImageTag}:latest" \
+                        --tag "${starlordImageTag}:master" \
+                        --tag "instructure/canvas-rce-api:latest
+                        .
+                    """
+                  }
+                }
+              }
+            }
+            stage('Push new release') {
+              // When the git tag starts with the letter "v" followed by one or more digits, we know this commit is a new release
+              when { tag pattern: "v\d+", comparator: "REGEXP"}
+
+              steps {
+                script {
+                  withCredentials([string(credentialsId: 'dockerhub-materials-rw', variable: 'DOCKERHUB_RW_PASSWORD')]) {
+                    sh 'echo $DOCKERHUB_RW_PASSWORD | docker login --username $DOCKERHUB_RW_USERNAME --password-stdin'
+                  }
+
+                  def version = sh(script: "docker-compose run --rm --name=web_version web node -p \"require('./package.json').version\"", returnStdout: true).trim()
+
+                  sh """
+                    docker tag \
+                      instructure/canvas-rce-api:latest \
+                      "instructure/canvas-rce-api:release-${version}" \
+                      "${starlordImageTag}:${version}"
+                  """
+
+                  sh """
+                    docker push \
+                      "instructure/canvas-rce-api:release-${version}" \
+                      "${starlordImageTag}:${version}"
+                  """
+                }
+              }
+            }
+          }
+          post {
+            cleanup {
+              sh 'docker logout "https://index.docker.io/v1/"'
+            }
+          }
+        }
       }
     }
   }

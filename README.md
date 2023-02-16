@@ -29,12 +29,11 @@ to manage and balance load between node processes such as [Passenger][1] or
 
 ### Docker
 
-A Docker image is available on Docker Hub at
-`instructure/canvas-rce-api:latest` or Starload at `starlord.inscloudgate.net/jenkins/canvas-rce-api:latest`.
-The container will run the application
-behind Nginx with Passenger listening on port `80`. Please refer to the
-documentation for the [`instructure/node-passenger` base image][7] for nginx and
-passenger configuration environment variables.
+A Docker image is available on Docker Hub at `instructure/canvas-rce-api:latest`
+or Starlord at `starlord.inscloudgate.net/jenkins/canvas-rce-api:latest`. The
+container will run the application behind Nginx with Passenger listening on port
+`80`. Please refer to the documentation for the [`instructure/node-passenger` base image][7]
+for nginx and passenger configuration environment variables.
 
 #### Example
 
@@ -165,6 +164,24 @@ Example of running a single test file:
 ```
 yarn test:one test/service/api/folders.test.js
 ```
+
+### Releasing
+
+For now releasing to NPM is a manual process.
+
+We use a post-merge Jenkins job to auto-publish `:latest` Docker images to
+Dockerhub and our internal registry, Starlord.
+
+When preparing a release, make sure to tag the release commit with the `v1.2.3`
+semantic release tagging convention. For example:
+
+```bash
+git tag "v1.2.3"
+git push --tags origin
+```
+
+_Important: without the `v` in the git tag, the post-merge Jenkins job won't
+publish a version-specific Docker image._
 
 ## License
 

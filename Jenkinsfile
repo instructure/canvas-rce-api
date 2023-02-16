@@ -38,31 +38,8 @@ pipeline {
         }
       }
     }
-    stage('Push latest to Starlord') {
-      when { environment name: "GERRIT_EVENT_TYPE", value: "change-merged" }
-
-      steps {
-        script {
-          withMultiPlatformBuilder {
-            def imageTag = "starlord.inscloudgate.net/jenkins/canvas-rce-api"
-            sh """
-              docker buildx build \
-                --builder multi-platform-builder \
-                --cache-from=type=registry,ref=${imageTag} \
-                --cache-to=type=local,dest=canvas-rce-api/cache_result \
-                --pull \
-                --push \
-                --platform=linux/amd64,linux/arm64 \
-                --tag "${imageTag}:latest" \
-                --tag "${imageTag}:master" \
-                .
-            """
-          }
-        }
-
-      }
-    }
   }
+
   post {
     cleanup {
         sh 'docker-compose down --volumes --remove-orphans --rmi all'
