@@ -77,7 +77,7 @@
     "express-statsd": "0.3.0",
     "hot-shots": "^6.1.1",
     "inja": "^1.1.0",
-    "jsonwebtoken": "5.7.0",
+    "jsonwebtoken": "9.0.0",
     "moment": "^2.22.2",
     "morgan": "^1.10.0",
     "node-exceptions": "^3.0.0",
