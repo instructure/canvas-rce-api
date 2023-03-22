@@ -69,7 +69,7 @@ pipeline {
                         --platform=linux/amd64,linux/arm64 \
                         --tag "${starlordImageTag}:latest" \
                         --tag "${starlordImageTag}:master" \
-                        --tag "instructure/canvas-rce-api:latest
+                        --tag "instructure/canvas-rce-api:latest" \
                         .
                     """
                   }
@@ -78,7 +78,7 @@ pipeline {
             }
             stage('Push new release') {
               // When the git tag starts with the letter "v" followed by one or more digits, we know this commit is a new release
-              when { tag pattern: "v\d+", comparator: "REGEXP"}
+              when { tag pattern: "v\\d+", comparator: "REGEXP"}
 
               steps {
                 script {
