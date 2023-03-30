@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-remove unsplash code
+## [1.25]
+
+Remove unsplash code
 
 ## [1.24]
 
