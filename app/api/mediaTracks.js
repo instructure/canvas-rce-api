@@ -11,9 +11,12 @@ function getIncludes(query) {
 }
 
 function canvasPath(request) {
-  const moid = request.params.mediaObjectId;
   const includes = getIncludes(request.query);
-  return `/api/v1/media_objects/${moid}/media_tracks${includes}`;
+  const moid = request.params.mediaAttachmentId || request.params.mediaObjectId;
+  const path = request.params.mediaAttachmentId
+    ? "media_attachments"
+    : "media_objects";
+  return `/api/v1/${path}/${moid}/media_tracks${includes}`;
 }
 
 function transformBody(body) {

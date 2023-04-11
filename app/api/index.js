@@ -147,6 +147,12 @@ function init(auth) {
         auth,
         wrapCanvas(media_objects, { method: "POST" })
       );
+      app.post(
+        "/api/media_attachments",
+        statsdKey("api", "media_attachments"),
+        auth,
+        wrapCanvas(media_objects, { method: "POST" })
+      );
       app.get(
         "/api/media_objects",
         statsdKey("api", "media_objects"),
@@ -159,18 +165,36 @@ function init(auth) {
         auth,
         wrapCanvas(media_objects, { method: "PUT" })
       );
+      app.put(
+        "/api/media_attachments/:mediaAttachmentId",
+        statsdKey("api", "media_attachments"),
+        auth,
+        wrapCanvas(media_objects, { method: "PUT" })
+      );
       app.get(
         "/api/media_objects/:mediaObjectId/media_tracks",
         statsdKey("api", "media_tracks"),
         auth,
         wrapCanvas(media_tracks)
-      ),
-        app.put(
-          "/api/media_objects/:mediaObjectId/media_tracks",
-          statsdKey("api", "media_tracks"),
-          auth,
-          wrapCanvas(media_tracks, { method: "PUT" })
-        );
+      );
+      app.get(
+        "/api/media_attachments/:mediaAttachmentId/media_tracks",
+        statsdKey("api", "media_tracks"),
+        auth,
+        wrapCanvas(media_tracks)
+      );
+      app.put(
+        "/api/media_objects/:mediaObjectId/media_tracks",
+        statsdKey("api", "media_tracks"),
+        auth,
+        wrapCanvas(media_tracks, { method: "PUT" })
+      );
+      app.put(
+        "/api/media_attachments/:mediaAttachmentId/media_tracks",
+        statsdKey("api", "media_tracks"),
+        auth,
+        wrapCanvas(media_tracks, { method: "PUT" })
+      );
     }
   };
 }

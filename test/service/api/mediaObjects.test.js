@@ -120,7 +120,7 @@ describe("MediaObjects API", () => {
     });
 
     describe("PUT", () => {
-      it("builds the correct path", () => {
+      it("builds the correct path for media_objects", () => {
         const params = { mediaObjectId: "mo_id" };
         const query = { anyOtherJunk: 17, user_entered_title: "the new title" };
         const path = canvasPath({ params, query, method: "PUT" });
@@ -131,12 +131,31 @@ describe("MediaObjects API", () => {
           )}`
         );
       });
+
+      it("builds the correct path for media_attachments", () => {
+        const params = { mediaAttachmentId: "mo_id" };
+        const query = { anyOtherJunk: 17, user_entered_title: "the new title" };
+        const path = canvasPath({ params, query, method: "PUT" });
+        assert.strictEqual(
+          path,
+          `/api/v1/media_attachments/mo_id?user_entered_title=${encodeURIComponent(
+            "the new title"
+          )}`
+        );
+      });
     });
 
     describe("POST", () => {
-      it("builds the correct path", () => {
-        const path = canvasPath({ method: "POST" });
+      it("builds the correct path for media_objects", () => {
+        const _parsedUrl = { path: "/api/media_objects" };
+        const path = canvasPath({ _parsedUrl, method: "POST" });
         assert.strictEqual(path, "/api/v1/media_objects");
+      });
+
+      it("builds the correct path for media_attachments", () => {
+        const _parsedUrl = { path: "/api/media_attachments" };
+        const path = canvasPath({ _parsedUrl, method: "POST" });
+        assert.strictEqual(path, "/api/v1/media_attachments");
       });
     });
   });

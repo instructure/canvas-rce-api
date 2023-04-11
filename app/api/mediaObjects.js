@@ -91,15 +91,19 @@ function canvasPathGET(request) {
   return `${baseURI}?per_page=${request.query.per_page}&use_verifiers=0${exclude}${sort}${search}`;
 }
 
-function canvasPathPOST() {
-  return "/api/v1/media_objects";
+function canvasPathPOST(request) {
+  return request._parsedUrl.path == "/api/media_attachments"
+    ? "/api/v1/media_attachments"
+    : "/api/v1/media_objects";
 }
 
 function canvasPathPUT(request) {
-  const moid = request.params.mediaObjectId;
   const user_entered_title = request.query.user_entered_title;
-
-  return `/api/v1/media_objects/${moid}?user_entered_title=${encodeURIComponent(
+  const moid = request.params.mediaAttachmentId || request.params.mediaObjectId;
+  const path = request.params.mediaAttachmentId
+    ? "media_attachments"
+    : "media_objects";
+  return `/api/v1/${path}/${moid}?user_entered_title=${encodeURIComponent(
     user_entered_title
   )}`;
 }

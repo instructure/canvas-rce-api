@@ -11,7 +11,7 @@ const {
 describe("MediaTracks API", () => {
   describe("canvasPath()", () => {
     describe("GET", () => {
-      it("builds the correct path", () => {
+      it("builds the correct path for media_objects", () => {
         const params = { mediaObjectId: "m-theidgoeshere" };
         const query = {};
         const path = canvasPath({ params, query, method: "GET" });
@@ -19,6 +19,13 @@ describe("MediaTracks API", () => {
           path,
           "/api/v1/media_objects/m-theidgoeshere/media_tracks"
         );
+      });
+
+      it("builds the correct path for media_attachments", () => {
+        const params = { mediaAttachmentId: "attach-id" };
+        const query = {};
+        const path = canvasPath({ params, query, method: "GET" });
+        assert.equal(path, "/api/v1/media_attachments/attach-id/media_tracks");
       });
 
       it("builds the correct path with 'include' query param", () => {
@@ -33,7 +40,7 @@ describe("MediaTracks API", () => {
     });
 
     describe("PUT", () => {
-      it("builds the correct path", () => {
+      it("builds the correct path for media_objects", () => {
         const params = { mediaObjectId: "m-theidgoeshere" };
         const query = {};
         const path = canvasPath({ params, query, method: "PUT" });
@@ -41,6 +48,13 @@ describe("MediaTracks API", () => {
           path,
           "/api/v1/media_objects/m-theidgoeshere/media_tracks"
         );
+      });
+
+      it("builds the correct path for media_attachments", () => {
+        const params = { mediaAttachmentId: "attach-id" };
+        const query = {};
+        const path = canvasPath({ params, query, method: "PUT" });
+        assert.equal(path, "/api/v1/media_attachments/attach-id/media_tracks");
       });
 
       it("builds the correct path with 'include' query param", () => {
