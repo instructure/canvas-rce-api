@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Update mime types for files
 Add media_attachment urls to api
 
 ## [1.25]
