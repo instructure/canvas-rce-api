@@ -42,10 +42,10 @@ pipeline {
           }
           post {
             failure {
-                slackSend channel: "#mat-bots", color: 'danger', message: "${env.SERVICE_NAME}: CG build failed (<${env.BUILD_URL}|Open>). Changes: \n - ${env.GIT_SUBJECT} [${env.GIT_AUTHOR}]"
+                slackSend channel: "#learning-foundations", color: 'danger', message: "${env.SERVICE_NAME}: CG build failed (<${env.BUILD_URL}|Open>). Changes: \n - ${env.GIT_SUBJECT} [${env.GIT_AUTHOR}]"
             }
             success {
-                slackSend channel: "#mat-bots", color: 'good', message: "${env.SERVICE_NAME}: CG build successful (<${env.BUILD_URL}|Open>). Changes: \n - ${env.GIT_SUBJECT} [${env.GIT_AUTHOR}]"
+                slackSend channel: "#learning-foundations", color: 'good', message: "${env.SERVICE_NAME}: CG build successful (<${env.BUILD_URL}|Open>). Changes: \n - ${env.GIT_SUBJECT} [${env.GIT_AUTHOR}]"
             }
           }
         }
