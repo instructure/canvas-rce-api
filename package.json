@@ -82,7 +82,7 @@
     "morgan": "^1.10.0",
     "node-exceptions": "^3.0.0",
     "node-fetch": "^2.6.1",
-    "node-jose": "^2.0.0",
+    "node-jose": "^2.2.0",
     "parse-link-header": "0.4.1",
     "qs": "^6.2.1",
     "querystring": "0.2.0",
