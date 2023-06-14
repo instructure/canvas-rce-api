@@ -81,7 +81,7 @@
     "moment": "^2.22.2",
     "morgan": "^1.10.0",
     "node-exceptions": "^3.0.0",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^2.6.7",
     "node-jose": "^2.0.0",
     "parse-link-header": "0.4.1",
     "qs": "^6.2.1",
