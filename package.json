@@ -1,9 +1,9 @@
 {
   "name": "canvas-rce-api",
-  "version": "1.26.0",
+  "version": "1.27.0",
   "description": "An API for proxying requests by the RCE to Canvas and other services.",
   "engines": {
-    "node": "^16",
+    "node": "^18",
     "npm": "^9"
   },
   "mocha": {

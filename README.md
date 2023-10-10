@@ -18,7 +18,7 @@ not handle `https` requests directly.
 ### Node.js
 
 The application can be run directly with Node.js by either running `npm start`
-or `node app.js`. It is designed to work with the current Node.js LTS (16.x)
+or `node app.js`. It is designed to work with the current Node.js LTS (18.x)
 release. Be sure to run `npm install --production` first to install all of the
 package dependencies.
 
@@ -101,7 +101,7 @@ production:
 ### Dependencies
 
 The only dependency needed to develop `canvas-rce-api` is a recent LTS release
-of Node.js (16.x). All other dependencies are installed via `npm`. Alternatively
+of Node.js (18.x). All other dependencies are installed via `npm`. Alternatively
 if you don't want to install Node.js on your machine you can run in `docker`
 using the included `docker-compose` file.
 
