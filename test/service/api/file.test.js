@@ -11,18 +11,19 @@ describe("File API", () => {
 
     it("builds the correct path including file id", () => {
       const query = { per_page: 50 };
-      const expectedPath = `/api/v1/files/${id}?include[]=preview_url`;
+      const expectedPath = `/api/v1/files/${id}?include=preview_url`;
       assert.equal(canvasPath({ params, query }), expectedPath);
     });
 
-    describe("when replacement context params are given", () => {
+    describe("when query params are given", () => {
       const query = {
         replacement_chain_context_type: "course",
         replacement_chain_context_id: 2,
+        include: "blueprint_course_status"
       };
 
       it("includes the replacement context params in the query string", () => {
-        const expectedPath = `/api/v1/files/47?include[]=preview_url&replacement_chain_context_type=course&replacement_chain_context_id=2`;
+        const expectedPath = `/api/v1/files/47?replacement_chain_context_type=course&replacement_chain_context_id=2&include=preview_url&include=blueprint_course_status`;
         assert.equal(canvasPath({ params, query }), expectedPath);
       });
     });
@@ -35,11 +36,11 @@ describe("File API", () => {
       request = {};
       response = {
         status: sinon.spy(),
-        send: sinon.spy(),
+        send: sinon.spy()
       };
       canvasResponse = {
         status: 200,
-        body: [],
+        body: []
       };
     });
 
@@ -65,13 +66,15 @@ describe("File API", () => {
           filename: "Foo.pdf",
           preview_url: "someCANVADOCSurl",
           url: "someurl",
+          restricted_by_master_course: "true",
+          is_master_course_child_content: "true"
         };
       });
 
       it("file has correctly tranformed properties", () => {
         canvasResponse.body = [file];
         canvasResponseHandler(request, response, canvasResponse);
-        response.send.calledWithMatch((val) => {
+        response.send.calledWithMatch(val => {
           return sinon.match(
             {
               id: file.id,
@@ -80,6 +83,7 @@ describe("File API", () => {
               url: file.url,
               preview_url: file.preview_url,
               embed: { type: "file" },
+              restricted_by_master_course: "true"
             },
             val
           );
@@ -90,7 +94,7 @@ describe("File API", () => {
         file.display_name = undefined;
         canvasResponse.body = [file];
         canvasResponseHandler(request, response, canvasResponse);
-        response.send.calledWithMatch((val) => {
+        response.send.calledWithMatch(val => {
           return sinon.match({ name: file.filename }, val);
         });
       });
