@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.27.1]
+
+Allow includes params to pass through to Canvas
+
 ## [1.27]
 
 Upgrade to Node 18
