@@ -13,6 +13,7 @@ pipeline {
     ).trim()
     SERVICE_NAME = 'canvas-rce-api'
     STARLORD_IMAGE_TAG = 'starlord.inscloudgate.net/jenkins/canvas-rce-api'
+    CONFIG_ARG = '--config .canvas-rce-api.json'
   }
   options {
     ansiColor("xterm")
@@ -54,11 +55,11 @@ pipeline {
             script {
               withMultiPlatformBuilder {
                 withCredentials([string(credentialsId: 'dockerhub-materials-rw', variable: 'DOCKERHUB_RW_PASSWORD')]) {
-                  sh 'echo $DOCKERHUB_RW_PASSWORD | docker login --username $DOCKERHUB_RW_USERNAME --password-stdin'
+                  sh 'echo $DOCKERHUB_RW_PASSWORD | docker $CONFIG_ARG login --username $DOCKERHUB_RW_USERNAME --password-stdin'
                 }
 
                 sh """
-                  docker buildx build \
+                  docker $CONFIG_ARG buildx build \
                     --builder multi-platform-builder \
                     --pull \
                     --push \
@@ -88,7 +89,7 @@ pipeline {
           steps {
             script {
               withCredentials([string(credentialsId: 'dockerhub-materials-rw', variable: 'DOCKERHUB_RW_PASSWORD')]) {
-                sh 'echo $DOCKERHUB_RW_PASSWORD | docker login --username $DOCKERHUB_RW_USERNAME --password-stdin'
+                sh 'echo $DOCKERHUB_RW_PASSWORD | docker $CONFIG_ARG login --username $DOCKERHUB_RW_USERNAME --password-stdin'
               }
 
               // We don't want to cause a conflict by reusing an existing builder container, so we first remove it if it exists.
@@ -99,7 +100,7 @@ pipeline {
               sh "docker buildx create --platform arm64,amd64 --name another-multi-platform-builder"
 
               sh """
-                docker buildx build \
+                docker $CONFIG_ARG buildx build \
                   --builder another-multi-platform-builder \
                   --pull \
                   --push \
@@ -116,7 +117,7 @@ pipeline {
   }
   post {
     cleanup {
-      sh 'docker logout "https://index.docker.io/v1/"'
+      sh 'docker $CONFIG_ARG logout "https://index.docker.io/v1/"'
       sh 'docker buildx rm another-multi-platform-builder || true'
     }
   }
