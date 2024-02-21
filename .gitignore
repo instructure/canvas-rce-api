@@ -1,6 +1,7 @@
 node_modules/
 npm-debug.log
 docker-compose.override.yml
+/docker-compose.local.dev.yml
 coverage/
 .nyc_output/
 .env

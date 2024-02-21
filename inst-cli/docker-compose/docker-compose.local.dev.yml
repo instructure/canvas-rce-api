@@ -1,0 +1,35 @@
+version: "3"
+services:
+  web:
+    build: .
+    environment:
+      PORT: 80
+      NODE_ENV: development
+      STATSD_HOST: 127.0.0.1
+      STATSD_PORT: 8125
+      ECOSYSTEM_SECRET: "astringthatisactually32byteslong"
+      ECOSYSTEM_KEY: "astringthatisactually32byteslong"
+      CIPHER_PASSWORD: TEMP_PASSWORD
+      # HTTP_PROTOCOL_OVERRIDE: http
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.rce-cors.headers.accesscontrolallowmethods=GET,POST,OPTIONS,PUT,PATCH"
+      - "traefik.http.middlewares.rce-cors.headers.accesscontrolallowheaders=*"
+      - "traefik.http.middlewares.rce-cors.headers.accesscontrolalloworiginlist=*"
+      - "traefik.http.middlewares.rce-cors.headers.accesscontrolmaxage=100"
+      - "traefik.http.middlewares.rce-cors.headers.addvaryheader=true"
+    networks:
+      default:
+        aliases:
+          - canvas-rce-api-web.inseng.test
+          - canvas-rce-api-web
+    volumes:
+      - .:/usr/src/app
+    command:
+      - npm
+      - run
+      - start:dev
+networks:
+  default:
+    external: true
+    name: "inst_shared"

@@ -131,6 +131,17 @@ the following command:
 cp docker-compose.override.yml.dev docker-compose.override.yml
 ```
 
+### Traefik
+
+If you'd like to use Instructure's Traefik set up for networking, copy
+./inst-cli/docker-compose/docker-compose.local.dev.yml to
+docker-compose.local.dev.yml and set up the COMPOSE_FILE variable in
+your .env file to include docker-compose.local.dev.yml
+
+```
+COMPOSE_FILE=docker-compose.local.dev.yml
+```
+
 ### Serve the application
 
 ```
