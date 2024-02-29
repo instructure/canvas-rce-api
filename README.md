@@ -77,23 +77,32 @@ Configuration options are set via the following environment variables:
 
 ### Canvas
 
-Canvas needs to be configured with the same secrets used to encrypt and sign the
-JWTs used for authentication. If you are running Consul to manage dynamic
-settings, the secrets and host should be added at the same paths as shown in the
-`dynamic_settings.yml` example below. A `dynamic_settings.yml` file may be used
-in place of managing configuration through Consul.
+Canvas needs to be configured to find the rich content service via the
+`config/canvas/rich-content-service/app-host` value in Consul or, for local
+development, the following value in `dynamic_settings.yml`:
 
 #### `dynamic_settings.yml`
 
 ```yml
-production:
+development:
   config:
     canvas:
-      canvas:
-        encryption-secret: "astringthatisactually32byteslong"
-        signing-secret: "astringthatisactually32byteslong"
       rich-content-service:
         app-host: "canvas-rce-api-host"
+```
+
+Canvas also needs to be configured to use the same encryption key and
+signing secret as the rich content service, for example:
+
+#### `vault_contents.yml`
+
+```yml
+development:
+  "app-canvas/data/secrets":
+    data:
+      canvas_security:
+        encryption_secret: "astringthatisactually32byteslong"
+        signing_secret: "astringthatisactually32byteslong"
 ```
 
 ## Developing
