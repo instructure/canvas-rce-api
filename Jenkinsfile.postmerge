@@ -90,11 +90,11 @@ pipeline {
             script {
               withMultiPlatformBuilder {
                 withCredentials([string(credentialsId: 'dockerhub-materials-rw', variable: 'DOCKERHUB_RW_PASSWORD')]) {
-                  sh 'echo $DOCKERHUB_RW_PASSWORD | docker $CONFIG_ARG login --username $DOCKERHUB_RW_USERNAME --password-stdin'
+                  sh 'echo $DOCKERHUB_RW_PASSWORD | docker login --username $DOCKERHUB_RW_USERNAME --password-stdin'
                 }
 
                 sh """
-                  docker $CONFIG_ARG buildx build \
+                  docker buildx build \
                     --builder another-multi-platform-builder \
                     --pull \
                     --push \
@@ -113,6 +113,7 @@ pipeline {
   post {
     cleanup {
       sh 'docker $CONFIG_ARG logout "https://index.docker.io/v1/"'
+      sh 'docker logout "https://index.docker.io/v1/"'
     }
   }
 }
