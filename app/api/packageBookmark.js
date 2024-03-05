@@ -10,7 +10,9 @@ function packageBookmark(request, bookmark) {
     const path = request.baseUrl + request.path;
     const query = Object.assign({}, request.query, { bookmark });
     const qs = querystring.stringify(query);
-    return `${request.protocol}://${request.get("Host")}${path}?${qs}`;
+    const myUrl =
+      process.env.RCE_API_HOST || request.get("host") || request.get("Host");
+    return `${request.protocol}://${myUrl}${path}?${qs}`;
   } else {
     return null;
   }
