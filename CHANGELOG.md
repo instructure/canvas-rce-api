@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.27.2]
+
+In the request to upload files, forward the no_redirect parameter to canvas if it's present in the request body
+
 ## [1.27.1]
 
 Allow includes params to pass through to Canvas
