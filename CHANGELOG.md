@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Add the editor field toe the api/wikiPages response
+
 ## [1.27.2]
 
 In the request to upload files, forward the no_redirect parameter to canvas if it's present in the request body

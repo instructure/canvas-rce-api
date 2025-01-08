@@ -24,7 +24,8 @@ const canvasResponseHandler = linksResponseHandler((request, results) => {
       title: wikiPage.title,
       published: wikiPage.published,
       date: wikiPage.todo_date || null,
-      date_type: "todo"
+      date_type: "todo",
+      editor: wikiPage.editor || null
     };
   });
 });
