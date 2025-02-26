@@ -1,6 +1,8 @@
-version: "3"
+name: canvas-rce-api
+
 services:
   web:
+    container_name: canvas-rce-api-web
     build: .
     environment:
       PORT: 80
@@ -12,17 +14,17 @@ services:
       CIPHER_PASSWORD: TEMP_PASSWORD
       # HTTP_PROTOCOL_OVERRIDE: http
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.middlewares.rce-cors.headers.accesscontrolallowmethods=GET,POST,OPTIONS,PUT,PATCH"
-      - "traefik.http.middlewares.rce-cors.headers.accesscontrolallowheaders=*"
-      - "traefik.http.middlewares.rce-cors.headers.accesscontrolalloworiginlist=*"
-      - "traefik.http.middlewares.rce-cors.headers.accesscontrolmaxage=100"
-      - "traefik.http.middlewares.rce-cors.headers.addvaryheader=true"
+      - traefik.enable=true
+      - traefik.http.middlewares.rce-cors.headers.accesscontrolallowmethods=GET,POST,OPTIONS,PUT,PATCH
+      - traefik.http.middlewares.rce-cors.headers.accesscontrolallowheaders=*
+      - traefik.http.middlewares.rce-cors.headers.accesscontrolalloworiginlist=*
+      - traefik.http.middlewares.rce-cors.headers.accesscontrolmaxage=100
+      - traefik.http.middlewares.rce-cors.headers.addvaryheader=true
     networks:
       default:
         aliases:
-          - canvas-rce-api-web.inseng.test
           - canvas-rce-api-web
+          - canvas-rce-api-web.$INST_DOMAIN
     volumes:
       - .:/usr/src/app
     command:
