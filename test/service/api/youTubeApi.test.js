@@ -72,6 +72,38 @@ describe("YouTube API", () => {
     youTubeTitle(req, resp);
   });
 
+  it("escapes HTML in vidId to prevent XSS", done => {
+    const vidId = '<script>alert("xss")</script>';
+    const escapedVidId = '&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;';
+
+    const req = { query: { vid_id: vidId } };
+
+    // Simulate no matching video found
+    buildYouTubeScope(vidId, {
+      items: [
+        {
+          id: { videoId: "otherbogusid" },
+          snippet: { title: "my video title otherbogusid" }
+        }
+      ]
+    });
+
+    const resp = {
+      type: () => {},
+      status: code => {
+        assert.equal(code, 500);
+        return resp;
+      },
+      send: data => {
+        assert.ok(data.includes(escapedVidId), "Response does not escape input");
+        assert.ok(!data.includes("<script>"), "Response includes raw script tag!");
+        done();
+      }
+    };
+
+    youTubeTitle(req, resp);
+  });
+
   it("fails on youtube call fail", done => {
     let vidId = "abcdefghijk";
     let req = { query: { vid_id: vidId } };

@@ -1,5 +1,6 @@
 "use strict";
 
+const escapeHtml = require('escape-html');
 const { parseFetchResponse } = require("../utils/fetch");
 
 const ytApiBase = "https://content.googleapis.com/youtube/v3/search";
@@ -41,7 +42,7 @@ function youTubeTitle(req, response) {
           `YouTube video search not found: vid_id="${vidId}"`
         );
         response.status(500);
-        response.send(`Video "${vidId}" not found.`);
+        response.send(`Video "${escapeHtml(vidId)}" not found.`);
       } else {
         response.status(searchResults.statusCode);
         response.json({ id: vidId, title: title });
