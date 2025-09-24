@@ -3,7 +3,7 @@
 const addRequestId = require("express-request-id")();
 const healthcheck = require("./middleware/healthcheck");
 const requestLogging = require("./middleware/requestLogs");
-const bodyParser = require("body-parser");
+const express = require("express");
 const corsProtection = require("./middleware/corsProtection");
 const errorHandling = require("./middleware/errors");
 const stats = require("./middleware/stats");
@@ -14,7 +14,8 @@ function middleware(app, applyRoutes) {
   // as request logging depends on the id
   app.use(addRequestId);
   app.use("/readiness", statsdKey("main", "readiness"), healthcheck());
-  app.use(bodyParser.json());
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
   requestLogging.applyToApp(app);
   corsProtection.applyToApp(app);
 
