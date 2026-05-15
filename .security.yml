@@ -1,0 +1,8 @@
+schema_version: 1
+tier: T2
+owners:
+  team: "@instructure-internal/richcontentexperience-team"
+  champion: "viktor.szpisjak@instructure.com"
+  slack: "#rich-content-experience"
+languages:
+  - javascript
