@@ -7,7 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Add the editor field toe the api/wikiPages response
+## [1.27.4]
+
+upgrade node.js runtime from 18 to 20
+upgrade dependencies
+
+## [1.27.3]
+
+Add the editor field to the api/wikiPages response
 
 ## [1.27.2]
 
