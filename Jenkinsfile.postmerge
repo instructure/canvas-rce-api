@@ -74,8 +74,9 @@ pipeline {
           }
         }
         stage('New Release') {
-          // When the git tag starts with the letter "v" followed by one or more digits, we know this commit is a new release
-          when { tag pattern: "v\\d+", comparator: "REGEXP"}
+          // When the git tag starts with the letter "v" followed by one or more digits, optionally followed by
+          // dot-separated digit groups (e.g. v1, v1.2, v1.2.3), we know this commit is a new release
+          when { tag pattern: "v\\d+(\\.\\d+)*", comparator: "REGEXP"}
 
           // We use an environment variable instead of a Groovy variable here because combining env var interpolation
           // with Groovy interpolation in a multiline Jenkins pipeline string is fraught with problems.

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.27.5]
+
+infra improvements
+
 ## [1.27.4]
 
 upgrade node.js runtime from 18 to 20
