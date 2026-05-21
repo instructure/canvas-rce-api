@@ -56,7 +56,6 @@
     "jsonwebtoken": "^5.7.0",
     "moment": "^2.22.2",
     "morgan": "^1.10.0",
-    "node-fetch": "^2.6.1",
     "node-jose": "^2.0.0",
     "parse-link-header": "^2.0.0",
     "raven": "github:zwily/raven-node#middleware-req-callback"
@@ -73,7 +72,7 @@
     "get-port": "7.2.0",
     "husky": "9.1.7",
     "mocha": "11.7.5",
-    "nock": "^13",
+    "nock": "14.0.15",
     "nodemon": "3.1.14",
     "prettier": "3.8.3",
     "pretty-quick": "4.2.2",

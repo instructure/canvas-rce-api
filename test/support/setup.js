@@ -1,3 +1,1 @@
-import fetch from "node-fetch";
-
-global.fetch = fetch;
+// intentionally empty: Node's built-in fetch is used directly

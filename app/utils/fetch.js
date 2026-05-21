@@ -16,7 +16,7 @@ function parseFetchResponse(res) {
     })
     .then((data) => ({
       body: data,
-      headers: res.headers.raw(),
+      headers: res.headers,
       statusCode: res.status,
     }));
 }
