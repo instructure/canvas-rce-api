@@ -53,7 +53,7 @@
     "express-request-id": "^1.4.1",
     "hot-shots": "^6.1.1",
     "inja": "^1.1.0",
-    "jsonwebtoken": "^5.7.0",
+    "jsonwebtoken": "9.0.3",
     "moment": "^2.22.2",
     "morgan": "^1.10.0",
     "node-jose": "^2.0.0",
@@ -83,7 +83,6 @@
   "overrides": {
     "minimatch": "^10.2.3",
     "qs": "^6.14.1",
-    "jws": "^3.2.3",
     "node-forge": "^1.4.0"
   }
 }
