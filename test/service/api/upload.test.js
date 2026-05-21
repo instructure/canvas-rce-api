@@ -1,12 +1,12 @@
-"use strict";
+import assert from "assert";
 
-const assert = require("assert");
-const sinon = require("sinon");
-const {
+import sinon from "sinon";
+
+import {
   canvasPath,
   canvasResponseHandler,
-  transformBody
-} = require("../../../app/api/upload");
+  transformBody,
+} from "../../../app/api/upload.js";
 
 describe("Upload API", () => {
   describe("canvasPath()", () => {
@@ -14,8 +14,8 @@ describe("Upload API", () => {
       const path = canvasPath({
         body: {
           contextType: "course",
-          contextId: 47
-        }
+          contextId: 47,
+        },
       });
       assert(path === `/api/v1/courses/47/files`);
     });
@@ -24,8 +24,8 @@ describe("Upload API", () => {
       const path = canvasPath({
         body: {
           contextType: "group",
-          contextId: 47
-        }
+          contextId: 47,
+        },
       });
       assert(path === `/api/v1/groups/47/files`);
     });
@@ -34,8 +34,8 @@ describe("Upload API", () => {
       const path = canvasPath({
         body: {
           contextType: "user",
-          contextId: 47
-        }
+          contextId: 47,
+        },
       });
       assert(path === `/api/v1/users/47/files`);
     });
@@ -47,15 +47,15 @@ describe("Upload API", () => {
     beforeEach(() => {
       request = {
         protocol: "http",
-        get: () => "canvashost"
+        get: () => "canvashost",
       };
       response = {
         status: sinon.spy(),
-        send: sinon.spy()
+        send: sinon.spy(),
       };
       canvasResponse = {
         status: 200,
-        body: []
+        body: [],
       };
     });
 
@@ -77,9 +77,9 @@ describe("Upload API", () => {
           name: "filename",
           size: 42,
           type: "jpeg",
-          parentFolderId: 1
+          parentFolderId: 1,
         },
-        ...overrides
+        ...overrides,
       };
     }
 

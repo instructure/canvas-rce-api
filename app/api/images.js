@@ -1,12 +1,11 @@
-"use strict";
-
 /**
  * NOTE: the new RCE in canvas now uses the /documents?context_types=image
  * endpoint to query for images rather than this /images endpoint
  */
 
-const packageBookmark = require("./packageBookmark");
-const { getSearch } = require("../utils/search");
+import { getSearch } from "../utils/search.js";
+
+import { packageBookmark } from "./packageBookmark.js";
 
 function canvasPath(request) {
   switch (request.query.contextType) {
@@ -26,24 +25,24 @@ function canvasResponseHandler(request, response, canvasResponse) {
   response.status(canvasResponse.statusCode);
   if (canvasResponse.statusCode === 200) {
     const images = canvasResponse.body;
-    const transformedImages = images.map(image => {
+    const transformedImages = images.map((image) => {
       return {
         id: image.id,
         filename: image.filename,
         thumbnail_url: image.thumbnail_url,
         display_name: image.display_name,
         preview_url: image.url,
-        href: image.url
+        href: image.url,
       };
     });
 
     response.send({
       images: transformedImages,
-      bookmark: packageBookmark(request, canvasResponse.bookmark)
+      bookmark: packageBookmark(request, canvasResponse.bookmark),
     });
   } else {
     response.send(canvasResponse.body);
   }
 }
 
-module.exports = { canvasPath, canvasResponseHandler };
+export { canvasPath, canvasResponseHandler };

@@ -1,10 +1,9 @@
-"use strict";
+import { fileEmbed } from "../../shared/mimeClass.js";
+import { optionalQuery } from "../utils/optionalQuery.js";
+import { getSearch } from "../utils/search.js";
+import { getSort } from "../utils/sort.js";
 
-const packageBookmark = require("./packageBookmark");
-const { fileEmbed } = require("../../shared/mimeClass");
-const { getSearch } = require("../utils/search");
-const { getSort } = require("../utils/sort");
-const { optionalQuery } = require("../utils/optionalQuery");
+import { packageBookmark } from "./packageBookmark.js";
 
 function canvasPath(request) {
   if (request.query.contextType === "user") {
@@ -15,7 +14,7 @@ function canvasPath(request) {
     return `/api/v1/folders/${request.params.folderId}/files?per_page=${
       request.query.per_page
     }&include[]=preview_url&use_verifiers=0${getSearch(request.query)}${getSort(
-      request.query
+      request.query,
     )}${optionalQuery(request.query, "category")}`;
   }
 }
@@ -26,7 +25,7 @@ function canvasResponseHandler(request, response, canvasResponse) {
     const files = canvasResponse.body;
 
     response.send({
-      files: files.map(file => {
+      files: files.map((file) => {
         return {
           createdAt: file.created_at,
           id: file.id,
@@ -39,14 +38,14 @@ function canvasResponseHandler(request, response, canvasResponse) {
           iframeUrl: file.embedded_iframe_url,
           thumbnailUrl: file.thumbnail_url || file.url,
           category: file.category,
-          mediaEntryId: file.media_entry_id
+          mediaEntryId: file.media_entry_id,
         };
       }),
-      bookmark: packageBookmark(request, canvasResponse.bookmark)
+      bookmark: packageBookmark(request, canvasResponse.bookmark),
     });
   } else {
     response.send(canvasResponse.body);
   }
 }
 
-module.exports = { canvasPath, canvasResponseHandler };
+export { canvasPath, canvasResponseHandler };

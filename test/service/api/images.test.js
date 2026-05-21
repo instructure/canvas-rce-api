@@ -1,11 +1,8 @@
-"use strict";
+import assert from "assert";
 
-const assert = require("assert");
-const sinon = require("sinon");
-const {
-  canvasPath,
-  canvasResponseHandler
-} = require("../../../app/api/images");
+import sinon from "sinon";
+
+import { canvasPath, canvasResponseHandler } from "../../../app/api/images.js";
 
 describe("Images API", () => {
   describe("canvasPath()", () => {
@@ -15,7 +12,7 @@ describe("Images API", () => {
       const query = { contextId: id, contextType: "course", per_page: 50 };
       assert(
         canvasPath({ params, query }) ===
-          `/api/v1/courses/${id}/files?per_page=50&content_types[]=image&use_verifiers=0`
+          `/api/v1/courses/${id}/files?per_page=50&content_types[]=image&use_verifiers=0`,
       );
     });
 
@@ -26,7 +23,7 @@ describe("Images API", () => {
       const path = canvasPath({ params, query });
       assert(
         path ===
-          `/api/v1/groups/${contextId}/files?per_page=50&content_types[]=image&use_verifiers=0`
+          `/api/v1/groups/${contextId}/files?per_page=50&content_types[]=image&use_verifiers=0`,
       );
     });
 
@@ -37,7 +34,7 @@ describe("Images API", () => {
       const path = canvasPath({ params, query });
       assert(
         path ===
-          `/api/v1/users/${contextId}/files?per_page=50&content_types[]=image&use_verifiers=0`
+          `/api/v1/users/${contextId}/files?per_page=50&content_types[]=image&use_verifiers=0`,
       );
     });
   });
@@ -48,15 +45,15 @@ describe("Images API", () => {
     beforeEach(() => {
       request = {
         protocol: "http",
-        get: () => "canvashost"
+        get: () => "canvashost",
       };
       response = {
         status: sinon.spy(),
-        send: sinon.spy()
+        send: sinon.spy(),
       };
       canvasResponse = {
         statusCode: 200,
-        body: []
+        body: [],
       };
     });
 
@@ -80,20 +77,20 @@ describe("Images API", () => {
             thumbnail_url: "thumbnail.jpg",
             display_name: "look!",
             url: "URL",
-            other: "unused_field"
-          }
+            other: "unused_field",
+          },
         ];
         canvasResponseHandler(request, response, canvasResponse);
       });
 
       it("simplifes API response", () => {
-        sinon.assert.calledWithMatch(response.send, val => {
+        sinon.assert.calledWithMatch(response.send, (val) => {
           return val.images[0].id == 1 && val.images[0].other === undefined;
         });
       });
 
       it("uses the big image for the href (which is for embedding)", () => {
-        sinon.assert.calledWithMatch(response.send, val => {
+        sinon.assert.calledWithMatch(response.send, (val) => {
           return (
             val.images[0].thumbnail_url == "thumbnail.jpg" &&
             val.images[0].preview_url == "URL" &&

@@ -1,7 +1,6 @@
-"use strict";
+import sinon from "sinon";
 
-const sessionHandler = require("../../../app/api/session");
-const sinon = require("sinon");
+import { getSessionHandler as sessionHandler } from "../../../app/api/session.js";
 
 describe("Session handler", () => {
   it("responsed with expected data from token", () => {
@@ -14,11 +13,11 @@ describe("Session handler", () => {
             can_upload_files: true,
             usage_rights_required: false,
             use_high_contrast: true,
-            can_create_pages: false
+            can_create_pages: false,
           },
-          domain: "canvas.docker"
-        }
-      }
+          domain: "canvas.docker",
+        },
+      },
     };
     const res = { json: sinon.spy() };
     sessionHandler(req, res);
@@ -29,7 +28,7 @@ describe("Session handler", () => {
       usageRightsRequired: false,
       useHighContrast: true,
       canCreatePages: false,
-      canvasUrl: "http://canvas.docker"
+      canvasUrl: "http://canvas.docker",
     });
   });
 });

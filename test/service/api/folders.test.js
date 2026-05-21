@@ -1,11 +1,8 @@
-"use strict";
+import assert from "assert";
 
-const assert = require("assert");
-const sinon = require("sinon");
-const {
-  canvasPath,
-  canvasResponseHandler
-} = require("../../../app/api/folders");
+import sinon from "sinon";
+
+import { canvasPath, canvasResponseHandler } from "../../../app/api/folders.js";
 
 describe("Folders API", () => {
   describe("canvasPath()", () => {
@@ -16,7 +13,7 @@ describe("Folders API", () => {
         const query = { per_page: 50 };
         assert(
           canvasPath({ params, query }) ===
-            `/api/v1/folders/${id}/folders?per_page=50`
+            `/api/v1/folders/${id}/folders?per_page=50`,
         );
       });
     });
@@ -28,7 +25,7 @@ describe("Folders API", () => {
         const query = { contextType: "course", contextId, per_page: 50 };
         const path = canvasPath({ params, query });
         assert(
-          path === `/api/v1/courses/${contextId}/folders/by_path?per_page=50`
+          path === `/api/v1/courses/${contextId}/folders/by_path?per_page=50`,
         );
       });
     });
@@ -40,7 +37,7 @@ describe("Folders API", () => {
         const query = { contextType: "group", contextId, per_page: 50 };
         const path = canvasPath({ params, query });
         assert(
-          path === `/api/v1/groups/${contextId}/folders/by_path?per_page=50`
+          path === `/api/v1/groups/${contextId}/folders/by_path?per_page=50`,
         );
       });
     });
@@ -52,7 +49,7 @@ describe("Folders API", () => {
         const query = { contextType: "user", contextId, per_page: 50 };
         const path = canvasPath({ params, query });
         assert(
-          path === `/api/v1/users/${contextId}/folders/by_path?per_page=50`
+          path === `/api/v1/users/${contextId}/folders/by_path?per_page=50`,
         );
       });
     });
@@ -140,22 +137,22 @@ describe("Folders API", () => {
       forwardedProto = null;
       request = {
         protocol: "http",
-        get: key => {
+        get: (key) => {
           switch (key) {
             case "host":
               return "canvashost";
             case "X-Forwarded-Proto":
               return forwardedProto;
           }
-        }
+        },
       };
       response = {
         status: sinon.spy(),
-        send: sinon.spy()
+        send: sinon.spy(),
       };
       canvasResponse = {
         statusCode: 200,
-        body: []
+        body: [],
       };
     });
 
@@ -174,7 +171,7 @@ describe("Folders API", () => {
       it("creates folders array with items from response body", () => {
         canvasResponse.body = [{}, {}, {}];
         canvasResponseHandler(request, response, canvasResponse);
-        sinon.assert.calledWithMatch(response.send, val => {
+        sinon.assert.calledWithMatch(response.send, (val) => {
           return (
             Array.isArray(val.folders) &&
             val.folders.length === canvasResponse.body.length
@@ -185,7 +182,7 @@ describe("Folders API", () => {
       it("works with a non-array response value converting it to an array", () => {
         canvasResponse.body = {};
         canvasResponseHandler(request, response, canvasResponse);
-        sinon.assert.calledWithMatch(response.send, val => {
+        sinon.assert.calledWithMatch(response.send, (val) => {
           return Array.isArray(val.folders) && val.folders.length === 1;
         });
       });
@@ -198,7 +195,7 @@ describe("Folders API", () => {
           locked_for_user: true,
           context_type: "Course",
           context_id: 22,
-          can_upload: true
+          can_upload: true,
         };
         canvasResponse.body = [folder];
         canvasResponseHandler(request, response, canvasResponse);
@@ -212,7 +209,7 @@ describe("Folders API", () => {
           id: folder.id,
           lockedForUser: folder.locked_for_user,
           name: folder.name,
-          parentId: folder.parent_folder_id
+          parentId: folder.parent_folder_id,
         });
       });
 
@@ -220,7 +217,7 @@ describe("Folders API", () => {
         const folder = { id: 47 };
         canvasResponse.body = [folder];
         canvasResponseHandler(request, response, canvasResponse);
-        sinon.assert.calledWithMatch(response.send, val => {
+        sinon.assert.calledWithMatch(response.send, (val) => {
           const baseUrl = `${request.protocol}://${request.get("host")}/api`;
           return val.folders[0].filesUrl === `${baseUrl}/files/${folder.id}`;
         });
@@ -230,7 +227,7 @@ describe("Folders API", () => {
         const folder = { id: 47 };
         canvasResponse.body = [folder];
         canvasResponseHandler(request, response, canvasResponse);
-        sinon.assert.calledWithMatch(response.send, val => {
+        sinon.assert.calledWithMatch(response.send, (val) => {
           const baseUrl = `${request.protocol}://${request.get("host")}/api`;
           return (
             val.folders[0].foldersUrl === `${baseUrl}/folders/${folder.id}`
@@ -243,7 +240,7 @@ describe("Folders API", () => {
         const folder = { id: 47 };
         canvasResponse.body = [folder];
         canvasResponseHandler(request, response, canvasResponse);
-        sinon.assert.calledWithMatch(response.send, val => {
+        sinon.assert.calledWithMatch(response.send, (val) => {
           const baseUrl = `${forwardedProto}://${request.get("host")}/api`;
           return (
             val.folders[0].filesUrl === `${baseUrl}/files/${folder.id}` &&
@@ -255,7 +252,7 @@ describe("Folders API", () => {
       it("has bookmark from canvasResponse", () => {
         canvasResponse.bookmark = "foo";
         canvasResponseHandler(request, response, canvasResponse);
-        sinon.assert.calledWithMatch(response.send, val => {
+        sinon.assert.calledWithMatch(response.send, (val) => {
           return /foo/.test(val.bookmark);
         });
       });
@@ -263,7 +260,7 @@ describe("Folders API", () => {
       it("has null bookmark if canvasResponse does not have one", () => {
         canvasResponse.bookmark = undefined;
         canvasResponseHandler(request, response, canvasResponse);
-        sinon.assert.calledWithMatch(response.send, val => {
+        sinon.assert.calledWithMatch(response.send, (val) => {
           return val.bookmark === null;
         });
       });

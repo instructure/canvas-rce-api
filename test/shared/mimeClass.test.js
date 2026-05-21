@@ -1,7 +1,6 @@
-"use strict";
+import assert from "assert";
 
-const assert = require("assert");
-const { fileEmbed, mimeClass } = require("../../shared/mimeClass");
+import { fileEmbed, mimeClass } from "../../shared/mimeClass.js";
 
 describe("fileEmbed", () => {
   it("defaults to file", () => {
@@ -20,7 +19,7 @@ describe("fileEmbed", () => {
   it("returns media entry id if provided", () => {
     let video = fileEmbed({
       "content-type": "video/mp4",
-      media_entry_id: "42"
+      media_entry_id: "42",
     });
     assert.equal(video.id, "42");
   });
@@ -38,7 +37,7 @@ describe("fileEmbed", () => {
   it("uses content-type to identify images", () => {
     let image = fileEmbed({
       "content-type": "image/png",
-      canvadoc_session_url: "some-url"
+      canvadoc_session_url: "some-url",
     });
     assert.equal(image.type, "image");
   });

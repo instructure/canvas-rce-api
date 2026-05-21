@@ -1,5 +1,3 @@
-"use strict";
-
 function buildUrl(domain, path) {
   var protocol = "http";
   if (process.env.HTTP_PROTOCOL_OVERRIDE) {
@@ -10,4 +8,4 @@ function buildUrl(domain, path) {
   return protocol + "://" + domain + (path || "");
 }
 
-module.exports = buildUrl;
+export { buildUrl };

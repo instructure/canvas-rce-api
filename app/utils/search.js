@@ -6,6 +6,7 @@ function getSearch(query) {
   }
 
   let encodedTerm;
+  let isSearchTermEncoded;
   try {
     isSearchTermEncoded = searchTerm !== decodeURIComponent(searchTerm);
     encodedTerm = isSearchTermEncoded
@@ -17,4 +18,4 @@ function getSearch(query) {
   return `&search_term=${encodedTerm}`;
 }
 
-module.exports = { getSearch };
+export { getSearch };

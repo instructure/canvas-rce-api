@@ -1,8 +1,6 @@
-"use strict";
+import { getSearch } from "../utils/search.js";
 
-const packageBookmark = require("./packageBookmark");
-const { getSearch } = require("../utils/search");
-
+import { packageBookmark } from "./packageBookmark.js";
 // to limit the results to media_objects associated with a course
 // the api includes contextType and contextId query_string parameters.
 function getContext(query) {
@@ -104,7 +102,7 @@ function canvasPathPUT(request) {
     ? "media_attachments"
     : "media_objects";
   return `/api/v1/${path}/${moid}?user_entered_title=${encodeURIComponent(
-    user_entered_title
+    user_entered_title,
   )}`;
 }
 
@@ -113,13 +111,13 @@ function canvasResponseHandler(request, response, canvasResponse) {
   if (canvasResponse.statusCode === 200) {
     const mediaObjs = canvasResponse.body;
     if (Array.isArray(mediaObjs)) {
-      const transformedObjs = mediaObjs.map(obj => {
+      const transformedObjs = mediaObjs.map((obj) => {
         return transformMediaObject(obj);
       });
 
       response.send({
         files: transformedObjs,
-        bookmark: packageBookmark(request, canvasResponse.bookmark)
+        bookmark: packageBookmark(request, canvasResponse.bookmark),
       });
     } else {
       const mediaObj = transformMediaObject(mediaObjs);
@@ -138,7 +136,7 @@ function transformMediaObject(obj) {
     media_object: obj.media_object,
     date: obj.created_at,
     published: true, // TODO: is this true?
-    embedded_iframe_url: obj.embedded_iframe_url
+    embedded_iframe_url: obj.embedded_iframe_url,
   };
 }
-module.exports = { canvasPath, canvasResponseHandler };
+export { canvasPath, canvasResponseHandler };

@@ -1,10 +1,10 @@
-"use strict";
+import assert from "assert";
 
-const canvasProxy = require("../../../app/api/canvasProxy");
-const assert = require("assert");
-const nock = require("nock");
-const sinon = require("sinon");
-const sign = require("../../../app/utils/sign");
+import nock from "nock";
+import sinon from "sinon";
+
+import * as canvasProxy from "../../../app/api/canvasProxy.js";
+import { signer } from "../../../app/utils/sign.js";
 
 describe("Canvas Proxy", () => {
   let httpStub;
@@ -90,13 +90,9 @@ describe("Canvas Proxy", () => {
       const bookmark = "bookmarkValue";
 
       it("signs bookmark from link header and includes in response", async () => {
-        const mock = sinon.mock(sign);
+        const mock = sinon.mock(signer);
         const signed = "signed";
-        mock
-          .expects("sign")
-          .once()
-          .withExactArgs(bookmark)
-          .returns(signed);
+        mock.expects("sign").once().withExactArgs(bookmark).returns(signed);
         httpStub
           .get(path)
           .reply(200, { some: "data" }, { Link: `<${bookmark}>; rel="next"` });

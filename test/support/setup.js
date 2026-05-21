@@ -1,3 +1,3 @@
-"use strict";
+import fetch from "node-fetch";
 
-global.fetch = require("node-fetch");
+global.fetch = fetch;

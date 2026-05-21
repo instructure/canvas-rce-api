@@ -1,7 +1,6 @@
-"use strict";
+import { getSearch } from "../utils/search.js";
 
-const linksResponseHandler = require("./linksResponseHandler");
-const { getSearch } = require("../utils/search");
+import { linksResponseHandler } from "./linksResponseHandler.js";
 
 function canvasPath(request) {
   const search = getSearch(request.query);
@@ -18,16 +17,16 @@ function canvasPath(request) {
 }
 
 const canvasResponseHandler = linksResponseHandler((request, results) => {
-  return results.map(wikiPage => {
+  return results.map((wikiPage) => {
     return {
       href: wikiPage.html_url,
       title: wikiPage.title,
       published: wikiPage.published,
       date: wikiPage.todo_date || null,
       date_type: "todo",
-      editor: wikiPage.editor || null
+      editor: wikiPage.editor || null,
     };
   });
 });
 
-module.exports = { canvasPath, canvasResponseHandler };
+export { canvasPath, canvasResponseHandler };

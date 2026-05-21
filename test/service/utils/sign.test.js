@@ -1,8 +1,8 @@
-"use strict";
+import assert from "assert";
 
-const assert = require("assert");
-const sign = require("../../../app/utils/sign");
-const sinon = require("sinon");
+import sinon from "sinon";
+
+import { signer as sign } from "../../../app/utils/sign.js";
 
 describe("sign util", () => {
   let originalSecret, clock;

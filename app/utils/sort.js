@@ -9,4 +9,4 @@ function getSort(query) {
   return orderBy ? `&sort=${sortBy}&order=${orderBy}` : `&sort=${sortBy}`;
 }
 
-module.exports = { getSort };
+export { getSort };

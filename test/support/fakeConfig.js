@@ -1,8 +1,6 @@
-"use strict";
-
-const _config = require("../../app/config");
-const _env = require("../../app/env");
-const configs = require("../../config");
+import _config from "../../app/config.js";
+import _env from "../../app/env.js";
+import configs from "../../config/index.js";
 
 function fakeConfig(envOverrides = {}, configOverrides = {}) {
   const env = _env.init({ ...process.env, ...envOverrides });
@@ -10,4 +8,4 @@ function fakeConfig(envOverrides = {}, configOverrides = {}) {
   return _config.init(env, conf);
 }
 
-module.exports = fakeConfig;
+export { fakeConfig };

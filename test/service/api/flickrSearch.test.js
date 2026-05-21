@@ -1,8 +1,8 @@
-"use strict";
+import assert from "assert";
 
-const flickrSearch = require("../../../app/api/flickrSearch");
-const assert = require("assert");
-const nock = require("nock");
+import nock from "nock";
+
+import { flickrSearch } from "../../../app/api/flickrSearch.js";
 
 describe("Flickr Search", () => {
   beforeEach(() => {
@@ -23,15 +23,15 @@ describe("Flickr Search", () => {
       nojsoncallback: "1",
       api_key: "some-long-api-key",
       text: searchTerm,
-      extras: "needs_interstitial"
+      extras: "needs_interstitial",
     };
     return nock("https://api.flickr.com")
       .get("/services/rest")
       .query(queryParams)
       .reply(200, {
         photos: {
-          photo: body
-        }
+          photo: body,
+        },
       });
   };
 
@@ -41,60 +41,60 @@ describe("Flickr Search", () => {
       send: () => {
         assert.ok(scope.isDone());
         done();
-      }
+      },
     };
   };
 
-  let buildRequest = searchTerm => {
+  let buildRequest = (searchTerm) => {
     return {
-      query: { term: searchTerm }
+      query: { term: searchTerm },
     };
   };
 
-  it("uses the api key and search term", done => {
+  it("uses the api key and search term", (done) => {
     let req = buildRequest("chess");
     let scope = buildFlickrScope([], "chess");
     let resp = buildResponseForScope(scope, done);
     flickrSearch(req, resp);
   });
 
-  it("uri encodes search term", done => {
+  it("uri encodes search term", (done) => {
     let req = buildRequest("cute cats");
     let scope = buildFlickrScope([], "cute cats");
     let resp = buildResponseForScope(scope, done);
     flickrSearch(req, resp);
   });
 
-  it("transforms results into useful links", done => {
+  it("transforms results into useful links", (done) => {
     let req = buildRequest("am");
     let body = [
       { farm: 1, server: 2, id: 3, secret: 4, title: "ham" },
-      { farm: 5, server: 6, id: 7, secret: 8, title: "spam" }
+      { farm: 5, server: 6, id: 7, secret: 8, title: "spam" },
     ];
     buildFlickrScope(body, "am");
 
     let resp = {
       status: () => {},
-      send: body => {
+      send: (body) => {
         assert.equal(body[0].href, "https://farm1.static.flickr.com/2/3_4.jpg");
         done();
-      }
+      },
     };
 
     flickrSearch(req, resp);
   });
 
-  it("transform includes link to web page for photo", done => {
+  it("transform includes link to web page for photo", (done) => {
     let req = buildRequest("am");
     let body = [
       { farm: 1, server: 2, id: 3, secret: 4, title: "ham", owner: "bill" },
-      { farm: 5, server: 6, id: 7, secret: 8, title: "spam", owner: "bob" }
+      { farm: 5, server: 6, id: 7, secret: 8, title: "spam", owner: "bob" },
     ];
     buildFlickrScope(body, "am");
 
     let resp = {
       status: () => {},
-      send: body => {
+      send: (body) => {
         try {
           assert.equal(body[0].link, "https://www.flickr.com/photos/bill/3");
           assert.equal(body[1].link, "https://www.flickr.com/photos/bob/7");
@@ -102,13 +102,13 @@ describe("Flickr Search", () => {
         } catch (err) {
           done(err);
         }
-      }
+      },
     };
 
     flickrSearch(req, resp);
   });
 
-  it("transformSearchResults removes photos with needs_interstitial=1", done => {
+  it("transformSearchResults removes photos with needs_interstitial=1", (done) => {
     let req = buildRequest("am");
     let body = [
       {
@@ -118,7 +118,7 @@ describe("Flickr Search", () => {
         secret: 4,
         title: "ham",
         owner: "bill",
-        needs_interstitial: 1
+        needs_interstitial: 1,
       },
       {
         farm: 5,
@@ -127,14 +127,14 @@ describe("Flickr Search", () => {
         secret: 8,
         title: "spam",
         owner: "bob",
-        needs_interstitial: 0
-      }
+        needs_interstitial: 0,
+      },
     ];
     buildFlickrScope(body, "am");
 
     let resp = {
       status: () => {},
-      send: body => {
+      send: (body) => {
         try {
           assert.equal(body.length, 1);
           assert.equal(body[0].link, "https://www.flickr.com/photos/bob/7");
@@ -142,7 +142,7 @@ describe("Flickr Search", () => {
         } catch (err) {
           done(err);
         }
-      }
+      },
     };
 
     flickrSearch(req, resp);

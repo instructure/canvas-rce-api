@@ -4,12 +4,11 @@
  * First use is for the documents pane of the content tray for the canvas-rce, but
  * it can be used for images and media files too
  */
-"use strict";
+import { getArrayQueryParam } from "../utils/object.js";
+import { optionalQuery } from "../utils/optionalQuery.js";
+import { getSearch } from "../utils/search.js";
 
-const packageBookmark = require("./packageBookmark");
-const { getArrayQueryParam } = require("../utils/object");
-const { getSearch } = require("../utils/search");
-const { optionalQuery } = require("../utils/optionalQuery");
+import { packageBookmark } from "./packageBookmark.js";
 
 function getContentTypes(query) {
   const list = getArrayQueryParam(query.content_types);
@@ -119,4 +118,4 @@ function canvasResponseHandler(request, response, canvasResponse) {
   }
 }
 
-module.exports = { canvasPath, canvasResponseHandler };
+export { canvasPath, canvasResponseHandler };

@@ -1,7 +1,6 @@
-"use strict";
+import StatsD from "hot-shots";
 
-const _config = require("../config");
-const StatsD = require("hot-shots");
+import _config from "../config.js";
 
 class StatsMiddleware {
   static inject() {
@@ -21,10 +20,7 @@ class StatsMiddleware {
     }
     return (request, response, next) => {
       if (actionKey == "__path__") {
-        actionKey = request.path
-          .split("/")
-          .join("-")
-          .replace(/^-/, "");
+        actionKey = request.path.split("/").join("-").replace(/^-/, "");
       }
       request.actionKey = actionKey;
       next();
@@ -37,7 +33,7 @@ class StatsMiddleware {
     this.statsd = new StatsD({
       host: config.get("stats.host"),
       port: config.get("stats.port"),
-      globalTags: typeof this.tags === "object" ? this.tags : {}
+      globalTags: typeof this.tags === "object" ? this.tags : {},
     });
     this.handle = this.handle.bind(this);
   }
@@ -72,14 +68,14 @@ class StatsMiddleware {
       const status = res.statusCode || "unknown_status";
       this.increment(`${action}.status_code.${status}`, "response", {
         action,
-        status
+        status,
       });
       const duration = Date.now() - start;
       this.timing(
         `${action}.response_time`,
         "response_time",
         { action },
-        duration
+        duration,
       );
       for (const key in req.timers) {
         // eslint-disable-next-line security/detect-object-injection
@@ -99,4 +95,4 @@ class StatsMiddleware {
   }
 }
 
-module.exports = StatsMiddleware;
+export { StatsMiddleware };

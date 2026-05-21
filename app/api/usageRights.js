@@ -1,5 +1,3 @@
-"use strict";
-
 function canvasPath(request) {
   const { context_type, context_id } = request.auth.payload;
   switch (context_type) {
@@ -22,9 +20,9 @@ function transformBody(body) {
     usage_rights: {
       use_justification: body.usageRight,
       legal_copyright: body.copyrightHolder,
-      license: body.ccLicense
-    }
+      license: body.ccLicense,
+    },
   };
 }
 
-module.exports = { canvasPath, transformBody };
+export { canvasPath, transformBody };

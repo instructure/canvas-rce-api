@@ -1,8 +1,8 @@
-"use strict";
+import assert from "assert";
 
-const youTubeTitle = require("../../../app/api/youTubeApi");
-const assert = require("assert");
-const nock = require("nock");
+import nock from "nock";
+
+import { youTubeTitle } from "../../../app/api/youTubeApi.js";
 
 describe("YouTube API", () => {
   beforeEach(() => {
@@ -18,7 +18,7 @@ describe("YouTube API", () => {
       part: "snippet",
       maxResults: "2",
       q: `"${vidId}"`,
-      key: "some-long-api-key"
+      key: "some-long-api-key",
     };
     return nock("https://content.googleapis.com")
       .get("/youtube/v3/search")
@@ -26,55 +26,55 @@ describe("YouTube API", () => {
       .reply(result, body);
   };
 
-  it("uses the api key and search term", done => {
+  it("uses the api key and search term", (done) => {
     let vidId = "abcdefghijk";
     let req = { query: { vid_id: vidId } };
     let scope = buildYouTubeScope(vidId, {
       items: [
         {
           id: { videoId: `${vidId}` },
-          snippet: { title: `my video title ${vidId}` }
-        }
-      ]
+          snippet: { title: `my video title ${vidId}` },
+        },
+      ],
     });
     let resp = {
-      status: status => {
+      status: (status) => {
         assert.equal(status, 200);
       },
       json: () => {
         assert.ok(scope.isDone());
         done();
-      }
+      },
     };
     youTubeTitle(req, resp);
   });
 
-  it("fails on vidId not found", done => {
+  it("fails on vidId not found", (done) => {
     let vidId = "bogusidhere";
     let req = { query: { vid_id: vidId } };
     buildYouTubeScope(vidId, {
       items: [
         {
           id: { videoId: "otherbogusis" },
-          snippet: { title: "my video title otherbogusid" }
-        }
-      ]
+          snippet: { title: "my video title otherbogusid" },
+        },
+      ],
     });
     let resp = {
-      status: status => {
+      status: (status) => {
         assert.equal(status, 500);
       },
-      send: data => {
+      send: (data) => {
         assert.equal(data, `Video "${vidId}" not found.`);
         done();
-      }
+      },
     };
     youTubeTitle(req, resp);
   });
 
-  it("escapes HTML in vidId to prevent XSS", done => {
+  it("escapes HTML in vidId to prevent XSS", (done) => {
     const vidId = '<script>alert("xss")</script>';
-    const escapedVidId = '&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;';
+    const escapedVidId = "&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;";
 
     const req = { query: { vid_id: vidId } };
 
@@ -83,45 +83,51 @@ describe("YouTube API", () => {
       items: [
         {
           id: { videoId: "otherbogusid" },
-          snippet: { title: "my video title otherbogusid" }
-        }
-      ]
+          snippet: { title: "my video title otherbogusid" },
+        },
+      ],
     });
 
     const resp = {
       type: () => {},
-      status: code => {
+      status: (code) => {
         assert.equal(code, 500);
         return resp;
       },
-      send: data => {
-        assert.ok(data.includes(escapedVidId), "Response does not escape input");
-        assert.ok(!data.includes("<script>"), "Response includes raw script tag!");
+      send: (data) => {
+        assert.ok(
+          data.includes(escapedVidId),
+          "Response does not escape input",
+        );
+        assert.ok(
+          !data.includes("<script>"),
+          "Response includes raw script tag!",
+        );
         done();
-      }
+      },
     };
 
     youTubeTitle(req, resp);
   });
 
-  it("fails on youtube call fail", done => {
+  it("fails on youtube call fail", (done) => {
     let vidId = "abcdefghijk";
     let req = { query: { vid_id: vidId } };
     buildYouTubeScope(
       vidId,
       {
-        errors: [{ error: 100, message: "this error message" }]
+        errors: [{ error: 100, message: "this error message" }],
       },
-      500
+      500,
     );
     let resp = {
-      status: status => {
+      status: (status) => {
         assert.equal(status, 500);
       },
-      send: data => {
+      send: (data) => {
         assert.equal(data, "Internal Error, see server logs");
         done();
-      }
+      },
     };
     youTubeTitle(req, resp);
   });

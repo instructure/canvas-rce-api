@@ -1,11 +1,11 @@
-"use strict";
+import { strictEqual } from "assert";
 
-const { strictEqual } = require("assert");
-const sinon = require("sinon");
-const {
+import sinon from "sinon";
+
+import {
   canvasPath,
   canvasResponseHandler,
-} = require("../../../app/api/documents");
+} from "../../../app/api/documents.js";
 
 describe("Documents API", () => {
   describe("canvasPath()", () => {
@@ -16,7 +16,7 @@ describe("Documents API", () => {
       const path = canvasPath({ params, query });
       strictEqual(
         path,
-        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0`
+        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0`,
       );
     });
 
@@ -27,7 +27,7 @@ describe("Documents API", () => {
       const path = canvasPath({ params, query });
       strictEqual(
         path,
-        `/api/v1/groups/${contextId}/files?per_page=50&use_verifiers=0`
+        `/api/v1/groups/${contextId}/files?per_page=50&use_verifiers=0`,
       );
     });
 
@@ -38,7 +38,7 @@ describe("Documents API", () => {
       const path = canvasPath({ params, query });
       strictEqual(
         path,
-        `/api/v1/users/${contextId}/files?per_page=50&use_verifiers=0`
+        `/api/v1/users/${contextId}/files?per_page=50&use_verifiers=0`,
       );
     });
 
@@ -54,7 +54,7 @@ describe("Documents API", () => {
       const path = canvasPath({ params, query });
       strictEqual(
         path,
-        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&content_types[]=text&content_types[]=application`
+        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&content_types[]=text&content_types[]=application`,
       );
     });
 
@@ -70,7 +70,7 @@ describe("Documents API", () => {
       const path = canvasPath({ params, query });
       strictEqual(
         path,
-        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&content_types[]=text&content_types[]=application`
+        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&content_types[]=text&content_types[]=application`,
       );
     });
 
@@ -86,7 +86,7 @@ describe("Documents API", () => {
       const path = canvasPath({ params, query });
       strictEqual(
         path,
-        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&exclude_content_types[]=text&exclude_content_types[]=application`
+        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&exclude_content_types[]=text&exclude_content_types[]=application`,
       );
     });
 
@@ -102,7 +102,7 @@ describe("Documents API", () => {
       const path = canvasPath({ params, query });
       strictEqual(
         path,
-        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&exclude_content_types[]=text&exclude_content_types[]=application`
+        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&exclude_content_types[]=text&exclude_content_types[]=application`,
       );
     });
 
@@ -118,7 +118,7 @@ describe("Documents API", () => {
       const path = canvasPath({ params, query });
       strictEqual(
         path,
-        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&sort=name&order=asc`
+        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&sort=name&order=asc`,
       );
     });
 
@@ -135,7 +135,7 @@ describe("Documents API", () => {
       const path = canvasPath({ params, query });
       strictEqual(
         path,
-        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&sort=name&order=desc`
+        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&sort=name&order=desc`,
       );
     });
 
@@ -153,7 +153,7 @@ describe("Documents API", () => {
       const path = canvasPath({ params, query });
       strictEqual(
         path,
-        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&sort=name&order=desc&search_term=foo%20bar`
+        `/api/v1/courses/${id}/files?per_page=50&use_verifiers=0&sort=name&order=desc&search_term=foo%20bar`,
       );
     });
 
@@ -178,7 +178,7 @@ describe("Documents API", () => {
         const path = canvasPath({ params, query });
         strictEqual(
           path,
-          `/api/v1/courses/47/files?per_page=50&use_verifiers=0&sort=name&order=desc&search_term=foo%20bar&category=uncategorized`
+          `/api/v1/courses/47/files?per_page=50&use_verifiers=0&sort=name&order=desc&search_term=foo%20bar&category=uncategorized`,
         );
       });
     });

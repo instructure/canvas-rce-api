@@ -1,21 +1,20 @@
-"use strict";
-
-const js = require("@eslint/js");
-const globals = require("globals");
-const mocha = require("eslint-plugin-mocha");
-const security = require("eslint-plugin-security");
-const prettier = require("eslint-config-prettier");
+import js from "@eslint/js";
+import globals from "globals";
+import mocha from "eslint-plugin-mocha";
+import security from "eslint-plugin-security";
+import importPlugin from "eslint-plugin-import";
+import prettier from "eslint-config-prettier";
 
 const mochaPlugin = mocha.default || mocha;
 
-module.exports = [
+export default [
   js.configs.recommended,
   security.configs.recommended,
   {
     files: ["app/**/*.js", "test/**/*.js", "shared/**/*.js"],
     languageOptions: {
       ecmaVersion: 2022,
-      sourceType: "commonjs",
+      sourceType: "module",
       globals: {
         ...globals.node,
         ...globals.mocha,
@@ -25,12 +24,24 @@ module.exports = [
     plugins: {
       mocha: mochaPlugin,
       security,
+      import: importPlugin,
     },
     rules: {
       strict: 0,
       "mocha/no-exclusive-tests": 2,
       "mocha/handle-done-callback": 2,
       "mocha/no-global-tests": 2,
+      "import/newline-after-import": ["error", { count: 1 }],
+      "import/order": [
+        "error",
+        {
+          groups: ["builtin", "external", "parent", "sibling", "index"],
+          "newlines-between": "always",
+          alphabetize: { order: "asc", caseInsensitive: true },
+        },
+      ],
+      "sort-imports": ["error", { ignoreDeclarationSort: true }],
+      "eol-last": ["error", "always"],
       // Allow intentionally unused identifiers when prefixed with `_`.
       "no-unused-vars": [
         "error",

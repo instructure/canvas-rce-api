@@ -1,7 +1,6 @@
-"use strict";
+import { getSearch } from "../utils/search.js";
 
-const linksResponseHandler = require("./linksResponseHandler");
-const { getSearch } = require("../utils/search");
+import { linksResponseHandler } from "./linksResponseHandler.js";
 
 function canvasPath(request) {
   const search = getSearch(request.query);
@@ -18,7 +17,7 @@ function canvasPath(request) {
 }
 
 const canvasResponseHandler = linksResponseHandler((request, results) => {
-  return results.map(discussion => {
+  return results.map((discussion) => {
     let date = null;
     let date_type = null;
     if (discussion.assignment && discussion.assignment.due_at) {
@@ -33,9 +32,9 @@ const canvasResponseHandler = linksResponseHandler((request, results) => {
       title: discussion.title,
       published: discussion.published,
       date,
-      date_type
+      date_type,
     };
   });
 });
 
-module.exports = { canvasPath, canvasResponseHandler };
+export { canvasPath, canvasResponseHandler };

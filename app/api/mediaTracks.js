@@ -1,11 +1,10 @@
-"use strict";
-const InvalidMediaTrack = require("../exceptions/InvalidMediaTrackException");
-const { getArrayQueryParam } = require("../utils/object");
+import { InvalidMediaTrack } from "../exceptions/InvalidMediaTrackException.js";
+import { getArrayQueryParam } from "../utils/object.js";
 
 function getIncludes(query) {
   const list = getArrayQueryParam(query.include);
   if (list && list.length) {
-    return "?" + list.map(t => `include[]=${t}`).join("&");
+    return "?" + list.map((t) => `include[]=${t}`).join("&");
   }
   return "";
 }
@@ -23,7 +22,7 @@ function transformBody(body) {
   if (!Array.isArray(body)) {
     throw InvalidMediaTrack.badFormat();
   }
-  const tracks = body.map(t => {
+  const tracks = body.map((t) => {
     if (!t.locale) {
       throw InvalidMediaTrack.missingLocale();
     }
@@ -41,4 +40,4 @@ function canvasResponseHandler(request, response, canvasResponse) {
   response.send(canvasResponse.body);
 }
 
-module.exports = { canvasPath, canvasResponseHandler, transformBody };
+export { canvasPath, canvasResponseHandler, transformBody };

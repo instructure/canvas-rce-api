@@ -1,8 +1,8 @@
-"use strict";
+import assert from "assert";
 
-const assert = require("assert");
-const sinon = require("sinon");
-const quizzes = require("../../../app/api/quizzes");
+import sinon from "sinon";
+
+import * as quizzes from "../../../app/api/quizzes.js";
 
 describe("Quizzes API", () => {
   describe("canvasPath", () => {
@@ -65,9 +65,9 @@ describe("Quizzes API", () => {
             all_dates: [{ due_at: "2019-04-22T13:00:00Z" }],
             due_at: "2019-04-22T13:00:00Z",
             quiz_type: "assignment",
-            ...overrides
-          }
-        ]
+            ...overrides,
+          },
+        ],
       };
 
       sinon.spy(response, "send");
@@ -102,9 +102,9 @@ describe("Quizzes API", () => {
       const [result] = setup(200, {
         all_dates: [
           { due_at: "2019-04-22T13:00:00Z" },
-          { due_at: "2019-04-23T13:00:00Z" }
+          { due_at: "2019-04-23T13:00:00Z" },
         ],
-        due_at: null
+        due_at: null,
       });
       assert.equal(result.links[0].date, "multiple");
       assert.equal(result.links[0].date_type, "due");

@@ -1,8 +1,7 @@
-"use strict";
+import { format, parse } from "url";
 
-const { parse, format } = require("url");
-const { fileEmbed } = require("../../shared/mimeClass");
-const { optionalQuery } = require("../utils/optionalQuery");
+import { fileEmbed } from "../../shared/mimeClass.js";
+import { optionalQuery } from "../utils/optionalQuery.js";
 
 function canvasPath(request) {
   const uri = parse(`/api/v1/files/${request.params.fileId}`);
@@ -37,11 +36,11 @@ function canvasResponseHandler(request, response, canvasResponse) {
       embed: fileEmbed(file),
       restricted_by_master_course: file.restricted_by_master_course,
       is_master_course_child_content: file.is_master_course_child_content,
-      is_master_course_master_content: file.is_master_course_master_content
+      is_master_course_master_content: file.is_master_course_master_content,
     });
   } else {
     response.send(canvasResponse.body);
   }
 }
 
-module.exports = { canvasPath, canvasResponseHandler };
+export { canvasPath, canvasResponseHandler };

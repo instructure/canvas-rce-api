@@ -1,6 +1,4 @@
-"use strict";
-
-module.exports = env => ({
+export default (env) => ({
   encryptionSecret: env.require("ECOSYSTEM_KEY"),
-  signingSecret: env.require("ECOSYSTEM_SECRET")
+  signingSecret: env.require("ECOSYSTEM_SECRET"),
 });

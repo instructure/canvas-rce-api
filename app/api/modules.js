@@ -1,7 +1,6 @@
-"use strict";
+import { getSearch } from "../utils/search.js";
 
-const linksResponseHandler = require("./linksResponseHandler");
-const { getSearch } = require("../utils/search");
+import { linksResponseHandler } from "./linksResponseHandler.js";
 
 function canvasPath(request) {
   const search = getSearch(request.query);
@@ -19,13 +18,13 @@ const canvasResponseHandler = linksResponseHandler((request, results) => {
   // Canvas' API for modules doesn't have an html_url, so we have to construct
   // it ourselves with knowledge of Canvas' internals (boo)
   let prefix = `/courses/${request.query.contextId}/modules/`;
-  return results.map(module => {
+  return results.map((module) => {
     return {
       href: prefix + module.id,
       title: module.name,
-      published: module.published
+      published: module.published,
     };
   });
 });
 
-module.exports = { canvasPath, canvasResponseHandler };
+export { canvasPath, canvasResponseHandler };

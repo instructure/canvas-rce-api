@@ -7,9 +7,7 @@
  * Uses ECOSYSTEM_SECRET from the environment as the signing secret.
  */
 
-"use strict";
-
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
 const DEFAULT_EXP = 24 * 60 * 60;
 const SECRET = process.env.ECOSYSTEM_SECRET;
@@ -40,4 +38,4 @@ function verify(token) {
   }
 }
 
-module.exports = { sign, verify };
+export const signer = { sign, verify };

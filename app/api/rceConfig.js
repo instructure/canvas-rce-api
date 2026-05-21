@@ -1,10 +1,8 @@
-"use strict";
-
 function canvasPath(request) {
   if (!request.query.contextId)
     throw new Error("missing contextId parameter from query param");
 
-  const queryParamName = (contextType => {
+  const queryParamName = ((contextType) => {
     switch (contextType) {
       case "course":
         return "course_id";
@@ -22,4 +20,4 @@ function canvasPath(request) {
   return `/api/v1/services/rce_config?${queryParamName}=${request.query.contextId}`;
 }
 
-module.exports = { canvasPath };
+export { canvasPath };

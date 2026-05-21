@@ -1,13 +1,11 @@
-"use strict";
-
-const fs = require("fs");
+import fs from "fs";
 
 function defaultResponse() {
   return {
     components: [],
     name: "Rich Content Service",
     status: 200,
-    version: `${getVersion()}`
+    version: `${getVersion()}`,
   };
 }
 
@@ -15,14 +13,14 @@ function defaultFSResponse() {
   return {
     message: "Filesystem healthy",
     name: "Filesystem",
-    status: 200
+    status: 200,
   };
 }
 
 function fsHealthy(callback) {
   const state = defaultFSResponse();
 
-  return new Promise(function(resolve, _reject) {
+  return new Promise(function (resolve, _reject) {
     fs.stat("/tmp", (err, stats) => {
       if (err || !stats.isDirectory()) {
         state.status = 503;
@@ -39,7 +37,7 @@ async function combineTests(tests, callback) {
   const response = defaultResponse();
 
   for (const test of tests) {
-    await test(componentState => {
+    await test((componentState) => {
       if (componentState.status !== 200) {
         response.status = 503;
       }
@@ -54,10 +52,10 @@ async function combineTests(tests, callback) {
 function healthcheck() {
   const tests = [fsHealthy];
 
-  return function(_req, res, _next) {
-    return new Promise(function(resolve, _reject) {
+  return function (_req, res, _next) {
+    return new Promise(function (resolve, _reject) {
       try {
-        combineTests(tests, function(response) {
+        combineTests(tests, function (response) {
           res.status(response.status).json(response);
           resolve();
         });
@@ -72,7 +70,6 @@ function healthcheck() {
 function getVersion() {
   let version = 0;
   try {
-    const fs = require("fs");
     const packageJson = fs.readFileSync("./package.json");
     return JSON.parse(packageJson).version || 0;
   } catch (_ex) {
@@ -81,4 +78,4 @@ function getVersion() {
   return version;
 }
 
-module.exports = healthcheck;
+export { healthcheck };

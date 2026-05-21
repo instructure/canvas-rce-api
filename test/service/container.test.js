@@ -1,7 +1,6 @@
-"use strict";
+import { equal } from "assert";
 
-const { equal } = require("assert");
-const container = require("../../app/container");
+import container from "../../app/container.js";
 
 describe("container", () => {
   it("returns a working container", () => {

@@ -1,7 +1,4 @@
-"use strict";
-
-const querystring = require("querystring");
-
+import querystring from "querystring";
 // package bookmark from canvas to be embedded as a query parameter to the same
 // path as the current request, and with all the same query parameters as the
 // current request (except replacing any existing bookmark)
@@ -16,4 +13,4 @@ function packageBookmark(request, bookmark) {
   }
 }
 
-module.exports = packageBookmark;
+export { packageBookmark };

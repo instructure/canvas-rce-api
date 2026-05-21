@@ -1,7 +1,6 @@
-"use strict";
+import { getSearch } from "../utils/search.js";
 
-const linksResponseHandler = require("./linksResponseHandler");
-const { getSearch } = require("../utils/search");
+import { linksResponseHandler } from "./linksResponseHandler.js";
 
 function canvasPath(request) {
   const search = getSearch(request.query);
@@ -18,7 +17,7 @@ function canvasPath(request) {
 }
 
 const canvasResponseHandler = linksResponseHandler((request, results) => {
-  return results.map(announcement => {
+  return results.map((announcement) => {
     let date = announcement.posted_at;
     let date_type = "posted";
     // posted_at date is created_at date until delayed post actually posts
@@ -30,9 +29,9 @@ const canvasResponseHandler = linksResponseHandler((request, results) => {
       href: announcement.html_url,
       title: announcement.title,
       date,
-      date_type
+      date_type,
     };
   });
 });
 
-module.exports = { canvasPath, canvasResponseHandler };
+export { canvasPath, canvasResponseHandler };

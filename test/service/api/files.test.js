@@ -1,8 +1,8 @@
-"use strict";
+import assert from "assert";
 
-const assert = require("assert");
-const sinon = require("sinon");
-const { canvasPath, canvasResponseHandler } = require("../../../app/api/files");
+import sinon from "sinon";
+
+import { canvasPath, canvasResponseHandler } from "../../../app/api/files.js";
 
 describe("Files API", () => {
   describe("canvasPath()", () => {

@@ -1,7 +1,6 @@
-"use strict";
+import { equal, ok } from "assert";
 
-const { equal, ok } = require("assert");
-const ConfigRequiredException = require("../../../app/exceptions/ConfigRequiredException");
+import { ConfigRequiredException } from "../../../app/exceptions/ConfigRequiredException.js";
 
 describe("ConfigRequiredException", () => {
   describe("forPath", () => {

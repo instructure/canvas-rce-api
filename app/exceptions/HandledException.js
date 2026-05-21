@@ -1,8 +1,13 @@
-"use strict";
+class HandledException extends Error {
+  constructor(message, status = 500, code) {
+    super(message);
+    this.name = this.constructor.name;
+    this.status = status;
+    if (code !== undefined) {
+      this.code = code;
+    }
+  }
 
-const { LogicalException } = require("node-exceptions");
-
-class HandledException extends LogicalException {
   responseStatus() {
     return this.status || 500;
   }
@@ -14,4 +19,4 @@ class HandledException extends LogicalException {
   }
 }
 
-module.exports = HandledException;
+export { HandledException };

@@ -1,12 +1,12 @@
-"use strict";
+import assert from "assert";
 
-const assert = require("assert");
-const sinon = require("sinon");
-const {
+import sinon from "sinon";
+
+import {
   canvasPath,
+  canvasResponseHandler,
   transformBody,
-  canvasResponseHandler
-} = require("../../../app/api/mediaTracks");
+} from "../../../app/api/mediaTracks.js";
 
 describe("MediaTracks API", () => {
   describe("canvasPath()", () => {
@@ -17,7 +17,7 @@ describe("MediaTracks API", () => {
         const path = canvasPath({ params, query, method: "GET" });
         assert.equal(
           path,
-          "/api/v1/media_objects/m-theidgoeshere/media_tracks"
+          "/api/v1/media_objects/m-theidgoeshere/media_tracks",
         );
       });
 
@@ -34,7 +34,7 @@ describe("MediaTracks API", () => {
         const path = canvasPath({ params, query, method: "GET" });
         assert.equal(
           path,
-          "/api/v1/media_objects/m-theidgoeshere/media_tracks?include[]=content&include[]=user_id"
+          "/api/v1/media_objects/m-theidgoeshere/media_tracks?include[]=content&include[]=user_id",
         );
       });
     });
@@ -46,7 +46,7 @@ describe("MediaTracks API", () => {
         const path = canvasPath({ params, query, method: "PUT" });
         assert.equal(
           path,
-          "/api/v1/media_objects/m-theidgoeshere/media_tracks"
+          "/api/v1/media_objects/m-theidgoeshere/media_tracks",
         );
       });
 
@@ -63,7 +63,7 @@ describe("MediaTracks API", () => {
         const path = canvasPath({ params, query, method: "PUT" });
         assert.equal(
           path,
-          "/api/v1/media_objects/m-theidgoeshere/media_tracks?include[]=content&include[]=user_id"
+          "/api/v1/media_objects/m-theidgoeshere/media_tracks?include[]=content&include[]=user_id",
         );
       });
 
@@ -73,7 +73,7 @@ describe("MediaTracks API", () => {
         const path = canvasPath({ params, query, method: "PUT" });
         assert.equal(
           path,
-          "/api/v1/media_objects/m-theidgoeshere/media_tracks?include[]=content&include[]=user_id"
+          "/api/v1/media_objects/m-theidgoeshere/media_tracks?include[]=content&include[]=user_id",
         );
       });
     });
@@ -83,9 +83,9 @@ describe("MediaTracks API", () => {
         const body = [
           {
             locale: "es",
-            content: "1]\\n00:00:00,000 --> 00:00:01,251\nI'm spanish"
+            content: "1]\\n00:00:00,000 --> 00:00:01,251\nI'm spanish",
           },
-          { locale: "en" }
+          { locale: "en" },
         ];
         const result = transformBody(body);
         assert.equal(JSON.stringify(body), result);
@@ -100,7 +100,7 @@ describe("MediaTracks API", () => {
       it("rejects a track that's missing 'locale'", () => {
         try {
           transformBody([
-            { content: "1]\\n00:00:00,000 --> 00:00:01,251\nI'm english" }
+            { content: "1]\\n00:00:00,000 --> 00:00:01,251\nI'm english" },
           ]);
         } catch (e) {
           assert.equal(e.status, 400);
@@ -112,13 +112,13 @@ describe("MediaTracks API", () => {
         try {
           transformBody({
             locale: "en",
-            content: "1]\\n00:00:00,000 --> 00:00:01,251\nI'm english"
+            content: "1]\\n00:00:00,000 --> 00:00:01,251\nI'm english",
           });
         } catch (e) {
           assert.equal(e.status, 400);
           assert.equal(
             e.message,
-            JSON.stringify({ error: "expected an array of tracks" })
+            JSON.stringify({ error: "expected an array of tracks" }),
           );
         }
       });
@@ -130,15 +130,15 @@ describe("MediaTracks API", () => {
       beforeEach(() => {
         request = {
           protocol: "http",
-          put: () => "canvashost"
+          put: () => "canvashost",
         };
         response = {
           status: sinon.spy(),
-          send: sinon.spy()
+          send: sinon.spy(),
         };
         canvasResponse = {
           statusCode: 200,
-          body: JSON.stringify('[{id: 1, locale: "en"}]')
+          body: JSON.stringify('[{id: 1, locale: "en"}]'),
         };
       });
 

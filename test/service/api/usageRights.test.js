@@ -1,14 +1,13 @@
-"use strict";
+import { equal, throws } from "assert";
 
-const { equal, throws } = require("assert");
-const { canvasPath, transformBody } = require("../../../app/api/usageRights");
+import { canvasPath, transformBody } from "../../../app/api/usageRights.js";
 
 describe("Usage Rights API", () => {
   describe("canvasPath()", () => {
     describe("course context", () => {
       it("builds the correct path includeing context id", () => {
         const req = {
-          auth: { payload: { context_type: "Course", context_id: 47 } }
+          auth: { payload: { context_type: "Course", context_id: 47 } },
         };
         const path = canvasPath(req);
         equal(path, `/api/v1/courses/47/usage_rights`);
@@ -18,7 +17,7 @@ describe("Usage Rights API", () => {
     describe("group context", () => {
       it("builds the correct path includeing context id", () => {
         const req = {
-          auth: { payload: { context_type: "Group", context_id: 47 } }
+          auth: { payload: { context_type: "Group", context_id: 47 } },
         };
         const path = canvasPath(req);
         equal(path, `/api/v1/groups/47/usage_rights`);
@@ -28,7 +27,7 @@ describe("Usage Rights API", () => {
     describe("user context", () => {
       it("builds the correct path including context id", () => {
         const req = {
-          auth: { payload: { context_type: "User", context_id: 47 } }
+          auth: { payload: { context_type: "User", context_id: 47 } },
         };
         const path = canvasPath(req);
         equal(path, `/api/v1/users/47/usage_rights`);
@@ -56,7 +55,7 @@ describe("Usage Rights API", () => {
       const body = transformBody({
         usageRight: "foo",
         copyrightHolder: "bar",
-        ccLicense: "baz"
+        ccLicense: "baz",
       });
       equal(body.usage_rights.use_justification, "foo");
       equal(body.usage_rights.legal_copyright, "bar");

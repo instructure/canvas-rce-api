@@ -1,17 +1,18 @@
-"use strict";
+import assert from "assert";
 
-const inja = require("inja");
-const _api = require("../../../app/api");
-const _config = require("../../../app/config");
-const _token = require("../../../app/token");
-const assert = require("assert");
-const express = require("express");
-const request = require("supertest");
-const moment = require("moment");
-const nock = require("nock");
-const addRequestId = require("express-request-id")();
+import express from "express";
+import _addRequestId_factory from "express-request-id";
+import inja from "inja";
+import moment from "moment";
+import nock from "nock";
+import request from "supertest";
 
-describe("api proxying", function() {
+import _api from "../../../app/api/index.js";
+import _config from "../../../app/config.js";
+import { Token as _token } from "../../../app/token.js";
+
+const addRequestId = _addRequestId_factory();
+describe("api proxying", function () {
   let container, tokenPayload, tokenString, token;
 
   function getProxied(path, tokenString) {
@@ -38,24 +39,20 @@ describe("api proxying", function() {
               case "token.encryptionSecret":
                 return "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
             }
-          }
+          },
         };
-      }
+      },
     });
 
     tokenPayload = {
       iss: "Canvas",
       aud: ["Instructure"],
       domain: "test.canvas.local",
-      exp: moment()
-        .add(1, "hours")
-        .unix(),
-      nbf: moment()
-        .subtract(30, "seconds")
-        .unix(),
+      exp: moment().add(1, "hours").unix(),
+      nbf: moment().subtract(30, "seconds").unix(),
       iat: moment().unix(),
       jti: "some-long-string-that-is-unique",
-      sub: 42
+      sub: 42,
     };
 
     token = container.make(_token);
@@ -64,17 +61,17 @@ describe("api proxying", function() {
 
   afterEach(() => {});
 
-  it("proxies api requests from good tokens", function(done) {
+  it("proxies api requests from good tokens", function (done) {
     nock("http://test.canvas.local")
       .get(
-        "/api/v1/folders/1/files?per_page=50&include[]=preview_url&use_verifiers=0"
+        "/api/v1/folders/1/files?per_page=50&include[]=preview_url&use_verifiers=0",
       )
       .reply(200, [
         {
           display_name: "file.txt",
           created_at: "2012-07-06T14:58:50Z",
-          updated_at: "2012-07-06T14:58:50Z"
-        }
+          updated_at: "2012-07-06T14:58:50Z",
+        },
       ]);
 
     getProxied("/api/files/1", tokenString)
@@ -83,10 +80,10 @@ describe("api proxying", function() {
       .end(done);
   });
 
-  it("passes on response codes", function(done) {
+  it("passes on response codes", function (done) {
     nock("http://test.canvas.local")
       .get(
-        "/api/v1/folders/1/files?per_page=50&include[]=preview_url&use_verifiers=0"
+        "/api/v1/folders/1/files?per_page=50&include[]=preview_url&use_verifiers=0",
       )
       .reply(500, { error: "an internal error occurred" });
 
@@ -96,7 +93,7 @@ describe("api proxying", function() {
       .end(done);
   });
 
-  it("uses query parameters to construct paths", function(done) {
+  it("uses query parameters to construct paths", function (done) {
     nock("http://test.canvas.local")
       .get("/api/v1/courses/999/pages?sort=title&per_page=50")
       .reply(200, [
@@ -104,8 +101,8 @@ describe("api proxying", function() {
           url: "my-page-title",
           title: "My Page Title",
           created_at: "2012-08-06T16:46:33-06:00",
-          updated_at: "2012-08-08T14:25:20-06:00"
-        }
+          updated_at: "2012-08-08T14:25:20-06:00",
+        },
       ]);
 
     getProxied("/api/wikiPages?contextType=course&contextId=999", tokenString)
@@ -115,12 +112,10 @@ describe("api proxying", function() {
   });
 
   it("catches bad tokens before proxying", async () => {
-    tokenPayload.exp = moment()
-      .subtract(10, "minutes")
-      .unix();
+    tokenPayload.exp = moment().subtract(10, "minutes").unix();
     const scope = nock("http://test.canvas.local")
       .get(
-        "/api/v1/folders/1/files?per_page=50&include[]=preview_url&use_verifiers=0"
+        "/api/v1/folders/1/files?per_page=50&include[]=preview_url&use_verifiers=0",
       )
       .reply(200, []);
 
@@ -129,7 +124,7 @@ describe("api proxying", function() {
       getProxied("/api/files/1", badToken)
         .expect(401)
         .expect(/token expired/)
-        .end(err => {
+        .end((err) => {
           try {
             assert.ok(!scope.isDone());
           } catch (caughtErr) {

@@ -1,7 +1,6 @@
-"use strict";
+import { equal, ok } from "assert";
 
-const { equal, ok } = require("assert");
-const AuthRequiredException = require("../../../app/exceptions/AuthRequiredException");
+import { AuthRequiredException } from "../../../app/exceptions/AuthRequiredException.js";
 
 describe("AuthRequiredException", () => {
   describe("tokenMissing", () => {

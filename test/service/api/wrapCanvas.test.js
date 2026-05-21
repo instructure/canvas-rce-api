@@ -1,12 +1,11 @@
-"use strict";
+import assert from "assert";
 
-const assert = require("assert");
-const nock = require("nock");
-const wrapCanvas = require("../../../app/api/wrapCanvas");
-const sign = require("../../../app/utils/sign");
-const { RuntimeException } = require("node-exceptions");
+import nock from "nock";
 
-describe("wrapping a Canvas request/response", function() {
+import { wrapCanvas } from "../../../app/api/wrapCanvas.js";
+import { signer } from "../../../app/utils/sign.js";
+
+describe("wrapping a Canvas request/response", function () {
   const domain = "test.canvas.local";
   const schemaAndHost = `http://${domain}`;
   const defaultPath = "/canvasPath";
@@ -16,7 +15,7 @@ describe("wrapping a Canvas request/response", function() {
       query: {},
       id: "request-id",
       auth: { payload, wrappedToken },
-      get: () => null
+      get: () => null,
     };
   }
 
@@ -26,9 +25,9 @@ describe("wrapping a Canvas request/response", function() {
       {
         canvasPath() {
           return defaultPath;
-        }
+        },
       },
-      overrides
+      overrides,
     );
   }
 
@@ -40,26 +39,24 @@ describe("wrapping a Canvas request/response", function() {
     request = mockRequest(tokenPayload, wrappedToken);
     response = {
       status: () => {},
-      send: () => {}
+      send: () => {},
     };
   });
 
-  it("uses the wrapper's path and token's domain for fetch", done => {
-    const scope = nock(schemaAndHost)
-      .get(defaultPath)
-      .reply(200, "success");
+  it("uses the wrapper's path and token's domain for fetch", (done) => {
+    const scope = nock(schemaAndHost).get(defaultPath).reply(200, "success");
     wrapCanvas(
       buildWrapper({
         canvasResponseHandler() {
           assert.ok(scope.isDone());
           done();
-        }
-      })
+        },
+      }),
     )(request, response);
   });
 
-  it("overrides wrapper path and token domain with the request's bookmark if given", done => {
-    request.query.bookmark = sign.sign("http://otherHost/bookmark");
+  it("overrides wrapper path and token domain with the request's bookmark if given", (done) => {
+    request.query.bookmark = signer.sign("http://otherHost/bookmark");
     const scope = nock("http://otherHost")
       .get("/bookmark")
       .reply(200, "success");
@@ -68,15 +65,13 @@ describe("wrapping a Canvas request/response", function() {
         canvasResponseHandler() {
           assert.ok(scope.isDone());
           done();
-        }
-      })
+        },
+      }),
     )(request, response);
   });
 
-  it("passes request, response, and canvas response to wrapper's response handler", done => {
-    nock(schemaAndHost)
-      .get(defaultPath)
-      .reply(200, "success");
+  it("passes request, response, and canvas response to wrapper's response handler", (done) => {
+    nock(schemaAndHost).get(defaultPath).reply(200, "success");
     wrapCanvas(
       buildWrapper({
         canvasResponseHandler(req, resp1, resp2) {
@@ -85,15 +80,13 @@ describe("wrapping a Canvas request/response", function() {
           assert.strictEqual(resp2.statusCode, 200);
           assert.strictEqual(resp2.body, "success");
           done();
-        }
-      })
+        },
+      }),
     )(request, response);
   });
 
-  it("posts with a body transformation when method specified", done => {
-    const scope = nock(schemaAndHost)
-      .post(defaultPath)
-      .reply(200, "{}");
+  it("posts with a body transformation when method specified", (done) => {
+    const scope = nock(schemaAndHost).post(defaultPath).reply(200, "{}");
     let wrapper = buildWrapper({
       transformBody() {
         return JSON.stringify({ post: "body" });
@@ -102,15 +95,13 @@ describe("wrapping a Canvas request/response", function() {
       canvasResponseHandler() {
         assert.ok(scope.isDone());
         done();
-      }
+      },
     });
     wrapCanvas(wrapper, { method: "POST" })(request, response);
   });
 
-  it("puts with a body transformation when method specified", done => {
-    const scope = nock(schemaAndHost)
-      .put(defaultPath)
-      .reply(200, "{}");
+  it("puts with a body transformation when method specified", (done) => {
+    const scope = nock(schemaAndHost).put(defaultPath).reply(200, "{}");
     let wrapper = buildWrapper({
       transformBody() {
         return JSON.stringify({ put: "body" });
@@ -118,21 +109,19 @@ describe("wrapping a Canvas request/response", function() {
       canvasResponseHandler() {
         assert.ok(scope.isDone());
         done();
-      }
+      },
     });
     wrapCanvas(wrapper, { method: "PUT" })(request, response);
   });
 
-  it("throws RuntimeException for an unrecognized method type", done => {
-    nock(schemaAndHost)
-      .get(defaultPath)
-      .reply(200, "success");
+  it("throws an Error for an unrecognized method type", (done) => {
+    nock(schemaAndHost).get(defaultPath).reply(200, "success");
     let wrapper = buildWrapper({
-      canvasResponseHandler() {}
+      canvasResponseHandler() {},
     });
-    wrapCanvas(wrapper, { method: "FOO" })(request, response, err => {
+    wrapCanvas(wrapper, { method: "FOO" })(request, response, (err) => {
       try {
-        assert.ok(err instanceof RuntimeException);
+        assert.ok(err instanceof Error);
         done();
       } catch (err) {
         done(err);

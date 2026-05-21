@@ -1,8 +1,7 @@
-"use strict";
+import { equal, throws } from "assert";
 
-const { equal, throws } = require("assert");
-const _config = require("../../app/config");
-const ConfigRequiredException = require("../../app/exceptions/ConfigRequiredException");
+import _config from "../../app/config.js";
+import { ConfigRequiredException } from "../../app/exceptions/ConfigRequiredException.js";
 
 describe("config provider", () => {
   let env;
@@ -15,17 +14,17 @@ describe("config provider", () => {
         if (name === "SECRET") {
           return "s3cret";
         }
-      }
+      },
     };
     configs = {
       app: () => ({
-        name: "test app"
+        name: "test app",
       }),
-      security: env => ({
+      security: (env) => ({
         jwt: {
-          secret: env.get("SECRET")
-        }
-      })
+          secret: env.get("SECRET"),
+        },
+      }),
     };
     config = _config.init(env, configs);
   });
@@ -44,7 +43,10 @@ describe("config provider", () => {
     });
 
     it("executes and returns fallback if it does not exist", () => {
-      equal(config.get("app.other", () => "fallback"), "fallback");
+      equal(
+        config.get("app.other", () => "fallback"),
+        "fallback",
+      );
     });
   });
 

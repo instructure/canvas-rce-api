@@ -1,6 +1,4 @@
-"use strict";
-
-const cors = require("cors");
+import cors from "cors";
 
 function validateOrigin(origin, callback) {
   // right now the only thing we expose is a javascript file, which
@@ -18,9 +16,9 @@ function validateOrigin(origin, callback) {
 
 function applyToApp(app) {
   var corsMiddleware = cors({
-    origin: validateOrigin
+    origin: validateOrigin,
   });
   app.use(corsMiddleware);
 }
 
-module.exports = { applyToApp, validateOrigin };
+export { applyToApp, validateOrigin };

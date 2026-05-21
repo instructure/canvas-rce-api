@@ -1,9 +1,9 @@
-"use strict";
+import crypto from "crypto";
 
-const crypto = require("crypto");
-const parseLinkHeader = require("parse-link-header");
-const sign = require("../utils/sign");
-const { parseFetchResponse } = require("../utils/fetch");
+import parseLinkHeader from "parse-link-header";
+
+import { parseFetchResponse } from "../utils/fetch.js";
+import { signer } from "../utils/sign.js";
 
 function signatureFor(string_to_sign) {
   const shared_secret = process.env.ECOSYSTEM_SECRET;
@@ -21,7 +21,7 @@ function requestHeaders(tokenString, req) {
     "User-Agent": req.get("User-Agent"),
     "X-Request-Context-Id": Buffer.from(req.id).toString("base64"),
     "X-Request-Context-Signature": reqIdSignature,
-    Accept: "application/json+canvas-string-ids"
+    Accept: "application/json+canvas-string-ids",
   };
 }
 
@@ -33,7 +33,7 @@ function parseBookmark(response) {
   if (header) {
     const links = parseLinkHeader(header[0]);
     if (links.next) {
-      response.bookmark = sign.sign(links.next.url);
+      response.bookmark = signer.sign(links.next.url);
     }
   }
   return response;
@@ -41,7 +41,7 @@ function parseBookmark(response) {
 
 function collectStats(req, promiseToTime) {
   const startTime = Date.now();
-  return promiseToTime().then(result => {
+  return promiseToTime().then((result) => {
     req.timers = req.timers || {};
     req.timers.canvas_time = Date.now() - startTime;
     return result;
@@ -59,11 +59,11 @@ function fetch(url, req, tokenString) {
   return collectStats(req, () =>
     global
       .fetch(url, {
-        headers: requestHeaders(tokenString, req)
+        headers: requestHeaders(tokenString, req),
       })
       .then(parseFetchResponse)
       .then(parseBookmark)
-      .catch(catchStatusCodeError)
+      .catch(catchStatusCodeError),
   );
 }
 
@@ -74,13 +74,13 @@ function send(method, url, req, tokenString, body) {
         method,
         headers: {
           ...requestHeaders(tokenString, req),
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: typeof body === "string" ? body : JSON.stringify(body)
+        body: typeof body === "string" ? body : JSON.stringify(body),
       })
       .then(parseFetchResponse)
-      .catch(catchStatusCodeError)
+      .catch(catchStatusCodeError),
   );
 }
 
-module.exports = { fetch, send };
+export { fetch, send };

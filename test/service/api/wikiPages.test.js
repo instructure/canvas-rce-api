@@ -1,8 +1,8 @@
-"use strict";
+import assert from "assert";
 
-const assert = require("assert");
-const sinon = require("sinon");
-const wikiPages = require("../../../app/api/wikiPages");
+import sinon from "sinon";
+
+import * as wikiPages from "../../../app/api/wikiPages.js";
 
 describe("Wiki Pages API", () => {
   describe("canvasPath", () => {
@@ -84,9 +84,9 @@ describe("Wiki Pages API", () => {
           html_url: "/courses/1/pages/the-page",
           title: "The Wiki Page",
           published: true,
-          todo_date: "2019-04-22T13:00:00Z"
-        }
-      ]
+          todo_date: "2019-04-22T13:00:00Z",
+        },
+      ],
     };
 
     let result;

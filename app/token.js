@@ -1,8 +1,7 @@
-"use strict";
+import jose from "node-jose";
 
-const jose = require("node-jose");
-const _config = require("./config");
-const TokenInvalidException = require("./exceptions/TokenInvalidException");
+import _config from "./config.js";
+import { TokenInvalidException } from "./exceptions/TokenInvalidException.js";
 
 class Token {
   static inject() {
@@ -134,9 +133,9 @@ class Token {
     return {
       kty: "oct",
       k: Buffer.from(secret).toString("base64"),
-      alg
+      alg,
     };
   }
 }
 
-module.exports = Token;
+export { Token };

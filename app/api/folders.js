@@ -1,12 +1,10 @@
-"use strict";
-
-const packageBookmark = require("./packageBookmark");
+import { packageBookmark } from "./packageBookmark.js";
 
 function transformBody(baseUrl, folders) {
   if (!Array.isArray(folders)) {
     folders = [folders];
   }
-  return folders.map(folder => {
+  return folders.map((folder) => {
     return {
       id: folder.id,
       parentId: folder.parent_folder_id,
@@ -16,7 +14,7 @@ function transformBody(baseUrl, folders) {
       lockedForUser: folder.locked_for_user,
       contextType: folder.context_type,
       contextId: folder.context_id,
-      canUpload: folder.can_upload
+      canUpload: folder.can_upload,
     };
   });
 }
@@ -60,11 +58,11 @@ function canvasResponseHandler(request, response, canvasResponse) {
     const baseUrl = `${protocol}://${request.get("host")}/api`;
     response.send({
       folders: transformBody(baseUrl, folders),
-      bookmark: packageBookmark(request, canvasResponse.bookmark)
+      bookmark: packageBookmark(request, canvasResponse.bookmark),
     });
   } else {
     response.send(canvasResponse.body);
   }
 }
 
-module.exports = { transformBody, canvasPath, canvasResponseHandler };
+export { transformBody, canvasPath, canvasResponseHandler };

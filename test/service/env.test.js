@@ -1,9 +1,7 @@
-"use strict";
+import { equal, throws } from "assert";
 
-const { equal, throws } = require("assert");
-const _env = require("../../app/env");
-const EnvRequiredException = require("../../app/exceptions/EnvRequiredException");
-const { InvalidArgumentException } = require("node-exceptions");
+import _env from "../../app/env.js";
+import { EnvRequiredException } from "../../app/exceptions/EnvRequiredException.js";
 
 describe("env provider", () => {
   let vars;
@@ -12,7 +10,7 @@ describe("env provider", () => {
   beforeEach(() => {
     vars = {
       KEY: "thekey",
-      SECRET: "s3cret"
+      SECRET: "s3cret",
     };
     env = _env.init(vars);
   });
@@ -27,11 +25,14 @@ describe("env provider", () => {
     });
 
     it("executes and returns fallback if it does not exist", () => {
-      equal(env.get("OTHER", () => "fallback"), "fallback");
+      equal(
+        env.get("OTHER", () => "fallback"),
+        "fallback",
+      );
     });
 
     it("throws an error if fallback is provided and is not a function", () => {
-      throws(() => env.get("OTHER", "string"), InvalidArgumentException);
+      throws(() => env.get("OTHER", "string"), TypeError);
     });
   });
 

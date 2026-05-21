@@ -1,7 +1,6 @@
-"use strict";
+import { deepEqual, equal } from "assert";
 
-const { equal, deepEqual } = require("assert");
-const object = require("../../../app/utils/object");
+import * as object from "../../../app/utils/object.js";
 
 describe("object utils", () => {
   describe("getByPath", () => {

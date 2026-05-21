@@ -1,16 +1,15 @@
-"use strict";
+import express from "express";
+import request from "supertest";
 
-const _application = require("../../app/application");
-const _routes = require("../../app/routes");
-const express = require("express");
-const request = require("supertest");
+import _application from "../../app/application.js";
+import _routes from "../../app/routes.js";
 
 describe("App Setup", () => {
   let env, routes, logger, app;
 
   beforeEach(() => {
     app = express();
-    env = { get: n => n === "PORT" && 4700 };
+    env = { get: (n) => n === "PORT" && 4700 };
     routes = _routes.init({ applyToApp: () => {} }, () => {});
     logger = { log: () => {} };
     const stats = { handle: (req, res, next) => next() };

@@ -1,9 +1,8 @@
-"use strict";
+import configs from "../config/index.js";
 
-const configs = require("../config");
-const { getByPath } = require("./utils/object");
-const ConfigRequiredException = require("./exceptions/ConfigRequiredException");
-const _env = require("./env");
+import _env from "./env.js";
+import { ConfigRequiredException } from "./exceptions/ConfigRequiredException.js";
+import { getByPath } from "./utils/object.js";
 
 function inject(provide) {
   return [_env, provide(configs)];
@@ -11,7 +10,7 @@ function inject(provide) {
 
 function init(env, configs) {
   const store = {};
-  Object.keys(configs).forEach(key => (store[key] = configs[key](env)));
+  Object.keys(configs).forEach((key) => (store[key] = configs[key](env)));
 
   const config = {
     get(path, fallback = () => null) {
@@ -25,10 +24,10 @@ function init(env, configs) {
         throw ConfigRequiredException.forPath(path);
       }
       return val;
-    }
+    },
   };
 
   return config;
 }
 
-module.exports = { inject, init, singleton: true };
+export default { inject, init, singleton: true };

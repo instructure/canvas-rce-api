@@ -1,9 +1,9 @@
-"use strict";
+import { deepStrictEqual, strictEqual } from "assert";
+import fs from "fs";
 
-const sinon = require("sinon");
-const { deepStrictEqual, strictEqual } = require("assert");
-const fs = require("fs");
-const healthcheck = require("../../../app/middleware/healthcheck");
+import sinon from "sinon";
+
+import { healthcheck } from "../../../app/middleware/healthcheck.js";
 
 describe("Healthcheck middleware", () => {
   it("returns a function", async () => {
@@ -39,7 +39,7 @@ describe("Healthcheck middleware", () => {
       const expectedComponent = {
         message: "Filesystem healthy",
         name: "Filesystem",
-        status: 200
+        status: 200,
       };
 
       fsStatStub.callsArgWith(1, null, { isDirectory: () => true });
@@ -47,7 +47,7 @@ describe("Healthcheck middleware", () => {
       await healthCheckFn(null, res, null);
       deepStrictEqual(
         jsonStub.firstCall.args[0].components[0],
-        expectedComponent
+        expectedComponent,
       );
     });
 
@@ -62,7 +62,7 @@ describe("Healthcheck middleware", () => {
       const expectedComponent = {
         message: "Filesystem in unexpected state",
         name: "Filesystem",
-        status: 503
+        status: 503,
       };
 
       fsStatStub.callsArgWith(1, null, { isDirectory: () => false });
@@ -70,7 +70,7 @@ describe("Healthcheck middleware", () => {
       await healthCheckFn(null, res, null);
       deepStrictEqual(
         jsonStub.firstCall.args[0].components[0],
-        expectedComponent
+        expectedComponent,
       );
     });
   });

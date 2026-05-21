@@ -1,7 +1,6 @@
-"use strict";
+import escapeHtml from "escape-html";
 
-const escapeHtml = require('escape-html');
-const { parseFetchResponse } = require("../utils/fetch");
+import { parseFetchResponse } from "../utils/fetch.js";
 
 const ytApiBase = "https://content.googleapis.com/youtube/v3/search";
 const ytApiQuery = "part=snippet&maxResults=2";
@@ -19,7 +18,7 @@ function fetchYouTubeTitle(vid_id) {
 
 function parseTitle(vidId, results) {
   let vidTitle;
-  results.body.items.forEach(vid => {
+  results.body.items.forEach((vid) => {
     if (vid.id.videoId === vidId) {
       vidTitle = vid.snippet.title;
     }
@@ -30,7 +29,7 @@ function parseTitle(vidId, results) {
 function youTubeTitle(req, response) {
   let vidId = req.query.vid_id;
   fetchYouTubeTitle(vidId)
-    .then(searchResults => {
+    .then((searchResults) => {
       if (searchResults.statusCode >= 400) {
         const err = new Error("YouTube search failed");
         err.body = searchResults.body;
@@ -39,7 +38,7 @@ function youTubeTitle(req, response) {
       let title = parseTitle(vidId, searchResults);
       if (title === undefined) {
         process.stderr.write(
-          `YouTube video search not found: vid_id="${vidId}"`
+          `YouTube video search not found: vid_id="${vidId}"`,
         );
         response.status(500);
         response.send(`Video "${escapeHtml(vidId)}" not found.`);
@@ -48,7 +47,7 @@ function youTubeTitle(req, response) {
         response.json({ id: vidId, title: title });
       }
     })
-    .catch(e => {
+    .catch((e) => {
       process.stderr.write("YouTube Search Failed");
       process.stderr.write("" + e);
       process.stderr.write(getYouTubeUrl(vidId));
@@ -57,4 +56,4 @@ function youTubeTitle(req, response) {
     });
 }
 
-module.exports = youTubeTitle;
+export { youTubeTitle };

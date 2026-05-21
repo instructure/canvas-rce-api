@@ -1,6 +1,4 @@
-"use strict";
-
-const buildUrl = require("./buildUrl");
+import { buildUrl } from "./buildUrl.js";
 
 function getSessionHandler(req, res) {
   const { workflow_state, context_type, context_id, domain } = req.auth.payload;
@@ -9,7 +7,7 @@ function getSessionHandler(req, res) {
     can_upload_files,
     usage_rights_required,
     use_high_contrast,
-    can_create_pages
+    can_create_pages,
   } = workflow_state;
 
   res.json({
@@ -19,8 +17,8 @@ function getSessionHandler(req, res) {
     usageRightsRequired: usage_rights_required,
     useHighContrast: use_high_contrast,
     canCreatePages: can_create_pages,
-    canvasUrl: buildUrl(domain)
+    canvasUrl: buildUrl(domain),
   });
 }
 
-module.exports = getSessionHandler;
+export { getSessionHandler };

@@ -1,8 +1,8 @@
-"use strict";
+import assert from "assert";
 
-const assert = require("assert");
-const sinon = require("sinon");
-const announcements = require("../../../app/api/announcements");
+import sinon from "sinon";
+
+import * as announcements from "../../../app/api/announcements.js";
 
 describe("Announcements API", () => {
   describe("canvasPath", () => {
@@ -82,9 +82,9 @@ describe("Announcements API", () => {
             html_url: "/courses/1/announcements/2",
             title: "Announcement 2",
             posted_at: "2019-04-24T13:00:00Z",
-            ...overrides
-          }
-        ]
+            ...overrides,
+          },
+        ],
       };
       sinon.spy(response, "send");
       announcements.canvasResponseHandler(request, response, canvasResponse);
@@ -114,11 +114,11 @@ describe("Announcements API", () => {
       const delayed_post_at = "2019-05-05T13:00:00Z";
       const [result, canvasResponse] = setup(200, {
         posted_at,
-        delayed_post_at
+        delayed_post_at,
       });
       assert.equal(
         result.links[0].date,
-        canvasResponse.body[0].delayed_post_at
+        canvasResponse.body[0].delayed_post_at,
       );
       assert.equal(result.links[0].date_type, "delayed_post");
     });

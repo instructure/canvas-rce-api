@@ -6,17 +6,21 @@
     "node": "^20",
     "npm": "^9"
   },
+  "type": "module",
   "mocha": {
     "exit": true,
-    "require": [
-      "dotenv/config",
-      "test/support/setup"
+    "node-option": [
+      "import=dotenv/config.js",
+      "import=./test/support/setup.js"
     ]
   },
-  "nyc": {
+  "c8": {
     "include": [
       "app/**/*.js",
       "shared/**/*.js"
+    ],
+    "reporter": [
+      "html"
     ]
   },
   "main": "app.js",
@@ -27,7 +31,7 @@
     "lint": "eslint \"app/**/*.js\" \"test/**/*.js\" \"shared/**/*.js\"",
     "test": "mocha 'test/{service,shared}/**/*.test.js'",
     "test:one": "mocha",
-    "test-cov": "cross-env BABEL_ENV=test nyc -r html node_modules/.bin/mocha -- 'test/{service,shared}/**/*.test.js'",
+    "test-cov": "cross-env BABEL_ENV=test c8 mocha 'test/{service,shared}/**/*.test.js'",
     "debug-test": "mocha --inspect-brk 'test/{service,shared}/**/*.test.js'",
     "debug-test:one": "mocha --inspect-brk",
     "fmt:check": "prettier -l '**/*.{js,json}'",
@@ -52,17 +56,18 @@
     "jsonwebtoken": "^5.7.0",
     "moment": "^2.22.2",
     "morgan": "^1.10.0",
-    "node-exceptions": "^3.0.0",
     "node-fetch": "^2.6.1",
     "node-jose": "^2.0.0",
     "parse-link-header": "^2.0.0",
     "raven": "github:zwily/raven-node#middleware-req-callback"
   },
   "devDependencies": {
+    "c8": "^10.1.3",
     "cross-env": "10.1.0",
     "dev-null": "0.1.1",
     "eslint": "9.39.4",
     "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-mocha": "11.3.0",
     "eslint-plugin-security": "4.0.0",
     "get-port": "7.2.0",
@@ -70,7 +75,6 @@
     "mocha": "11.7.5",
     "nock": "^13",
     "nodemon": "3.1.14",
-    "nyc": "18.0.0",
     "prettier": "3.8.3",
     "pretty-quick": "4.2.2",
     "sinon": "22.0.0",

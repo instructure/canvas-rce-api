@@ -1,6 +1,5 @@
-"use strict";
-
-const morgan = require("morgan");
+import devNull from "dev-null";
+import morgan from "morgan";
 
 // assumes requests have had id added already
 morgan.token("id", function getId(req) {
@@ -16,7 +15,7 @@ function logWithFormat(stream, immediate) {
 
 function loggingStream() {
   if (process.env.NODE_ENV == "test") {
-    return require("dev-null")();
+    return devNull();
   } else {
     return process.stdout;
   }
@@ -28,4 +27,4 @@ function applyToApp(app, stream) {
   app.use(middleware);
 }
 
-module.exports = { middleware: logWithFormat, applyToApp };
+export { logWithFormat as middleware, applyToApp };

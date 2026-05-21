@@ -1,7 +1,6 @@
-"use strict";
+import assert from "assert";
 
-const assert = require("assert");
-const search = require("../../../app/utils/search");
+import * as search from "../../../app/utils/search.js";
 
 describe("search(query)", () => {
   let query = new Object();
@@ -31,7 +30,7 @@ describe("search(query)", () => {
     const getSearchResult = search.getSearch(query);
     assert.ok(
       getSearchResult.endsWith(encodedSearchText),
-      `Expected ${getSearchResult} to end with ${encodedSearchText}`
+      `Expected ${getSearchResult} to end with ${encodedSearchText}`,
     );
   });
 
@@ -41,7 +40,7 @@ describe("search(query)", () => {
     const getSearchResult = search.getSearch(query);
     assert.ok(
       getSearchResult.endsWith(encodedSearchText),
-      `Expected ${getSearchResult} to end with ${encodedSearchText}`
+      `Expected ${getSearchResult} to end with ${encodedSearchText}`,
     );
   });
 

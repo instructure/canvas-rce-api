@@ -1,5 +1,3 @@
-"use strict";
-
 function getByPath(path, obj) {
   const keys = path.split(".");
   let next = obj;
@@ -28,4 +26,4 @@ function getArrayQueryParam(param) {
   return list;
 }
 
-module.exports = { getByPath, getArrayQueryParam };
+export { getByPath, getArrayQueryParam };

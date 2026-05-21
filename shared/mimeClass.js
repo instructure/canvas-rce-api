@@ -1,5 +1,3 @@
-"use strict";
-
 function fileEmbed(file) {
   let fileMimeClass = mimeClass(file);
   let fileMediaEntryId = mediaEntryId(file);
@@ -96,7 +94,7 @@ function mimeClass(file) {
         "video/avi": "video",
         "video/*": "video",
         video: "video",
-        "application/x-shockwave-flash": "flash"
+        "application/x-shockwave-flash": "flash",
       }[contentType] || "file"
     );
   }
@@ -106,4 +104,4 @@ function getContentType(file) {
   return file["content-type"] || file.type;
 }
 
-module.exports = { fileEmbed, mimeClass };
+export { fileEmbed, mimeClass };

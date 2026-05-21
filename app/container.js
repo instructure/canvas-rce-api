@@ -1,5 +1,3 @@
-"use strict";
+import inja from "inja";
 
-const inja = require("inja");
-
-module.exports = inja();
+export default inja();

@@ -1,21 +1,17 @@
-"use strict";
+import assert from "assert";
+import dgram from "dgram";
+import { EventEmitter } from "events";
 
-const StatsMiddleware = require("../../../app/middleware/stats");
-const dgram = require("dgram");
-const fakeConfig = require("../../support/fakeConfig");
-const { EventEmitter } = require("events");
-const sinon = require("sinon");
-const assert = require("assert");
+import getPort from "get-port";
+import sinon from "sinon";
+
+import { StatsMiddleware } from "../../../app/middleware/stats.js";
+import { fakeConfig } from "../../support/fakeConfig.js";
 
 describe("StatsMiddleware", () => {
   let statsServer, req, res, envOverrides, clock, next;
 
   beforeEach(async () => {
-    // TODO: once this project is converted to ESM, replace this dynamic
-    // import with a top-level `import getPort from "get-port"` and drop
-    // the `.default` destructuring. `get-port@7+` is ESM-only, so it
-    // cannot be `require()`d from CommonJS today.
-    const { default: getPort } = await import("get-port");
     const port = await getPort();
     clock = sinon.useFakeTimers({
       toFake: [

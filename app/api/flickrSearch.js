@@ -1,6 +1,4 @@
-"use strict";
-
-const { parseFetchResponse } = require("../utils/fetch");
+import { parseFetchResponse } from "../utils/fetch.js";
 
 const flickrBase = "https://api.flickr.com/services/rest";
 // extras=needs_interstitial is required to get undocumented needs_interstitial
@@ -23,15 +21,15 @@ function transformSearchResults(results) {
       // it seems to be reliable at identifying nsfw rsults where safe and the
       // safe_search filter are not. this should be the first thing to check if
       // nsfw results come through in the future.
-      .filter(photo => photo.needs_interstitial != 1)
-      .map(photo => {
+      .filter((photo) => photo.needs_interstitial != 1)
+      .map((photo) => {
         const url = `https://farm${photo.farm}.static.flickr.com/${photo.server}/${photo.id}_${photo.secret}.jpg`;
         const link = `https://www.flickr.com/photos/${photo.owner}/${photo.id}`;
         return {
           id: photo.id,
           title: photo.title,
           href: url,
-          link: link
+          link: link,
         };
       })
   );
@@ -54,4 +52,4 @@ async function flickrSearch(req, response) {
   }
 }
 
-module.exports = flickrSearch;
+export { flickrSearch };

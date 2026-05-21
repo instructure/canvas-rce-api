@@ -1,10 +1,7 @@
-"use strict";
+import { signer } from "../utils/sign.js";
 
-const canvasProxy = require("./canvasProxy");
-const buildUrl = require("./buildUrl");
-const sign = require("../utils/sign");
-const { RuntimeException } = require("node-exceptions");
-
+import { buildUrl } from "./buildUrl.js";
+import * as canvasProxy from "./canvasProxy.js";
 // by default just proxies the canvas response status and body
 function defaultCanvasResponseHandler(request, response, canvasResponse) {
   response.status(canvasResponse.statusCode);
@@ -27,7 +24,7 @@ function canvasApiCall(wrapper, request, response, options) {
   const canvasResponseHandler =
     wrapper.canvasResponseHandler || defaultCanvasResponseHandler;
   const transformBody = wrapper.transformBody || defaultTransformBody;
-  let url = sign.verify(request.query.bookmark);
+  let url = signer.verify(request.query.bookmark);
   if (!url) {
     request.query.per_page =
       request.query.per_page || DEFAULT_CANVAS_PER_PAGE_ARG;
@@ -36,18 +33,20 @@ function canvasApiCall(wrapper, request, response, options) {
     url = buildUrl(domain, path);
   }
   if (options.method == "GET") {
-    canvasProxy.fetch(url, request, wrappedTokenString).then(canvasResponse => {
-      canvasResponseHandler(request, response, canvasResponse);
-    });
+    canvasProxy
+      .fetch(url, request, wrappedTokenString)
+      .then((canvasResponse) => {
+        canvasResponseHandler(request, response, canvasResponse);
+      });
   } else if (options.method == "POST" || options.method === "PUT") {
     let transformedBody = transformBody(request.body);
     canvasProxy
       .send(options.method, url, request, wrappedTokenString, transformedBody)
-      .then(canvasResponse => {
+      .then((canvasResponse) => {
         canvasResponseHandler(request, response, canvasResponse);
       });
   } else {
-    throw new RuntimeException(`Method ${options.method} is not supported`);
+    throw new Error(`Method ${options.method} is not supported`);
   }
 }
 
@@ -65,4 +64,4 @@ function wrapCanvas(wrapper, options) {
   };
 }
 
-module.exports = wrapCanvas;
+export { wrapCanvas };

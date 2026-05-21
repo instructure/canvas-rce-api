@@ -1,5 +1,3 @@
-"use strict";
-
 function canvasPath(request) {
   switch (request.body.contextType) {
     case "course":
@@ -22,7 +20,7 @@ function transformBody(body) {
     parent_folder_id: body.file.parentFolderId,
     on_duplicate: body.onDuplicate || "rename",
     success_include: ["preview_url"],
-    category: body.category || undefined
+    category: body.category || undefined,
   };
   if (body.no_redirect) {
     canvasUploadPreflightBody.no_redirect = body.no_redirect;
@@ -36,4 +34,4 @@ function canvasResponseHandler(request, response, canvasResponse) {
   response.send(canvasResponse.body);
 }
 
-module.exports = { canvasPath, transformBody, canvasResponseHandler };
+export { canvasPath, transformBody, canvasResponseHandler };

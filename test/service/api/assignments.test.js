@@ -1,8 +1,8 @@
-"use strict";
+import assert from "assert";
 
-const assert = require("assert");
-const sinon = require("sinon");
-const assignments = require("../../../app/api/assignments");
+import sinon from "sinon";
+
+import * as assignments from "../../../app/api/assignments.js";
 
 describe("Assignments API", () => {
   describe("canvasPath", () => {
@@ -64,9 +64,9 @@ describe("Assignments API", () => {
             due_date: "2019-04-22T13:00:00Z",
             date_type: "due",
             published: true,
-            ...overrides
-          }
-        ]
+            ...overrides,
+          },
+        ],
       };
       sinon.spy(response, "send");
       assignments.canvasResponseHandler(request, response, canvasResponse);
@@ -89,7 +89,7 @@ describe("Assignments API", () => {
       const [result, canvasResponse] = setup();
       assert.strictEqual(
         result.links[0].published,
-        canvasResponse.body[0].published
+        canvasResponse.body[0].published,
       );
     });
 

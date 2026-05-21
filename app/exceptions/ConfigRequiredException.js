@@ -1,11 +1,9 @@
-"use strict";
+import { HandledException } from "./HandledException.js";
 
-const { LogicalException } = require("node-exceptions");
-
-class ConfigRequiredException extends LogicalException {
+class ConfigRequiredException extends HandledException {
   static forPath(path) {
     return new this(`Configuration required for "${path}"`);
   }
 }
 
-module.exports = ConfigRequiredException;
+export { ConfigRequiredException };

@@ -1,11 +1,11 @@
-"use strict";
+import assert from "assert";
 
-const assert = require("assert");
-const sinon = require("sinon");
-const {
+import sinon from "sinon";
+
+import {
   canvasPath,
-  canvasResponseHandler
-} = require("../../../app/api/mediaObjects");
+  canvasResponseHandler,
+} from "../../../app/api/mediaObjects.js";
 
 describe("MediaObjects API", () => {
   describe("canvasPath()", () => {
@@ -15,12 +15,12 @@ describe("MediaObjects API", () => {
         const query = {
           contextId: 47,
           contextType: "course",
-          per_page: 50
+          per_page: 50,
         };
         const path = canvasPath({ params, query, method: "GET" });
         assert.strictEqual(
           path,
-          "/api/v1/courses/47/media_objects?per_page=50&use_verifiers=0&exclude[]=sources&exclude[]=tracks"
+          "/api/v1/courses/47/media_objects?per_page=50&use_verifiers=0&exclude[]=sources&exclude[]=tracks",
         );
       });
 
@@ -29,12 +29,12 @@ describe("MediaObjects API", () => {
         const query = {
           contextId: 47,
           contextType: "group",
-          per_page: 50
+          per_page: 50,
         };
         const path = canvasPath({ params, query, method: "GET" });
         assert.strictEqual(
           path,
-          "/api/v1/groups/47/media_objects?per_page=50&use_verifiers=0&exclude[]=sources&exclude[]=tracks"
+          "/api/v1/groups/47/media_objects?per_page=50&use_verifiers=0&exclude[]=sources&exclude[]=tracks",
         );
       });
 
@@ -43,12 +43,12 @@ describe("MediaObjects API", () => {
         const query = {
           contextId: 47,
           contextType: "user",
-          per_page: 50
+          per_page: 50,
         };
         const path = canvasPath({ params, query, method: "GET" });
         assert.strictEqual(
           path,
-          "/api/v1/media_objects?per_page=50&use_verifiers=0&exclude[]=sources&exclude[]=tracks"
+          "/api/v1/media_objects?per_page=50&use_verifiers=0&exclude[]=sources&exclude[]=tracks",
         );
       });
 
@@ -59,12 +59,12 @@ describe("MediaObjects API", () => {
           contextType: "user",
           per_page: 50,
           sort: "date",
-          order: "desc"
+          order: "desc",
         };
         const path = canvasPath({ params, query, method: "GET" });
         assert.strictEqual(
           path,
-          "/api/v1/media_objects?per_page=50&use_verifiers=0&exclude[]=sources&exclude[]=tracks&sort=created_at&order=desc"
+          "/api/v1/media_objects?per_page=50&use_verifiers=0&exclude[]=sources&exclude[]=tracks&sort=created_at&order=desc",
         );
       });
 
@@ -74,7 +74,7 @@ describe("MediaObjects API", () => {
         const path = canvasPath({ params, query, method: "GET" });
         assert.strictEqual(
           path,
-          "/api/v1/media_objects?per_page=50&use_verifiers=0&exclude[]=sources&exclude[]=tracks"
+          "/api/v1/media_objects?per_page=50&use_verifiers=0&exclude[]=sources&exclude[]=tracks",
         );
       });
 
@@ -84,7 +84,7 @@ describe("MediaObjects API", () => {
           const query = {
             contextId: 47,
             contextType: "foobar",
-            per_page: 50
+            per_page: 50,
           };
           assert.throws(() => canvasPath({ params, query, method: "GET" }));
         });
@@ -93,7 +93,7 @@ describe("MediaObjects API", () => {
           const params = {};
           const query = {
             contextType: "foobar",
-            per_page: 50
+            per_page: 50,
           };
           assert.throws(() => canvasPath({ params, query, method: "GET" }));
         });
@@ -102,7 +102,7 @@ describe("MediaObjects API", () => {
           const params = {};
           const query = {
             per_page: 50,
-            sort: "foobar"
+            sort: "foobar",
           };
           assert.throws(() => canvasPath({ params, query, method: "GET" }));
         });
@@ -112,7 +112,7 @@ describe("MediaObjects API", () => {
           const query = {
             per_page: 50,
             sort: "title",
-            order: "foobar"
+            order: "foobar",
           };
           assert.throws(() => canvasPath({ params, query, method: "GET" }));
         });
@@ -127,8 +127,8 @@ describe("MediaObjects API", () => {
         assert.strictEqual(
           path,
           `/api/v1/media_objects/mo_id?user_entered_title=${encodeURIComponent(
-            "the new title"
-          )}`
+            "the new title",
+          )}`,
         );
       });
 
@@ -139,8 +139,8 @@ describe("MediaObjects API", () => {
         assert.strictEqual(
           path,
           `/api/v1/media_attachments/mo_id?user_entered_title=${encodeURIComponent(
-            "the new title"
-          )}`
+            "the new title",
+          )}`,
         );
       });
     });
@@ -166,15 +166,15 @@ describe("MediaObjects API", () => {
     beforeEach(() => {
       request = {
         protocol: "http",
-        get: () => "canvashost"
+        get: () => "canvashost",
       };
       response = {
         status: sinon.spy(),
-        send: sinon.spy()
+        send: sinon.spy(),
       };
       canvasResponse = {
         statusCode: 200,
-        body: []
+        body: [],
       };
     });
 
@@ -198,7 +198,7 @@ describe("MediaObjects API", () => {
             can_add_captions: true,
             media_type: "video",
             created_at: "2019-04-01T13:00Z",
-            embedded_iframe_url: "http://somewhere"
+            embedded_iframe_url: "http://somewhere",
           },
           {
             user_entered_title: "Second User Title",
@@ -207,14 +207,14 @@ describe("MediaObjects API", () => {
             can_add_captions: true,
             media_type: "video",
             created_at: "2019-04-01T13:01Z",
-            embedded_iframe_url: "http://somewhere_else"
-          }
+            embedded_iframe_url: "http://somewhere_else",
+          },
         ];
       });
 
       it("transforms the API response", () => {
         canvasResponseHandler(request, response, canvasResponse);
-        sinon.assert.calledWithMatch(response.send, val => {
+        sinon.assert.calledWithMatch(response.send, (val) => {
           return (
             val.bookmark === null &&
             val.files[0].id === "m-gibberish" &&
@@ -230,14 +230,14 @@ describe("MediaObjects API", () => {
       it("prefers user's title in the API response", () => {
         canvasResponse.body[0].user_entered_title = "User Title";
         canvasResponseHandler(request, response, canvasResponse);
-        sinon.assert.calledWithMatch(response.send, val => {
+        sinon.assert.calledWithMatch(response.send, (val) => {
           return val.files[0].title === "User Title";
         });
       });
 
       it("transforms the whole files array", () => {
         canvasResponseHandler(request, response, canvasResponse);
-        sinon.assert.calledWithMatch(response.send, val => {
+        sinon.assert.calledWithMatch(response.send, (val) => {
           return (
             val.bookmark === null &&
             val.files[0].id === "m-gibberish" &&

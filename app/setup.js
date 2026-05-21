@@ -1,12 +1,10 @@
-"use strict";
-
-const withMiddleware = require("./middleware");
-const appRoutes = require("./routes");
+import { middleware as withMiddleware } from "./middleware.js";
+import appRoutes from "./routes.js";
 
 function setup(app) {
-  withMiddleware(app, wrappedApp => {
+  withMiddleware(app, (wrappedApp) => {
     appRoutes(wrappedApp);
   });
 }
 
-module.exports = setup;
+export { setup };

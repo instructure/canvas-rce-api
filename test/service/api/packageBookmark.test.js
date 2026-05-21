@@ -1,7 +1,6 @@
-"use strict";
+import { equal } from "assert";
 
-const { equal } = require("assert");
-const packageBookmark = require("../../../app/api/packageBookmark");
+import { packageBookmark } from "../../../app/api/packageBookmark.js";
 
 describe("packageBookmark", () => {
   let request, bookmark;
@@ -12,7 +11,7 @@ describe("packageBookmark", () => {
       path: "/c",
       query: { id: 47, bookmark: "oldbookmark" },
       protocol: "http",
-      get: header => header === "Host" && "somehost:3000"
+      get: (header) => header === "Host" && "somehost:3000",
     };
     bookmark = "canvasurl";
   });

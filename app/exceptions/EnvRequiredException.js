@@ -1,11 +1,9 @@
-"use strict";
+import { HandledException } from "./HandledException.js";
 
-const { LogicalException } = require("node-exceptions");
-
-class EnvRequiredException extends LogicalException {
+class EnvRequiredException extends HandledException {
   static forVar(name) {
     return new this(`Environment variable "${name}" is required`);
   }
 }
 
-module.exports = EnvRequiredException;
+export { EnvRequiredException };

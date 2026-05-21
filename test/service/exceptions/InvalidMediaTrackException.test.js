@@ -1,7 +1,6 @@
-"use strict";
+import { equal, ok } from "assert";
 
-const { equal, ok } = require("assert");
-const InvalidMediaTrackException = require("../../../app/exceptions/InvalidMediaTrackException");
+import { InvalidMediaTrack as InvalidMediaTrackException } from "../../../app/exceptions/InvalidMediaTrackException.js";
 
 describe("InvalidMediaTrackException", () => {
   describe("missingLocale", () => {

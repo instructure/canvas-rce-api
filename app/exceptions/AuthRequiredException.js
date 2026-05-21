@@ -1,6 +1,4 @@
-"use strict";
-
-const HandledException = require("./HandledException");
+import { HandledException } from "./HandledException.js";
 
 class AuthRequiredException extends HandledException {
   static tokenMissing() {
@@ -8,4 +6,4 @@ class AuthRequiredException extends HandledException {
   }
 }
 
-module.exports = AuthRequiredException;
+export { AuthRequiredException };

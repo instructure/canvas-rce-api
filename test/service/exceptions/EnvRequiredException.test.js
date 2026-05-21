@@ -1,7 +1,6 @@
-"use strict";
+import { equal, ok } from "assert";
 
-const { equal, ok } = require("assert");
-const EnvRequiredException = require("../../../app/exceptions/EnvRequiredException");
+import { EnvRequiredException } from "../../../app/exceptions/EnvRequiredException.js";
 
 describe("EnvRequiredException", () => {
   describe("forVar", () => {

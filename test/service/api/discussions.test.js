@@ -1,8 +1,8 @@
-"use strict";
+import assert from "assert";
 
-const assert = require("assert");
-const sinon = require("sinon");
-const discussions = require("../../../app/api/discussions");
+import sinon from "sinon";
+
+import * as discussions from "../../../app/api/discussions.js";
 
 describe("Discussions API", () => {
   describe("canvasPath", () => {
@@ -73,9 +73,9 @@ describe("Discussions API", () => {
             html_url: "/courses/1/discussions/2",
             title: "Discussion 2",
             published: true,
-            ...overrides
-          }
-        ]
+            ...overrides,
+          },
+        ],
       };
       sinon.spy(response, "send");
       discussions.canvasResponseHandler(request, response, canvasResponse);
@@ -101,18 +101,18 @@ describe("Discussions API", () => {
 
     it("pulls the due_at date from canvas' response", () => {
       const [result, canvasResponse] = setup(200, {
-        assignment: { due_at: "2019-04-22T13:00:00Z" }
+        assignment: { due_at: "2019-04-22T13:00:00Z" },
       });
       assert.equal(
         result.links[0].date,
-        canvasResponse.body[0].assignment.due_at
+        canvasResponse.body[0].assignment.due_at,
       );
       assert.equal(result.links[0].date_type, "due");
     });
 
     it("pulls the todo date from canvas' response", () => {
       const [result, canvasResponse] = setup(200, {
-        todo_date: "2019-04-22T13:00:00Z"
+        todo_date: "2019-04-22T13:00:00Z",
       });
       assert.equal(result.links[0].date, canvasResponse.body[0].todo_date);
       assert.equal(result.links[0].date_type, "todo");

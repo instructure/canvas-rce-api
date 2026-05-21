@@ -1,6 +1,4 @@
-"use strict";
-
-const HandledException = require("./HandledException");
+import { HandledException } from "./HandledException.js";
 
 class InvalidMediaTrack extends HandledException {
   static missingLocale() {
@@ -9,9 +7,9 @@ class InvalidMediaTrack extends HandledException {
   static badFormat() {
     return new this(
       JSON.stringify({ error: "expected an array of tracks" }),
-      400
+      400,
     );
   }
 }
 
-module.exports = InvalidMediaTrack;
+export { InvalidMediaTrack };

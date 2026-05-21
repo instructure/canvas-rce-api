@@ -1,7 +1,5 @@
-"use strict";
-
-const _token = require("../token");
-const AuthRequiredException = require("../exceptions/AuthRequiredException");
+import { AuthRequiredException } from "../exceptions/AuthRequiredException.js";
+import { Token as _token } from "../token.js";
 
 function bearerToken(authorization) {
   const matches = /^Bearer\s(.+)/.exec(authorization);
@@ -25,7 +23,7 @@ function init(token) {
       req.auth = {
         token: jwt,
         payload: await token.verify(jwt),
-        wrappedToken: await token.wrap(jwt)
+        wrappedToken: await token.wrap(jwt),
       };
       next();
     } catch (err) {
@@ -34,4 +32,4 @@ function init(token) {
   };
 }
 
-module.exports = { inject, init, singleton: true };
+export default { inject, init, singleton: true };

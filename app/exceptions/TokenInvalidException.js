@@ -1,6 +1,4 @@
-"use strict";
-
-const HandledException = require("./HandledException");
+import { HandledException } from "./HandledException.js";
 
 class TokenInvalidException extends HandledException {
   static before() {
@@ -21,4 +19,4 @@ class TokenInvalidException extends HandledException {
   }
 }
 
-module.exports = TokenInvalidException;
+export { TokenInvalidException };

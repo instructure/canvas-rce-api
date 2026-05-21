@@ -1,8 +1,8 @@
-"use strict";
+import assert from "assert";
 
-const assert = require("assert");
-const sinon = require("sinon");
-const modules = require("../../../app/api/modules");
+import sinon from "sinon";
+
+import * as modules from "../../../app/api/modules.js";
 
 describe("Modules API", () => {
   describe("canvasPath", () => {
@@ -46,7 +46,7 @@ describe("Modules API", () => {
     const response = { status: () => {}, send: () => {} };
     const canvasResponse = {
       statusCode: 200,
-      body: [{ id: "456", name: "Module 2", published: true }]
+      body: [{ id: "456", name: "Module 2", published: true }],
     };
 
     let result;

@@ -1,7 +1,6 @@
-"use strict";
+import { equal, ok } from "assert";
 
-const { equal, ok } = require("assert");
-const TokenInvalidException = require("../../../app/exceptions/TokenInvalidException");
+import { TokenInvalidException } from "../../../app/exceptions/TokenInvalidException.js";
 
 describe("TokenInvalidException", () => {
   describe("before", () => {

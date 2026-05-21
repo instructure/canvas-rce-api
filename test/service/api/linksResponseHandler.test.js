@@ -1,8 +1,8 @@
-"use strict";
+import assert from "assert";
 
-const assert = require("assert");
-const sinon = require("sinon");
-const linksResponseHandler = require("../../../app/api/linksResponseHandler");
+import sinon from "sinon";
+
+import { linksResponseHandler } from "../../../app/api/linksResponseHandler.js";
 
 describe("Link API response handlers", () => {
   const request = {};
@@ -15,7 +15,7 @@ describe("Link API response handlers", () => {
   describe("non-200 canvas responses", () => {
     const failedCanvasResponse = {
       statusCode: 404,
-      body: { error: "Resource does not exist" }
+      body: { error: "Resource does not exist" },
     };
 
     let handler;
@@ -42,8 +42,8 @@ describe("Link API response handlers", () => {
     const canvasResponse = {
       statusCode: 200,
       body: [
-        { html_url: "/courses/1/announcements/2", title: "Announcement 2" }
-      ]
+        { html_url: "/courses/1/announcements/2", title: "Announcement 2" },
+      ],
     };
 
     let handler;
@@ -77,18 +77,18 @@ describe("Link API response handlers", () => {
     describe("bookmark construction", () => {
       const canvasBookmark = "/canvasBookmark";
       const bookmarkedCanvasResponse = Object.assign({}, canvasResponse, {
-        bookmark: canvasBookmark
+        bookmark: canvasBookmark,
       });
       const request = {
         protocol: "http",
-        get: header => header === "Host" && "rce.example",
+        get: (header) => header === "Host" && "rce.example",
         baseUrl: "/api",
         path: "/wikiPages",
         query: {
           contextType: "course",
           contextId: "123",
-          bookmark: "/oldBookmark"
-        }
+          bookmark: "/oldBookmark",
+        },
       };
 
       let bookmark;
@@ -118,7 +118,7 @@ describe("Link API response handlers", () => {
 
       it("adds the canvas bookmark", () => {
         assert.ok(
-          bookmark.match(`bookmark=${encodeURIComponent(canvasBookmark)}`)
+          bookmark.match(`bookmark=${encodeURIComponent(canvasBookmark)}`),
         );
       });
     });

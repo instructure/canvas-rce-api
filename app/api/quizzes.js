@@ -1,7 +1,6 @@
-"use strict";
+import { getSearch } from "../utils/search.js";
 
-const linksResponseHandler = require("./linksResponseHandler");
-const { getSearch } = require("../utils/search");
+import { linksResponseHandler } from "./linksResponseHandler.js";
 
 function canvasPath(request) {
   const search = getSearch(request.query);
@@ -16,7 +15,7 @@ function canvasPath(request) {
 }
 
 const canvasResponseHandler = linksResponseHandler((request, results) => {
-  return results.map(quiz => {
+  return results.map((quiz) => {
     let date = quiz.due_at;
     if (quiz.all_dates && quiz.all_dates.length > 1) {
       date = "multiple";
@@ -27,9 +26,9 @@ const canvasResponseHandler = linksResponseHandler((request, results) => {
       published: quiz.published,
       date,
       date_type: "due",
-      quiz_type: quiz.quiz_type
+      quiz_type: quiz.quiz_type,
     };
   });
 });
 
-module.exports = { canvasPath, canvasResponseHandler };
+export { canvasPath, canvasResponseHandler };

@@ -1,12 +1,13 @@
-"use strict";
+import express from "express";
+import _addRequestId_factory from "express-request-id";
 
-const addRequestId = require("express-request-id")();
-const healthcheck = require("./middleware/healthcheck");
-const requestLogging = require("./middleware/requestLogs");
-const express = require("express");
-const corsProtection = require("./middleware/corsProtection");
-const errorHandling = require("./middleware/errors");
-const stats = require("./middleware/stats");
+import * as corsProtection from "./middleware/corsProtection.js";
+import * as errorHandling from "./middleware/errors.js";
+import { healthcheck } from "./middleware/healthcheck.js";
+import * as requestLogging from "./middleware/requestLogs.js";
+import { StatsMiddleware as stats } from "./middleware/stats.js";
+
+const addRequestId = _addRequestId_factory();
 const statsdKey = stats.actionKeyMiddleware;
 
 function middleware(app, applyRoutes) {
@@ -25,4 +26,4 @@ function middleware(app, applyRoutes) {
   errorHandling.applyToApp(app, process.env.SENTRY_DSN);
 }
 
-module.exports = middleware;
+export { middleware };
