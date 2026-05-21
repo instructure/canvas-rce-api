@@ -2,7 +2,6 @@
 
 const StatsMiddleware = require("../../../app/middleware/stats");
 const dgram = require("dgram");
-const getPort = require("get-port");
 const fakeConfig = require("../../support/fakeConfig");
 const { EventEmitter } = require("events");
 const sinon = require("sinon");
@@ -12,14 +11,28 @@ describe("StatsMiddleware", () => {
   let statsServer, req, res, envOverrides, clock, next;
 
   beforeEach(async () => {
-    clock = sinon.useFakeTimers();
+    // TODO: once this project is converted to ESM, replace this dynamic
+    // import with a top-level `import getPort from "get-port"` and drop
+    // the `.default` destructuring. `get-port@7+` is ESM-only, so it
+    // cannot be `require()`d from CommonJS today.
+    const { default: getPort } = await import("get-port");
+    const port = await getPort();
+    clock = sinon.useFakeTimers({
+      toFake: [
+        "Date",
+        "setTimeout",
+        "clearTimeout",
+        "setInterval",
+        "clearInterval",
+      ],
+    });
     next = sinon.spy();
     envOverrides = {
       STATSD_HOST: "127.0.0.1",
-      STATSD_PORT: await getPort(),
+      STATSD_PORT: port,
       STATS_PREFIX: "prefix",
       CG_ENVIRONMENT: "env",
-      DOG_TAGS: "false"
+      DOG_TAGS: "false",
     };
     req = { actionKey: "foo" };
     res = new EventEmitter();
@@ -40,15 +53,15 @@ describe("StatsMiddleware", () => {
 
   const message = (nth = 1) =>
     new Promise((resolve, reject) => {
-      statsServer.once("message", msg => {
+      statsServer.once("message", (msg) => {
         statsServer.removeAllListeners();
         resolve(msg.toString());
       });
-      statsServer.once("error", err => {
+      statsServer.once("error", (err) => {
         statsServer.removeAllListeners();
         reject(err);
       });
-    }).then(msg => {
+    }).then((msg) => {
       if (nth > 1) {
         return message(nth - 1);
       }
@@ -108,7 +121,7 @@ describe("StatsMiddleware", () => {
       run();
       await assertMsg(
         "prefix.env.request.response_time:0|ms|#a:1,action:foo",
-        2
+        2,
       );
     });
 
@@ -127,7 +140,7 @@ describe("StatsMiddleware", () => {
     it("includes unknown_status", async () => {
       run();
       await assertMsg(
-        "prefix.env.request.response:1|c|#action:foo,status:unknown_status"
+        "prefix.env.request.response:1|c|#action:foo,status:unknown_status",
       );
     });
   });

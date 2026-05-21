@@ -19,7 +19,7 @@ describe("File API", () => {
       const query = {
         replacement_chain_context_type: "course",
         replacement_chain_context_id: 2,
-        include: "blueprint_course_status"
+        include: "blueprint_course_status",
       };
 
       it("includes the replacement context params in the query string", () => {
@@ -36,11 +36,11 @@ describe("File API", () => {
       request = {};
       response = {
         status: sinon.spy(),
-        send: sinon.spy()
+        send: sinon.spy(),
       };
       canvasResponse = {
         status: 200,
-        body: []
+        body: [],
       };
     });
 
@@ -67,26 +67,25 @@ describe("File API", () => {
           preview_url: "someCANVADOCSurl",
           url: "someurl",
           restricted_by_master_course: "true",
-          is_master_course_child_content: "true"
+          is_master_course_child_content: "true",
         };
       });
 
       it("file has correctly tranformed properties", () => {
         canvasResponse.body = [file];
         canvasResponseHandler(request, response, canvasResponse);
-        response.send.calledWithMatch(val => {
-          return sinon.match(
-            {
+        response.send.calledWithMatch((val) => {
+          return sinon
+            .match({
               id: file.id,
               type: file["content-type"],
               name: file.display_name,
               url: file.url,
               preview_url: file.preview_url,
               embed: { type: "file" },
-              restricted_by_master_course: "true"
-            },
-            val
-          );
+              restricted_by_master_course: "true",
+            })
+            .test(val);
         });
       });
 
@@ -94,8 +93,8 @@ describe("File API", () => {
         file.display_name = undefined;
         canvasResponse.body = [file];
         canvasResponseHandler(request, response, canvasResponse);
-        response.send.calledWithMatch(val => {
-          return sinon.match({ name: file.filename }, val);
+        response.send.calledWithMatch((val) => {
+          return sinon.match({ name: file.filename }).test(val);
         });
       });
     });
