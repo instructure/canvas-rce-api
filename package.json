@@ -44,11 +44,9 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^5.0.1",
-    "entities": "^1.1.2",
     "escape-html": "^1.0.3",
     "express": "^4.20.0",
     "express-request-id": "^1.4.1",
-    "express-statsd": "^0.3.0",
     "hot-shots": "^6.1.1",
     "inja": "^1.1.0",
     "jsonwebtoken": "^5.7.0",
@@ -56,12 +54,9 @@
     "morgan": "^1.10.0",
     "node-exceptions": "^3.0.0",
     "node-fetch": "^2.6.1",
-    "node-forge": "^1.4.0",
     "node-jose": "^2.0.0",
     "parse-link-header": "^2.0.0",
-    "querystring": "^0.2.1",
-    "raven": "github:zwily/raven-node#middleware-req-callback",
-    "url": "^0.11.3"
+    "raven": "github:zwily/raven-node#middleware-req-callback"
   },
   "devDependencies": {
     "cross-env": "10.1.0",
@@ -85,6 +80,7 @@
   "overrides": {
     "minimatch": "^10.2.3",
     "qs": "^6.14.1",
-    "jws": "^3.2.3"
+    "jws": "^3.2.3",
+    "node-forge": "^1.4.0"
   }
 }
