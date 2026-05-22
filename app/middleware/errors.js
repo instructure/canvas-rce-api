@@ -18,9 +18,9 @@ function errorStatusCode(err) {
   return err.status || 500;
 }
 
-function tagRequestId(req, _res, next) {
+function attachRequestId(err, req, _res, next) {
   Sentry.getCurrentScope().setExtra("request_id", req.id);
-  next();
+  next(err);
 }
 
 function handledErrorMiddleware(err, req, res, next) {
@@ -46,7 +46,7 @@ function applyToApp(app) {
   const sentryActive = Boolean(Sentry.getClient());
 
   if (sentryActive) {
-    app.use(tagRequestId);
+    app.use(attachRequestId);
   }
 
   app.use(handledErrorMiddleware);
