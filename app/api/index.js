@@ -94,7 +94,7 @@ function init(auth) {
         wrapCanvas(file),
       );
       app.get(
-        "/api/folders/:folderId?",
+        "/api/folders{/:folderId}",
         statsdKey("api", "folders"),
         auth,
         wrapCanvas(folders),

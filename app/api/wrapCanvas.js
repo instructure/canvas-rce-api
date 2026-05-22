@@ -15,6 +15,18 @@ function defaultTransformBody(body) {
   return body;
 }
 
+// In Express 5 `req.query` is a configurable getter that returns a fresh
+// parsed object on each access, so plain `req.query.foo = ...` assignments
+// don't stick. Redefine the property with a plain object instead.
+function setQuery(request, query) {
+  Object.defineProperty(request, "query", {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    value: query,
+  });
+}
+
 // uses wrapper to determine canvas request to make, makes the request (with
 // appropriate jwt wrapping, request ID forwarding, etc.), and then hands the
 // response back to the wrapper. in the case of a token error, hands that to
@@ -26,8 +38,10 @@ function canvasApiCall(wrapper, request, response, options) {
   const transformBody = wrapper.transformBody || defaultTransformBody;
   let url = signer.verify(request.query.bookmark);
   if (!url) {
-    request.query.per_page =
-      request.query.per_page || DEFAULT_CANVAS_PER_PAGE_ARG;
+    setQuery(request, {
+      ...request.query,
+      per_page: request.query.per_page || DEFAULT_CANVAS_PER_PAGE_ARG,
+    });
     let domain = request.auth.payload.domain;
     let path = wrapper.canvasPath(request);
     url = buildUrl(domain, path);
