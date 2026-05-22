@@ -23,7 +23,7 @@ function middleware(app, applyRoutes) {
   applyRoutes(app);
 
   // error handling needs to be applied last
-  errorHandling.applyToApp(app, process.env.SENTRY_DSN);
+  errorHandling.applyToApp(app);
 }
 
 export { middleware };

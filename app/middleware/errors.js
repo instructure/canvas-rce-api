@@ -1,62 +1,26 @@
 /*eslint no-console: 0*/
 /*eslint no-unused-vars: 0*/
 
-import raven from "raven";
+import * as Sentry from "@sentry/node";
 
-function ravenDataCallback(data, environment) {
-  data.tags = data.tags || {};
-  data.tags.site = environment;
+function onBeforeSend(event, environment) {
+  event.tags = event.tags || {};
+  event.tags.site = environment;
 
-  if (data.request && data.request.env) {
-    delete data.request.env;
+  if (event.request && event.request.env) {
+    delete event.request.env;
   }
 
-  return data;
-}
-
-function middlewareErrorData(req, data) {
-  data.extra = data.extra || {};
-  data.extra.request_id = req.id;
-  return data;
-}
-
-function buildRavenClient(dsn, environment) {
-  var raven_client = new raven.Client(dsn, {
-    dataCallback: function (data) {
-      return ravenDataCallback(data, environment);
-    },
-  });
-  raven_client.patchGlobal(function () {
-    console.log("Exiting due to uncaught exception.");
-    process.exit(1);
-  });
-  return raven_client;
+  return event;
 }
 
 function errorStatusCode(err) {
   return err.status || 500;
 }
 
-function applySentryMiddleware(app, client) {
-  app.use(raven.middleware.express(client, middlewareErrorData));
-
-  app.use(function (err, req, res, next) {
-    // still useful to have stack in console output for on-server debugging
-    console.error(err.stack);
-    res.status(errorStatusCode(err));
-    res.send("From Sentry Error Handler");
-    res.end("An error occurred.\n" + res.sentry + "\n");
-  });
-}
-
-function simpleOnError(err, req, res, next) {
-  res.status(errorStatusCode(err));
-  res.send("From Simple Error Handler" + "\n" + err.toString());
-  res.end(res.sentry + "\n");
-}
-
-function applySimpleErrorMiddleware(app) {
-  app.use(simpleOnError);
+function tagRequestId(req, _res, next) {
+  Sentry.getCurrentScope().setExtra("request_id", req.id);
+  next();
 }
 
 function handledErrorMiddleware(err, req, res, next) {
@@ -67,23 +31,31 @@ function handledErrorMiddleware(err, req, res, next) {
   }
 }
 
-function applyToApp(app, sentryDSN) {
-  // Set up error handling
-  var ravenClient = null;
-  if (sentryDSN) {
-    var environment = process.env.INS_STACK_NAME || process.env.NODE_ENV;
-    ravenClient = buildRavenClient(sentryDSN, environment);
+function finalErrorRenderer() {
+  return function (err, req, res, _next) {
+    // still useful to have stack in console output for on-server debugging
+    console.error(err.stack);
+    const errorId = res.sentry || req.id;
+    res.status(errorStatusCode(err));
+    res.type("text/plain").send(`An error occurred. Error ID: ${errorId}\n`);
+  };
+}
+
+function applyToApp(app) {
+  // Sentry.init is performed early in instrument.js
+  const sentryActive = Boolean(Sentry.getClient());
+
+  if (sentryActive) {
+    app.use(tagRequestId);
   }
 
   app.use(handledErrorMiddleware);
 
-  if (ravenClient) {
-    applySentryMiddleware(app, ravenClient);
-  } else {
-    applySimpleErrorMiddleware(app);
+  if (sentryActive) {
+    Sentry.setupExpressErrorHandler(app);
   }
+
+  app.use(finalErrorRenderer());
 }
 
-export { applyToApp };
-export { ravenDataCallback as onRavenData };
-export { middlewareErrorData as onMiddlewareData };
+export { applyToApp, onBeforeSend };

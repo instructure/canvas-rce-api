@@ -2,7 +2,6 @@ import assert from "assert";
 import dgram from "dgram";
 import { EventEmitter } from "events";
 
-import getPort from "get-port";
 import sinon from "sinon";
 
 import { StatsMiddleware } from "../../../app/middleware/stats.js";
@@ -12,7 +11,15 @@ describe("StatsMiddleware", () => {
   let statsServer, req, res, envOverrides, clock, next;
 
   beforeEach(async () => {
-    const port = await getPort();
+    statsServer = dgram.createSocket("udp4");
+    await new Promise((resolve, reject) => {
+      statsServer.once("error", reject);
+      statsServer.bind(0, "127.0.0.1", () => {
+        statsServer.removeListener("error", reject);
+        resolve();
+      });
+    });
+    const port = statsServer.address().port;
     clock = sinon.useFakeTimers({
       toFake: [
         "Date",
@@ -32,8 +39,6 @@ describe("StatsMiddleware", () => {
     };
     req = { actionKey: "foo" };
     res = new EventEmitter();
-    statsServer = dgram.createSocket("udp4");
-    statsServer.bind(envOverrides.STATSD_PORT);
   });
 
   afterEach(() => {
