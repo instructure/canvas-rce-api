@@ -1,7 +1,6 @@
 import assert from "assert";
 
 import express from "express";
-import _addRequestId_factory from "express-request-id";
 import inja from "inja";
 import moment from "moment";
 import nock from "nock";
@@ -9,9 +8,9 @@ import request from "supertest";
 
 import _api from "../../../app/api/index.js";
 import _config from "../../../app/config.js";
+import { addRequestId } from "../../../app/middleware/requestId.js";
 import { Token as _token } from "../../../app/token.js";
 
-const addRequestId = _addRequestId_factory();
 describe("api proxying", function () {
   let container, tokenPayload, tokenString, token;
 

@@ -1,13 +1,12 @@
 import express from "express";
-import _addRequestId_factory from "express-request-id";
 
 import * as corsProtection from "./middleware/corsProtection.js";
 import * as errorHandling from "./middleware/errors.js";
 import { healthcheck } from "./middleware/healthcheck.js";
+import { addRequestId } from "./middleware/requestId.js";
 import * as requestLogging from "./middleware/requestLogs.js";
 import { StatsMiddleware as stats } from "./middleware/stats.js";
 
-const addRequestId = _addRequestId_factory();
 const statsdKey = stats.actionKeyMiddleware;
 
 function middleware(app, applyRoutes) {
