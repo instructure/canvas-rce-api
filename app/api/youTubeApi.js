@@ -5,7 +5,7 @@ const ytApiQuery = "part=snippet&maxResults=2";
 
 function getYouTubeUrl(vid_id) {
   let key = process.env.YOUTUBE_API_KEY;
-  let queryAddendum = `q="${vid_id}"&key=${key}`;
+  let queryAddendum = `q=${encodeURIComponent(`"${vid_id}"`)}&key=${encodeURIComponent(key)}`;
   return `${ytApiBase}?${ytApiQuery}&${queryAddendum}`;
 }
 

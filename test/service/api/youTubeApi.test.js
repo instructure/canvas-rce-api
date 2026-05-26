@@ -107,6 +107,65 @@ describe("YouTube API", () => {
     youTubeTitle(req, resp);
   });
 
+  it("encodes vid_id so injected query parameters cannot override real ones", (done) => {
+    const maliciousVidId = 'abc"&maxResults=50&key=ATTACKER&foo=bar';
+    const req = { query: { vid_id: maliciousVidId } };
+
+    const scope = nock("https://content.googleapis.com")
+      .get("/youtube/v3/search")
+      .query((actual) => {
+        return (
+          actual.part === "snippet" &&
+          actual.maxResults === "2" &&
+          actual.key === "some-long-api-key" &&
+          actual.q === `"${maliciousVidId}"` &&
+          actual.foo === undefined
+        );
+      })
+      .reply(200, { items: [] });
+
+    const resp = {
+      status: (code) => {
+        assert.equal(code, 404);
+        return resp;
+      },
+      json: () => {
+        assert.ok(
+          scope.isDone(),
+          "expected request to match with encoded params",
+        );
+        done();
+      },
+    };
+
+    youTubeTitle(req, resp);
+  });
+
+  it("encodes vid_id containing a raw '&' so it does not start a new param", (done) => {
+    const maliciousVidId = "foo&key=ATTACKER";
+    const req = { query: { vid_id: maliciousVidId } };
+
+    const scope = nock("https://content.googleapis.com")
+      .get("/youtube/v3/search")
+      .query((actual) => {
+        return (
+          actual.key === "some-long-api-key" &&
+          actual.q === `"${maliciousVidId}"`
+        );
+      })
+      .reply(200, { items: [] });
+
+    const resp = {
+      status: () => resp,
+      json: () => {
+        assert.ok(scope.isDone());
+        done();
+      },
+    };
+
+    youTubeTitle(req, resp);
+  });
+
   it("fails on youtube call fail", (done) => {
     let vidId = "abcdefghijk";
     let req = { query: { vid_id: vidId } };
