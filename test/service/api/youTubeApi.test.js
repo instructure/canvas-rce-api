@@ -49,7 +49,7 @@ describe("YouTube API", () => {
     youTubeTitle(req, resp);
   });
 
-  it("fails on vidId not found", (done) => {
+  it("returns 404 with JSON body when vidId not found", (done) => {
     let vidId = "bogusidhere";
     let req = { query: { vid_id: vidId } };
     buildYouTubeScope(vidId, {
@@ -62,23 +62,23 @@ describe("YouTube API", () => {
     });
     let resp = {
       status: (status) => {
-        assert.equal(status, 500);
+        assert.equal(status, 404);
       },
-      send: (data) => {
-        assert.equal(data, `Video "${vidId}" not found.`);
+      json: (data) => {
+        assert.deepStrictEqual(data, {
+          error: "video_not_found",
+          id: vidId,
+        });
         done();
       },
     };
     youTubeTitle(req, resp);
   });
 
-  it("escapes HTML in vidId to prevent XSS", (done) => {
+  it("safely returns attacker-controlled vidId via JSON (no HTML interpretation)", (done) => {
     const vidId = '<script>alert("xss")</script>';
-    const escapedVidId = "&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;";
-
     const req = { query: { vid_id: vidId } };
 
-    // Simulate no matching video found
     buildYouTubeScope(vidId, {
       items: [
         {
@@ -89,20 +89,17 @@ describe("YouTube API", () => {
     });
 
     const resp = {
-      type: () => {},
       status: (code) => {
-        assert.equal(code, 500);
+        assert.equal(code, 404);
         return resp;
       },
-      send: (data) => {
-        assert.ok(
-          data.includes(escapedVidId),
-          "Response does not escape input",
-        );
-        assert.ok(
-          !data.includes("<script>"),
-          "Response includes raw script tag!",
-        );
+      json: (data) => {
+        // JSON response means Content-Type is application/json, so the
+        // browser will never interpret the body as HTML.
+        assert.deepStrictEqual(data, {
+          error: "video_not_found",
+          id: vidId,
+        });
         done();
       },
     };

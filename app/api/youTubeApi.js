@@ -1,5 +1,3 @@
-import escapeHtml from "escape-html";
-
 import { parseFetchResponse } from "../utils/fetch.js";
 
 const ytApiBase = "https://content.googleapis.com/youtube/v3/search";
@@ -40,8 +38,8 @@ function youTubeTitle(req, response) {
         process.stderr.write(
           `YouTube video search not found: vid_id="${vidId}"`,
         );
-        response.status(500);
-        response.send(`Video "${escapeHtml(vidId)}" not found.`);
+        response.status(404);
+        response.json({ error: "video_not_found", id: vidId });
       } else {
         response.status(searchResults.statusCode);
         response.json({ id: vidId, title: title });
