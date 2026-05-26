@@ -16,9 +16,11 @@ function init(api, auth) {
 
     api.applyToApp(app);
 
-    app.get("/test_error", statsdKey("main", "test_error"), function () {
-      throw new Error("Busted!");
-    });
+    if (process.env.NODE_ENV === "development") {
+      app.get("/test_error", statsdKey("main", "test_error"), function () {
+        throw new Error("Busted!");
+      });
+    }
 
     app.get(
       "/test_jwt",
