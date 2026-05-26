@@ -31,12 +31,12 @@ function setQuery(request, query) {
 // appropriate jwt wrapping, request ID forwarding, etc.), and then hands the
 // response back to the wrapper. in the case of a token error, hands that to
 // the wrapper as well.
-function canvasApiCall(wrapper, request, response, options) {
+async function canvasApiCall(wrapper, request, response, options) {
   const wrappedTokenString = request.auth.wrappedToken;
   const canvasResponseHandler =
     wrapper.canvasResponseHandler || defaultCanvasResponseHandler;
   const transformBody = wrapper.transformBody || defaultTransformBody;
-  let url = signer.verify(request.query.bookmark);
+  let url = await signer.verify(request.query.bookmark);
   if (!url) {
     setQuery(request, {
       ...request.query,
@@ -70,11 +70,7 @@ function wrapCanvas(wrapper, options) {
   options = options || {};
   options.method = options.method || "GET";
   return (request, response, next) => {
-    try {
-      canvasApiCall(wrapper, request, response, options);
-    } catch (err) {
-      next(err);
-    }
+    canvasApiCall(wrapper, request, response, options).catch(next);
   };
 }
 

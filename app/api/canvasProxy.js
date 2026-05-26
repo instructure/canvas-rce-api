@@ -27,12 +27,12 @@ function requestHeaders(tokenString, req) {
 
 // looks for a Link header. if there is one, looks for a rel="next" link in it.
 // if there is one, pulls it's value out and sticks it into response.bookmark
-function parseBookmark(response) {
+async function parseBookmark(response) {
   const header = response.headers.get("link");
   if (header) {
     const links = parseLinkHeader(header);
     if (links.next) {
-      response.bookmark = signer.sign(links.next.url);
+      response.bookmark = await signer.sign(links.next.url);
     }
   }
   return response;

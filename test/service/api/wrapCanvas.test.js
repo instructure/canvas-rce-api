@@ -55,19 +55,21 @@ describe("wrapping a Canvas request/response", function () {
     )(request, response);
   });
 
-  it("overrides wrapper path and token domain with the request's bookmark if given", (done) => {
-    request.query.bookmark = signer.sign("http://otherHost/bookmark");
+  it("overrides wrapper path and token domain with the request's bookmark if given", async () => {
+    request.query.bookmark = await signer.sign("http://otherHost/bookmark");
     const scope = nock("http://otherHost")
       .get("/bookmark")
       .reply(200, "success");
-    wrapCanvas(
-      buildWrapper({
-        canvasResponseHandler() {
-          assert.ok(scope.isDone());
-          done();
-        },
-      }),
-    )(request, response);
+    await new Promise((resolve) => {
+      wrapCanvas(
+        buildWrapper({
+          canvasResponseHandler() {
+            assert.ok(scope.isDone());
+            resolve();
+          },
+        }),
+      )(request, response);
+    });
   });
 
   it("passes request, response, and canvas response to wrapper's response handler", (done) => {

@@ -53,10 +53,9 @@
     "express": "5.2.1",
     "hot-shots": "14.3.1",
     "inja": "^1.1.0",
-    "jsonwebtoken": "9.0.3",
+    "jose": "^6.2.3",
     "moment": "^2.22.2",
     "morgan": "^1.10.0",
-    "node-jose": "^2.0.0",
     "parse-link-header": "^2.0.0"
   },
   "devDependencies": {
@@ -79,7 +78,6 @@
     "supertest": "7.2.2"
   },
   "overrides": {
-    "minimatch": "^10.2.3",
-    "node-forge": "^1.4.0"
+    "minimatch": "^10.2.3"
   }
 }

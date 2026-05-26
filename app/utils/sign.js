@@ -1,38 +1,42 @@
 /**
  * Sign and verify a value.
  *
- * Implemented as a JWT since the library is already present, and handles
- * signing, encoding, and verifying with and expiration.
+ * Implemented as a JWT, signing, encoding, and verifying with an expiration.
  *
  * Uses ECOSYSTEM_SECRET from the environment as the signing secret.
  */
 
-import jwt from "jsonwebtoken";
+import { SignJWT, jwtVerify } from "jose";
 
 const DEFAULT_EXP = 24 * 60 * 60;
 const SECRET = process.env.ECOSYSTEM_SECRET;
+const secretBytes = new TextEncoder().encode(SECRET);
 
 /**
  * Sign a value
  *
  * @param {*} value to be signed
  * @param {number} [expiresIn=86400] seconds
- * @return {string}
+ * @return {Promise<string>}
  */
-function sign(val, expiresIn = DEFAULT_EXP) {
-  return jwt.sign({ val }, SECRET, { expiresIn });
+async function sign(val, expiresIn = DEFAULT_EXP) {
+  return await new SignJWT({ val })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime(`${expiresIn}s`)
+    .sign(secretBytes);
 }
 
 /**
  * Verify and return a signed value
  *
  * @param {string} token
- * @return {*} original value or null if invalid for any reason
+ * @return {Promise<*>} original value or null if invalid for any reason
  */
-function verify(token) {
+async function verify(token) {
   try {
-    const { val } = jwt.verify(token, SECRET);
-    return val;
+    const { payload } = await jwtVerify(token, secretBytes);
+    return payload.val;
   } catch (_) {
     return null;
   }

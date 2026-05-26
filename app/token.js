@@ -1,4 +1,9 @@
-import jose from "node-jose";
+import {
+  CompactEncrypt,
+  CompactSign,
+  compactDecrypt,
+  compactVerify,
+} from "jose";
 
 import _config from "./config.js";
 import { TokenInvalidException } from "./exceptions/TokenInvalidException.js";
@@ -15,8 +20,8 @@ class Token {
   constructor(config) {
     const signingSecret = config.require("token.signingSecret");
     const encryptionSecret = config.require("token.encryptionSecret");
-    this._signingKey = this._jwk(signingSecret, "HS256");
-    this._encryptionKey = this._jwk(encryptionSecret, "A256GCM");
+    this._signingKey = new TextEncoder().encode(signingSecret);
+    this._encryptionKey = new TextEncoder().encode(encryptionSecret);
   }
 
   /**
@@ -86,7 +91,7 @@ class Token {
   }
 
   _decode(value) {
-    return Buffer.from(value, "base64").toString("ascii");
+    return Buffer.from(value, "base64").toString("utf8");
   }
 
   _encode(value) {
@@ -94,28 +99,26 @@ class Token {
   }
 
   async _decrypt(value) {
-    const key = await jose.JWK.asKey(this._encryptionKey);
-    return await jose.JWE.createDecrypt(key).decrypt(value);
+    const { plaintext } = await compactDecrypt(value, this._encryptionKey);
+    return { plaintext: Buffer.from(plaintext) };
   }
 
   async _encrypt(value) {
-    const key = await jose.JWK.asKey(this._encryptionKey);
-    return await jose.JWE.createEncrypt({ format: "compact" }, key)
-      .update(value)
-      .final();
+    return await new CompactEncrypt(new TextEncoder().encode(value))
+      .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
+      .encrypt(this._encryptionKey);
   }
 
   async _verify(value) {
-    const key = await jose.JWK.asKey(this._signingKey);
-    return await jose.JWS.createVerify(key).verify(value);
+    const { payload } = await compactVerify(value, this._signingKey);
+    return { payload: new TextDecoder().decode(payload) };
   }
 
   async _sign(payload) {
-    const value = Buffer.from(JSON.stringify(payload));
-    const key = await jose.JWK.asKey(this._signingKey);
-    return await jose.JWS.createSign({ format: "compact" }, key)
-      .update(value)
-      .final();
+    const value = new TextEncoder().encode(JSON.stringify(payload));
+    return await new CompactSign(value)
+      .setProtectedHeader({ alg: "HS256" })
+      .sign(this._signingKey);
   }
 
   _validatePayload(payload) {
@@ -127,14 +130,6 @@ class Token {
     if (payload.exp != null && payload.exp < now) {
       throw TokenInvalidException.expired();
     }
-  }
-
-  _jwk(secret, alg) {
-    return {
-      kty: "oct",
-      k: Buffer.from(secret).toString("base64"),
-      alg,
-    };
   }
 }
 
