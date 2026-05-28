@@ -22,6 +22,7 @@ function requestHeaders(tokenString, req) {
     "X-Request-Context-Id": Buffer.from(req.id).toString("base64"),
     "X-Request-Context-Signature": reqIdSignature,
     Accept: "application/json+canvas-string-ids",
+    "Accept-Language": req.get("Accept-Language") || "en",
   };
 }
 
